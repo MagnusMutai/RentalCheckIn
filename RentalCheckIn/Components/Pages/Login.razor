@@ -1,0 +1,39 @@
+﻿@page "/login"
+@inject IAuthService AuthService
+@inject NavigationManager NavigationManager
+@inject HttpClient Http
+<h3>Login</h3>
+
+@if (!string.IsNullOrEmpty(ErrorMessage))
+{
+    <div class="alert alert-danger">@ErrorMessage</div>
+}
+
+<EditForm Model="loginModel" OnValidSubmit="HandleLogin">
+    <InputText @bind-Value="loginModel.Email" placeholder="Email" />
+    <InputText @bind-Value="loginModel.Password" placeholder="Password" type="password" />
+    <button type="submit">Login</button>
+</EditForm>
+
+@code {
+    private HostLoginDto loginModel = new();
+    private string ErrorMessage;
+    [Inject]
+    private ILocalStorageService LocalStorage { get; set; }
+
+    private async Task HandleLogin()
+    {
+        try
+        {
+            var lhost = await AuthService.AuthenticateAsync(loginModel.Email, loginModel.Password);
+            // Store email for OTP verification
+            await LocalStorage.SetItemAsync("emailForOtp", lhost.MailAddress);
+            NavigationManager.NavigateTo("/verify-otp");
+            // Await AuthStateProvider.GetAuthStateProvider
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = ex.Message;
+        }
+    }
+}

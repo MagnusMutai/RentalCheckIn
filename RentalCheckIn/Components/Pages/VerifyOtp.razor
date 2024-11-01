@@ -1,0 +1,64 @@
+﻿@page "/verify-otp"
+@inject JwtService JwtService
+@inject TotpService TotpService
+@inject NavigationManager NavigationManager
+
+<h3>Verify OTP</h3>
+
+@if (!string.IsNullOrEmpty(ErrorMessage))
+{
+    <div class="alert alert-danger">@ErrorMessage</div>
+}
+
+<EditForm Model="otpModel" OnValidSubmit="HandleVerifyOtp">
+    <InputText @bind-Value="otpModel.Code" placeholder="OTP Code" />
+    <button type="submit">Verify</button>
+</EditForm>
+
+@code {
+    private OtpDto otpModel = new();
+    private string ErrorMessage;
+    [Inject]
+    private ILocalStorageService LocalStorage { get; set; }
+    [Inject]
+    private IHostRepository HostRepository { get; set; }
+    [Inject]
+    private AuthenticationStateProvider AuthStateProvider { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        otpModel.Email = await LocalStorage.GetItemAsync<string>("emailForOtp");
+        if (string.IsNullOrEmpty(otpModel.Email))
+        {
+            NavigationManager.NavigateTo("/login");
+        }
+    }
+
+    private async Task HandleVerifyOtp()
+    {
+        try
+        {
+            var user = await HostRepository.GetByEmailAsync(otpModel.Email);
+            if (user == null)
+                throw new Exception("User not found");
+
+            if (!TotpService.VerifyCode(user.TotpSecret, otpModel.Code))
+                throw new Exception("Invalid OTP code");
+
+            var token = JwtService.GenerateToken(user);
+
+            // Store the token (e.g., in local storage)
+            await LocalStorage.SetItemAsync("authToken", token);
+
+            await AuthStateProvider.GetAuthenticationStateAsync();
+
+
+            // Navigate to the home page or dashboard
+            NavigationManager.NavigateTo("/");
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = ex.Message;
+        }
+    }
+}

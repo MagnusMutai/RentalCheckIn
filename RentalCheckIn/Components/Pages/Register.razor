@@ -1,0 +1,47 @@
+﻿@page "/register"
+@inject NavigationManager NavigationManager
+
+<h3>Register</h3>
+
+@if (!string.IsNullOrEmpty(ErrorMessage))
+{
+    <div class="alert alert-danger">@ErrorMessage</div>
+}
+
+@if (string.IsNullOrEmpty(TotpSecret))
+{
+    <EditForm Model="registerModel" OnValidSubmit="HandleRegister">
+        <InputText @bind-Value="registerModel.FirstName" placeholder="FirstName" />
+        <InputText @bind-Value="registerModel.LastName" placeholder="LastName" />
+        <InputText @bind-Value="registerModel.Email" placeholder="Email" />
+        <InputText @bind-Value="registerModel.Password" placeholder="Password" type="password" />
+        <button type="submit">Register</button>
+    </EditForm>
+}
+else
+{
+    <p>Please add the following secret to your authenticator app:</p>
+    <p><strong>@TotpSecret</strong></p>
+    <p>After adding, proceed to <a href="/login">Login</a>.</p>
+}
+
+@code {
+    private HostSignUpDto registerModel = new();
+    private string ErrorMessage;
+    private string TotpSecret;
+    [Inject]
+    private IAuthService AuthService { get; set; }
+
+    private async Task HandleRegister()
+    {
+        try
+        {
+            var lhost = await AuthService.RegisterAsync(registerModel);
+            TotpSecret = lhost.TotpSecret;
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = ex.Message;
+        }
+    }
+}
