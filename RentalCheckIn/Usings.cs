@@ -1,0 +1,12 @@
+﻿global using Microsoft.AspNetCore.Authentication.JwtBearer;
+global using Microsoft.IdentityModel.Tokens;
+global using RentalCheckIn.Entities;
+global using System.IdentityModel.Tokens.Jwt;
+global using System.Security.Claims;
+global using System.Text;
+global using Microsoft.EntityFrameworkCore;
+global using RentalCheckIn.Data;
+global using System.ComponentModel.DataAnnotations;
+global using RentalCheckIn.Dtos;
+global using Blazored.LocalStorage;
+global using RentalCheckIn.Repositories;
