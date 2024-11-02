@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using RentalCheckIn.BusinessServices;
+using static RentalCheckIn.Responses.CustomResponses;
 
 namespace RentalCheckIn.Controllers
 {
@@ -16,7 +17,7 @@ namespace RentalCheckIn.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult<Lhost>> Login(HostLoginDto request)
+        public async Task<ActionResult<AuthenticationResult>> Login(HostLoginDto request)
         {
 
             var result = await accountService.LoginAsync(request);
@@ -24,7 +25,7 @@ namespace RentalCheckIn.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<ActionResult<Lhost>> Register(HostSignUpDto request)
+        public async Task<ActionResult<AuthenticationResult>> Register(HostSignUpDto request)
         {
             var result = await accountService.RegisterAsync(request);
             return Ok(result);

@@ -8,5 +8,4 @@ global using Microsoft.EntityFrameworkCore;
 global using RentalCheckIn.Data;
 global using System.ComponentModel.DataAnnotations;
 global using RentalCheckIn.Dtos;
-global using Blazored.LocalStorage;
 global using RentalCheckIn.Repositories;

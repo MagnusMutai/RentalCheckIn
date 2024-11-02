@@ -1,15 +1,17 @@
 ﻿@page "/logout"
 @inject AuthenticationStateProvider AuthStateProvider
 @inject NavigationManager NavigationManager
-@inject ILocalStorageService LocalStorage
 
 <h3>Logging out...</h3>
 
 @code {
+    [Inject]
+    private ProtectedLocalStorage LocalStorage { get; set; }
+
     protected override async Task OnInitializedAsync()
     {
         // Mark user as logged out
-        await LocalStorage.RemoveItemAsync("token");
+        await LocalStorage.DeleteAsync("token");
         Constants.JWTToken = "";
         await AuthStateProvider.GetAuthenticationStateAsync();
         // Redirect to login page

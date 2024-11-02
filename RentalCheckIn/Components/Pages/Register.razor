@@ -34,14 +34,13 @@ else
 
     private async Task HandleRegister()
     {
-        try
+        var result = await AuthService.RegisterAsync(registerModel);
+
+        if (result.Success)
         {
-            var lHost = await AuthService.RegisterAsync(registerModel);
-            TotpSecret = lHost.TotpSecret;
+            TotpSecret = result.Host.TotpSecret;
         }
-        catch (Exception ex)
-        {
-            ErrorMessage = ex.Message;
-        }
+
+        ErrorMessage = result.Message;
     }
 }

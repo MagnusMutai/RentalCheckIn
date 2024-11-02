@@ -14,13 +14,3 @@
     </Router>
 </CascadingAuthenticationState>
 
-@* @code {
-    [Inject]
-    private CustomAuthStateProvider AuthStateProvider {get; set;}
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (firstRender)
-        {
-            await AuthStateProvider.InitializeAsync();
-        }
-    } *@
