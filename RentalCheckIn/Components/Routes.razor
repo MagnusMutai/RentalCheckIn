@@ -1,8 +1,26 @@
 ﻿<CascadingAuthenticationState>
     <Router AppAssembly="typeof(Program).Assembly">
         <Found Context="routeData">
-            <AuthorizeRouteView RouteData="routeData" DefaultLayout="typeof(Layout.MainLayout)" />
+            <AuthorizeRouteView RouteData="routeData" DefaultLayout="typeof(Layout.MainLayout)">
+                <Authorizing>
+                    Please wait while you're being logged in...
+                </Authorizing>
+                <NotAuthorized>
+                    Sorry, you're not allowed to see this.
+                </NotAuthorized>
+            </AuthorizeRouteView>
             <FocusOnNavigate RouteData="routeData" Selector="h1" />
         </Found>
     </Router>
 </CascadingAuthenticationState>
+
+@* @code {
+    [Inject]
+    private CustomAuthStateProvider AuthStateProvider {get; set;}
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await AuthStateProvider.InitializeAsync();
+        }
+    } *@

@@ -2,25 +2,27 @@
 
 public class JwtService
 {
-    private readonly IConfiguration _configuration;
+    private readonly IConfiguration configuration;
     public JwtService(IConfiguration configuration)
     {
-        _configuration = configuration;
+        this.configuration = configuration;
     }
 
-    public string GenerateToken(Lhost lhost)
+    public string GenerateToken(Lhost lHost)
     {
-        var secretKey = _configuration["Jwt:SecretKey"];
+        var secretKey = configuration["Jwt:SecretKey"];
         var key = Encoding.ASCII.GetBytes(secretKey);
 
         var claims = new[]
         {
-            new Claim(ClaimTypes.NameIdentifier, lhost.HostId.ToString()),
-            new Claim(ClaimTypes.Email, lhost.MailAddress)
+            new Claim(ClaimTypes.NameIdentifier, lHost.HostId.ToString()),
+            new Claim(ClaimTypes.Email, lHost.MailAddress)
         };
-
+        
         var tokenDescriptor = new SecurityTokenDescriptor
         {
+            Issuer = configuration["Jwt:Issuer"],
+            Audience = configuration["Jwt:Audience"],
             Subject = new ClaimsIdentity(claims),
             Expires = DateTime.UtcNow.AddDays(7), // Token valid for 7 days
             SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)

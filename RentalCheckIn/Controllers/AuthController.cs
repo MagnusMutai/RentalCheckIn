@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using RentalCheckIn.BusinessServices;
 
 namespace RentalCheckIn.Controllers
 {
@@ -7,11 +8,26 @@ namespace RentalCheckIn.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        [HttpPost]
-        public async Task<ActionResult<string>> Login(HostLoginDto request)
+        private readonly IAccountService accountService;
+
+        public AuthController(IAccountService accountService) 
         {
-            string token = "eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTUxMiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiVG9ueSBTdGFyayIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6Iklyb24gTWFuIiwiZXhwIjozMTY4NTQwMDAwfQ.IbVQa1lNYYOzwso69xYfsMOHnQfO3VLvVqV2SOXS7sTtyyZ8DEf5jmmwz2FGLJJvZnQKZuieHnmHkg7CGkDbvA";
-            return token;
+            this.accountService = accountService;
+        }
+
+        [HttpPost("login")]
+        public async Task<ActionResult<Lhost>> Login(HostLoginDto request)
+        {
+
+            var result = await accountService.LoginAsync(request);
+            return Ok(result);
+        }
+
+        [HttpPost("register")]
+        public async Task<ActionResult<Lhost>> Register(HostSignUpDto request)
+        {
+            var result = await accountService.RegisterAsync(request);
+            return Ok(result);
         }
     }
 }

@@ -6,5 +6,4 @@ public class HostLoginDto
     public string Email { get; set; }
     [Required]
     public string Password { get; set; }
-    public string TotpSecret { get; set; }
 }

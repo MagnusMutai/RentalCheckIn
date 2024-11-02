@@ -2,31 +2,33 @@
 
 public class HostRepository : IHostRepository
 {
-    private readonly AppDbContext _context;
+    private readonly AppDbContext context;
     public HostRepository(AppDbContext context)
     {
-        _context = context;
+        this.context = context;
     }
 
-    public async Task AddLHostAsync(Lhost lhost)
+    public async Task AddLHostAsync(Lhost lHost)
     {
-        _context.Lhosts.Add(lhost);
-        await _context.SaveChangesAsync();
+        context.Lhosts.Add(lHost);
+        await context.SaveChangesAsync();
     }
 
     public async Task<Lhost> GetByEmailAsync(string mailAddress)
     {
-        return await _context.Lhosts.FirstOrDefaultAsync(h => h.MailAddress == mailAddress);
+        return await context.Lhosts.FirstOrDefaultAsync(h => h.MailAddress == mailAddress);
     }
 
     public async Task<Lhost> GetByIdAsync(int id)
     {
-        return await _context.Lhosts.FindAsync(id);
+        return await context.Lhosts.FindAsync(id);
     }
 
-    public async Task UpdateLHostAsync(Lhost lhost)
+    public async Task UpdateLHostAsync(Lhost lHost)
     {
-        _context.Lhosts.Update(lhost);
-        await _context.SaveChangesAsync();
+        context.Lhosts.Update(lHost);
+        await context.SaveChangesAsync();
     }
+
+
 }
