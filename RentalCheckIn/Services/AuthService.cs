@@ -1,5 +1,4 @@
-﻿using RentalCheckIn.Dtos;
-using static RentalCheckIn.Responses.CustomResponses;
+﻿using static RentalCheckIn.Responses.CustomResponses;
 
 namespace RentalCheckIn.Services;
 
