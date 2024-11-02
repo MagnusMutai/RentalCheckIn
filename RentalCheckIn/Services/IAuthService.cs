@@ -1,7 +1,9 @@
-﻿namespace RentalCheckIn.Services;
+﻿using static RentalCheckIn.Responses.CustomResponses;
+
+namespace RentalCheckIn.Services;
 
 public interface IAuthService
 {
-    Task<Lhost> RegisterAsync(HostSignUpDto hostSignUpDto);
-    Task<Lhost> LoginAsync(HostLoginDto hostLoginDto);
+    Task<AuthenticationResult> RegisterAsync(HostSignUpDto hostSignUpDto);
+    Task<AuthenticationResult> LoginAsync(HostLoginDto hostLoginDto);
 }

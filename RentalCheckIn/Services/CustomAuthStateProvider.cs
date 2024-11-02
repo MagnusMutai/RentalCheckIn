@@ -5,25 +5,17 @@ namespace RentalCheckIn.Services;
 
 public class CustomAuthStateProvider : AuthenticationStateProvider
 {
-    private readonly ILocalStorageService localStorage;
     private readonly HttpClient http;
     private bool isInitialized = false;
     private string token = string.Empty;
 
-    public CustomAuthStateProvider(ILocalStorageService localStorage, HttpClient http)
+    public CustomAuthStateProvider(HttpClient http)
     {
-        this.localStorage = localStorage;
         this.http = http;
     }
 
     public override async Task<AuthenticationState> GetAuthenticationStateAsync()
     {
-        //if (isInitialized)
-        //{
-        //}
-        //token = await localStorage.GetItemAsStringAsync("token");
-        string token = "eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTUxMiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiVG9ueSBTdGFyayIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6Iklyb24gTWFuIiwiZXhwIjozMTY4NTQwMDAwfQ.IbVQa1lNYYOzwso69xYfsMOHnQfO3VLvVqV2SOXS7sTtyyZ8DEf5jmmwz2FGLJJvZnQKZuieHnmHkg7CGkDbvA";
-        
         var identity = new ClaimsIdentity();
         http.DefaultRequestHeaders.Authorization = null;
 
@@ -58,10 +50,5 @@ public class CustomAuthStateProvider : AuthenticationStateProvider
             case 3: base64 += "="; break;
         }
         return Convert.FromBase64String(base64);
-    }
-
-    public async Task InitializeAsync()
-    {
-        isInitialized = true;
     }
 }

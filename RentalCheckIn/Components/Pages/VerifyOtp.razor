@@ -19,7 +19,7 @@
     private OtpDto otpModel = new();
     private string ErrorMessage;
     [Inject]
-    private ILocalStorageService LocalStorage { get; set; }
+    private ProtectedLocalStorage LocalStorage { get; set; }
     [Inject]
     private IHostRepository HostRepository { get; set; }
     [Inject]
@@ -27,7 +27,12 @@
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        otpModel.Email = await LocalStorage.GetItemAsync<string>("emailForOtp");
+        var result = await LocalStorage.GetAsync<string>("emailForOtp");
+
+        if (result.Success)
+        {
+            otpModel.Email = result.Value;
+        }
         if (string.IsNullOrEmpty(otpModel.Email))
         {
             NavigationManager.NavigateTo("/login");
@@ -48,7 +53,7 @@
             var token = JwtService.GenerateToken(user);
             Constants.JWTToken = token;
             // Store the token (e.g., in local storage)
-            await LocalStorage.SetItemAsync("token", token);
+            await LocalStorage.SetAsync("token", token);
 
             await AuthStateProvider.GetAuthenticationStateAsync();
 

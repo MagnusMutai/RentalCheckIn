@@ -13,5 +13,7 @@ public partial class Apartment
 
     public DateTime CreationDate { get; set; }
 
+    public string ImagePath { get; set; } = null!;
+
     public virtual ICollection<Reservation> Reservations { get; set; } = new List<Reservation>();
 }

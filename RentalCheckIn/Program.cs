@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using RentalCheckIn.BusinessServices;
 using RentalCheckIn.Components;
 using RentalCheckIn.Services;
@@ -37,7 +38,6 @@ return new HttpClient
 var secretKey = builder.Configuration["Jwt:SecretKey"];
 var key = Encoding.ASCII.GetBytes(secretKey);
 builder.Services.AddAuthenticationCore();
-builder.Services.AddTransient<LoginService>();
 builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthStateProvider>();
 //builder.Services.AddScoped<CustomAuthStateProvider>();
 builder.Services.AddAuthentication(options =>
@@ -71,7 +71,7 @@ builder.Services.AddScoped<IHostRepository, HostRepository>();
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<JwtService>();
 builder.Services.AddScoped<TotpService>();
-builder.Services.AddBlazoredLocalStorage();
+builder.Services.AddScoped<ProtectedLocalStorage>();
 
 var app = builder.Build();
 

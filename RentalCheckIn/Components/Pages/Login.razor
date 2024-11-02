@@ -19,21 +19,21 @@
     private HostLoginDto loginModel = new();
     private string ErrorMessage;
     [Inject]
-    private ILocalStorageService LocalStorage { get; set; }
+    private ProtectedLocalStorage LocalStorage { get; set; }
 
     private async Task HandleLogin()
     {
-        try
+        var result = await AuthService.LoginAsync(loginModel);
+        if (result.Success)
         {
-            var lhost = await AuthService.LoginAsync(loginModel);
+            var lHost = result.Host;
             // Store email for OTP verification
-            await LocalStorage.SetItemAsync("emailForOtp", lhost.MailAddress);
+            await LocalStorage.SetAsync("emailForOtp", lHost.MailAddress);
             NavigationManager.NavigateTo("/verify-otp");
-            // Await AuthStateProvider.GetAuthStateProvider
         }
-        catch (Exception ex)
+        else
         {
-            ErrorMessage = ex.Message;
+            ErrorMessage = result.Message;
         }
     }
 }

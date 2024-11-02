@@ -1,4 +1,5 @@
 ﻿using RentalCheckIn.Services;
+using static RentalCheckIn.Responses.CustomResponses;
 
 namespace RentalCheckIn.BusinessServices;
 public class AccountService : IAccountService
@@ -8,14 +9,23 @@ public class AccountService : IAccountService
     {
         this.hostRepository = hostRepository;
     }
-    public async Task<Lhost> LoginAsync(HostLoginDto hostLoginDto)
+    public async Task<AuthenticationResult> LoginAsync(HostLoginDto hostLoginDto)
     {
-        // Call api here
         var lHost = await hostRepository.GetByEmailAsync(hostLoginDto.Email);
         if (lHost == null || !VerifyPassword(hostLoginDto.Password, lHost.PasswordHash))
-            throw new Exception("Invalid email or password");
+        {
+            return new AuthenticationResult
+            {
+                Success = false,
+                Message = "Invalid email or password, please try again"
+            };
+        }
 
-        return lHost;
+        return new AuthenticationResult
+        {
+            Success = true,
+            Host = lHost,
+        };
     }
 
     public string HashPassword(string password)
@@ -23,11 +33,17 @@ public class AccountService : IAccountService
         return BCrypt.Net.BCrypt.HashPassword(password);
     }
 
-    public async Task<Lhost> RegisterAsync(HostSignUpDto hostSignUpDto)
+    public async Task<AuthenticationResult> RegisterAsync(HostSignUpDto hostSignUpDto)
     {
-        var existingUser = await hostRepository.GetByEmailAsync(hostSignUpDto.Email);
-        if (existingUser != null)
-            throw new Exception("User already exists");
+        var existingHost = await hostRepository.GetByEmailAsync(hostSignUpDto.Email);
+        if (existingHost != null)
+        {
+            return new AuthenticationResult
+            {
+                Success = false,
+                Message = "User already exists"
+            };
+        }
 
         var totpService = new TotpService();
         var totpSecret = totpService.GenerateSecret();
@@ -42,12 +58,15 @@ public class AccountService : IAccountService
             MailAddress = hostSignUpDto.Email,
         };
 
-        // Call the api here
         await hostRepository.AddLHostAsync(lHost);
 
         // Return the TOTP secret to the caller to display to the user
         lHost.TotpSecret = totpSecret;
-        return lHost;
+        return new AuthenticationResult
+        {
+            Success = true,
+            Host = lHost
+        };
     }
 
     public bool VerifyPassword(string password, string passwordHash)

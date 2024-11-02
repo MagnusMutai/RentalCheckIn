@@ -1,12 +1,12 @@
 ﻿@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
 @using RentalCheckIn.Services
 @inject NavigationManager NavigationManager
-@inject ILocalStorageService LocalStorage
 @inject AuthenticationStateProvider AuthStateProvider
 
 <AuthorizeView>
     <Authorized>
-        <button @onclick="Logout" class="btn btn-danger">Logout</button>
+        <a href="logout" @onclick="Logout" class="btn btn-danger">Logout</a>
     </Authorized>
     <NotAuthorized>
         <button @onclick="Login" class="btn btn-primary">Login</button>
@@ -14,6 +14,9 @@
 </AuthorizeView>
 
 @code {
+    [Inject]
+    private ProtectedLocalStorage LocalStorage { get; set; }
+
     void Login()
     {
         NavigationManager.NavigateTo("login");
@@ -21,7 +24,7 @@
 
     async Task Logout()
     {
-        await LocalStorage.RemoveItemAsync("token");
+        await LocalStorage.DeleteAsync("token");
         Constants.JWTToken = "";
         await AuthStateProvider.GetAuthenticationStateAsync();
     }
