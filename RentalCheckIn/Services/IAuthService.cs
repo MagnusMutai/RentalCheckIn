@@ -3,7 +3,5 @@
 public interface IAuthService
 {
     Task<Lhost> RegisterAsync(HostSignUpDto hostSignUpDto);
-    Task<Lhost> AuthenticateAsync(string mailAddress, string password);
-    bool VerifyPassword(string password, string passwordHash);
-    string HashPassword(string password);
+    Task<Lhost> LoginAsync(HostLoginDto hostLoginDto);
 }

@@ -1,38 +1,37 @@
 ﻿using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
-using OtpNet;
 using System.Net.Http.Headers;
 using System.Text.Json;
-using static System.Net.WebRequestMethods;
 namespace RentalCheckIn.Services;
 
 public class CustomAuthStateProvider : AuthenticationStateProvider
 {
     private readonly ILocalStorageService localStorage;
-    private readonly LoginService loginService;
     private readonly HttpClient http;
+    private bool isInitialized = false;
+    private string token = string.Empty;
 
-    public CustomAuthStateProvider(ILocalStorageService localStorage, LoginService loginService, HttpClient http) 
+    public CustomAuthStateProvider(ILocalStorageService localStorage, HttpClient http)
     {
         this.localStorage = localStorage;
-        this.loginService = loginService;
         this.http = http;
     }
 
     public override async Task<AuthenticationState> GetAuthenticationStateAsync()
     {
-        var savedToken = loginService.GetToken();
-
-        //var savedToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIzIiwiZW1haWwiOiJNYWdudXNNbkBnbWFpbC5jb20iLCJuYmYiOjE3MzA0ODczMTYsImV4cCI6MTczMTA5MjExNiwiaWF0IjoxNzMwNDg3MzE2fQ.QJL_y9IX1iW2ZjJSyYuBUnG1xwFB5N2xOzLEAia3i2k";
-
+        //if (isInitialized)
+        //{
+        //}
+        //token = await localStorage.GetItemAsStringAsync("token");
+        string token = "eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTUxMiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiVG9ueSBTdGFyayIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6Iklyb24gTWFuIiwiZXhwIjozMTY4NTQwMDAwfQ.IbVQa1lNYYOzwso69xYfsMOHnQfO3VLvVqV2SOXS7sTtyyZ8DEf5jmmwz2FGLJJvZnQKZuieHnmHkg7CGkDbvA";
+        
         var identity = new ClaimsIdentity();
         http.DefaultRequestHeaders.Authorization = null;
 
-        if (!string.IsNullOrEmpty(savedToken))
+        if (!string.IsNullOrEmpty(Constants.JWTToken))
         {
-            identity = new ClaimsIdentity(ParseClaimsFromJwt(savedToken), "jwt");
+            identity = new ClaimsIdentity(ParseClaimsFromJwt(Constants.JWTToken), "jwt");
             http.DefaultRequestHeaders.Authorization =
-                new AuthenticationHeaderValue("Bearer", savedToken.Replace("\"", ""));
+                new AuthenticationHeaderValue("Bearer", Constants.JWTToken.Replace("\"", ""));
         }
 
         var user = new ClaimsPrincipal(identity);
@@ -59,17 +58,10 @@ public class CustomAuthStateProvider : AuthenticationStateProvider
             case 3: base64 += "="; break;
         }
         return Convert.FromBase64String(base64);
-}
-
-    public void NotifyUserAuthentication(ClaimsPrincipal user)
-    {
-        NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(user)));
     }
 
-    public async Task NotifyUserLogout()
+    public async Task InitializeAsync()
     {
-        await localStorage.RemoveItemAsync("authToken");
-        var anonymousUser = new ClaimsPrincipal(new ClaimsIdentity());
-        NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(anonymousUser)));
+        isInitialized = true;
     }
 }

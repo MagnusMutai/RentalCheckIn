@@ -1,6 +1,7 @@
 ﻿@page "/logout"
-@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject AuthenticationStateProvider AuthStateProvider
 @inject NavigationManager NavigationManager
+@inject ILocalStorageService LocalStorage
 
 <h3>Logging out...</h3>
 
@@ -8,8 +9,9 @@
     protected override async Task OnInitializedAsync()
     {
         // Mark user as logged out
-        await ((CustomAuthStateProvider)AuthenticationStateProvider).NotifyUserLogout();
-
+        await LocalStorage.RemoveItemAsync("token");
+        Constants.JWTToken = "";
+        await AuthStateProvider.GetAuthenticationStateAsync();
         // Redirect to login page
         NavigationManager.NavigateTo("/login");
     }

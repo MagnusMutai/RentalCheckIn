@@ -1,6 +1,6 @@
-using Blazored.SessionStorage;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
+using RentalCheckIn.BusinessServices;
 using RentalCheckIn.Components;
 using RentalCheckIn.Services;
 
@@ -11,29 +11,35 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
 builder.Services.AddControllers();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "My API", Version = "V1" });
+});
 
 // Configure EF Core with MySQL
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseMySql(builder.Configuration.GetConnectionString("DefaultConnection"),
     new MySqlServerVersion(new Version(8, 0, 40))));
 
-// Configure JWT Authentication
-var secretKey = builder.Configuration["Jwt:SecretKey"];
-var key = Encoding.ASCII.GetBytes(secretKey);
-
-builder.Services.AddAuthenticationCore();
-builder.Services.AddTransient<LoginService>();
-builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthStateProvider>();
-// Register HttpClient with BaseAddress
+//Register HttpClient with BaseAddress
 builder.Services.AddScoped<HttpClient>(sp =>
 {
     var navigationManager = sp.GetRequiredService<NavigationManager>();
-    return new HttpClient
-    {
-        BaseAddress = new Uri(navigationManager.BaseUri)
-    };
+return new HttpClient
+{
+    BaseAddress = new Uri(navigationManager.BaseUri)
+};
 });
 
+//builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri ("https://localhost:7110")});
+
+// Configure JWT Authentication
+var secretKey = builder.Configuration["Jwt:SecretKey"];
+var key = Encoding.ASCII.GetBytes(secretKey);
+builder.Services.AddAuthenticationCore();
+builder.Services.AddTransient<LoginService>();
+builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthStateProvider>();
+//builder.Services.AddScoped<CustomAuthStateProvider>();
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -45,22 +51,27 @@ builder.Services.AddAuthentication(options =>
     options.SaveToken = true;
     options.TokenValidationParameters = new TokenValidationParameters
     {
+        ValidateIssuer = true,
+        ValidateAudience = true,
         ValidateIssuerSigningKey = true,
+        ValidateLifetime = true,
+        ValidIssuer = builder.Configuration["Jwt:Issuer"],
+        ValidAudience = builder.Configuration["Jwt:Audience"],
         IssuerSigningKey = new SymmetricSecurityKey(key),
-        ValidateIssuer = false,
-        ValidateAudience = false,
         ClockSkew = TimeSpan.Zero
     };
 });
+
+
 
 // Register application services
 //builder.Services.AddScoped<IHostRepository, HostRepository>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IHostRepository, HostRepository>();
+builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<JwtService>();
 builder.Services.AddScoped<TotpService>();
 builder.Services.AddBlazoredLocalStorage();
-builder.Services.AddBlazoredSessionStorage();
 
 var app = builder.Build();
 
@@ -74,13 +85,18 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.MapControllers();
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.UseStaticFiles();
 app.UseAntiforgery();
 
-app.MapControllers();
+app.UseSwagger();
+app.UseSwaggerUI(c =>
+{
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Auth V1");
+});
 
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();

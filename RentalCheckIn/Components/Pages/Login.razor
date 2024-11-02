@@ -25,7 +25,7 @@
     {
         try
         {
-            var lhost = await AuthService.AuthenticateAsync(loginModel.Email, loginModel.Password);
+            var lhost = await AuthService.LoginAsync(loginModel);
             // Store email for OTP verification
             await LocalStorage.SetItemAsync("emailForOtp", lhost.MailAddress);
             NavigationManager.NavigateTo("/verify-otp");

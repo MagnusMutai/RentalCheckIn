@@ -16,7 +16,7 @@ namespace RentalCheckIn.Services
         {
             //var accessToken = localStorage.GetAsync<string>("token").ToString();
             //return accessToken;
-            var accessToken1 = localStorage1.GetItemAsStringAsync("authToken").ToString();
+            var accessToken1 = localStorage1.GetItemAsStringAsync("token").ToString();
             return accessToken1;
         }
 

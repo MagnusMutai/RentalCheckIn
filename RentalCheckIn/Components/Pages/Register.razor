@@ -36,8 +36,8 @@ else
     {
         try
         {
-            var lhost = await AuthService.RegisterAsync(registerModel);
-            TotpSecret = lhost.TotpSecret;
+            var lHost = await AuthService.RegisterAsync(registerModel);
+            TotpSecret = lHost.TotpSecret;
         }
         catch (Exception ex)
         {
