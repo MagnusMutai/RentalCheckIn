@@ -1,4 +1,6 @@
-﻿namespace RentalCheckIn.Repositories;
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace RentalCheckIn.Repositories;
 
 public class HostRepository : IHostRepository
 {
@@ -30,5 +32,29 @@ public class HostRepository : IHostRepository
         await context.SaveChangesAsync();
     }
 
+    public async Task<Lhost> GetUserByEmailVerificationTokenAsync(string token)
+    {
+        return await context.Lhosts
+            .FirstOrDefaultAsync(u => u.EmailVerificationToken == token && u.EmailVTokenExpiresAt > DateTime.UtcNow);
+    }
+
+    public async Task<bool> UpdateLHostPartialAsync(Lhost lHost, Action<Lhost> patchData)
+    {
+        // Attach user if not already tracked
+        context.Lhosts.Attach(lHost);
+
+        patchData(lHost);
+
+        // Mark only specified properties as modified
+        foreach (var property in context.Entry(lHost).Properties)
+        {
+            if (property.IsModified)
+            {
+                context.Entry(lHost).Property(property.Metadata.Name).IsModified = true;
+            }
+        }
+        // Save changes
+        return await context.SaveChangesAsync() > 0; 
+    }
 
 }

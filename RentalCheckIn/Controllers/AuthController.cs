@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using RentalCheckIn.BusinessServices;
 using static RentalCheckIn.Responses.CustomResponses;
@@ -28,6 +29,13 @@ namespace RentalCheckIn.Controllers
         public async Task<ActionResult<AuthenticationResult>> Register(HostSignUpDto request)
         {
             var result = await accountService.RegisterAsync(request);
+            return Ok(result);
+        }
+        [AllowAnonymous]
+        [HttpPost("verify-email")]
+        public async Task<ActionResult<EmailVerificationResult>> VerifyEmail([FromBody] string token)
+        {
+            var result = await accountService.VerifyEmailTokenAsync(token);
             return Ok(result);
         }
     }

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using RentalCheckIn.BusinessServices;
 using RentalCheckIn.Components;
+using RentalCheckIn.Configuration.Email;
 using RentalCheckIn.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -72,6 +73,8 @@ builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<JwtService>();
 builder.Services.AddScoped<TotpService>();
 builder.Services.AddScoped<ProtectedLocalStorage>();
+builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
+builder.Services.AddScoped<IEmailService, EmailService>();
 
 var app = builder.Build();
 

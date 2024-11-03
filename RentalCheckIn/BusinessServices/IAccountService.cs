@@ -8,4 +8,5 @@ public interface IAccountService
     Task<AuthenticationResult> LoginAsync(HostLoginDto hostLoginDto);
     bool VerifyPassword(string password, string passwordHash);
     string HashPassword(string password);
+    Task<EmailVerificationResult> VerifyEmailTokenAsync(string token);
 }
