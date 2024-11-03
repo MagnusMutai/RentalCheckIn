@@ -1,16 +1,12 @@
 ﻿@page "/email-confirmation"
 @using Microsoft.AspNetCore.WebUtilities
+@using System.Web
 @using static RentalCheckIn.Responses.CustomResponses
 @inject HttpClient Http
 @inject NavigationManager Navigation
 
 <h3>Email Verification</h3>
-
-@if (isLoading)
-{
-    <p>Verifying your email, please wait...</p>
-}
-else if (isSuccess)
+@if (isSuccess)
 {
     <p class="text-success">@Message</p>
 }
@@ -38,13 +34,11 @@ else if (!string.IsNullOrEmpty(errorMessage))
 
         if (queryParams.TryGetValue("token", out var tokenValues))
         {
-            string token = tokenValues.FirstOrDefault();
-
+            var token = tokenValues.FirstOrDefault();
             if (!string.IsNullOrWhiteSpace(token))
             {
                 try
                 {
-
                     // Call the API endpoint to verify the email token
                     var response = await Http.PostAsJsonAsync("api/Auth/verify-email", token);
 
@@ -70,14 +64,11 @@ else if (!string.IsNullOrEmpty(errorMessage))
                     errorMessage = ex.Message;
                 }
             }
-            else
-            {
-                errorMessage = "The verification token is missing or invalid.";
-            }
         }
         else
         {
-            errorMessage = "No verification token was provided in the URL.";
+            // No verification token was provided in the URL.
+            errorMessage = "Verification is invalid, please contact support";
         }
 
         isLoading = false;

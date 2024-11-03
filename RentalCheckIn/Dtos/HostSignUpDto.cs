@@ -14,7 +14,7 @@ public class HostSignUpDto
     [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$",
     ErrorMessage = "Password must be at least 8 characters long, including an uppercase letter, a lowercase letter, a number, and a special character.")]
     public string Password { get; set; } = string.Empty;
-    [Required, DataType(DataType.Password), Compare("Password", ErrorMessage = "Passwords do not match.")]
+    [DataType(DataType.Password), Compare("Password", ErrorMessage = "Passwords do not match.")]
     public string ConfirmPassword { get; set; } = string.Empty;
 
 }
