@@ -28,24 +28,78 @@ public class AccountService : IAccountService
                 Message = "The account is not registered"
             };
         }
-        
-        if (!VerifyPassword(hostLoginDto.Password, lHost.PasswordHash))
+        // Check if user is blocked
+        else if (lHost.IsBlockedSince.HasValue)
         {
+            // Lift the block after 15 minutes
+            TimeSpan blockDuration = TimeSpan.FromMinutes(15);
+            var remainingTime = blockDuration - (DateTime.UtcNow - lHost.IsBlockedSince.Value);
+
+            if (remainingTime > TimeSpan.Zero)
+            {
+                // User is still blocked
+                string formattedRemainingTime = $"{remainingTime.Minutes} minutes and {remainingTime.Seconds} seconds";
+
+                return new AuthenticationResult
+                {
+                    Success = false,
+                    Message = $"Your account is blocked. Please wait for {formattedRemainingTime} before trying again."
+                };
+            }
+            else
+            {
+                // Unblock the user if the block duration has passed
+                lHost.IsBlockedSince = null;
+                lHost.LoginAttempts = 0;
+            }
+        }
+        else if (!VerifyPassword(hostLoginDto.Password, lHost.PasswordHash) && lHost.EmailConfirmed)
+        {
+            // Increase login attempts for unsuccessful logins
+            await hostRepository.UpdateLHostPartialAsync(lHost, host =>
+            {
+                host.LoginAttempts += 1;
+                // Block user if login attempts exceed limit
+                if (lHost.LoginAttempts > 5)
+                {
+                    host.IsBlockedSince = DateTime.UtcNow;
+                }
+            });
+
             return new AuthenticationResult
             {
                 Success = false,
                 Message = "Invalid email or password, please try again"
             };
-        }
 
-        if (!lHost.EmailConfirmed)
+        }
+        else if (!lHost.EmailConfirmed)
         {
+            // Increase login attempts for unsuccessful logins
+            await hostRepository.UpdateLHostPartialAsync(lHost, host =>
+            {
+                host.LoginAttempts += 1;
+                // Block user if login attempts exceed limit
+                if (lHost.LoginAttempts > 5)
+                {
+                    host.IsBlockedSince = DateTime.UtcNow;
+                }
+            });
+
             return new AuthenticationResult
             {
                 Success = false,
-                Message = "Check your email to confirm your account."
+                Message = "The verification link has been sent to your email, please check your spam folder."
             };
         }
+
+        // Determine what to do with the bool return type
+        await hostRepository.UpdateLHostPartialAsync(lHost, host =>
+        {
+            host.LastLogin = DateTime.Now;
+            // Reset login attempt to zero for a successful login
+            host.LoginAttempts = 0;
+        });
 
         return new AuthenticationResult
         {
@@ -90,9 +144,9 @@ public class AccountService : IAccountService
 
         // Return the TOTP secret to the caller to display to the user
         lHost.TotpSecret = totpSecret;
-        //var encodedToken = HttpUtility.UrlEncode(lHost.EmailVerificationToken);
+        var encodedToken = HttpUtility.UrlEncode(lHost.EmailVerificationToken);
         // Send the new verification email
-        var verificationLink = $"{configuration["ApplicatioSettings:AppUrl"]}/email-confirmation?token={lHost.EmailVerificationToken}";
+        var verificationLink = $"{configuration["ApplicatioSettings:AppUrl"]}/email-confirmation?token={encodedToken}";
         await emailService.SendEmailAsync(lHost.MailAddress, "Confirm your email", $"Please confirm your email by clicking <a href=\"{verificationLink}\">here</a>.");
 
         return new AuthenticationResult
@@ -114,7 +168,8 @@ public class AccountService : IAccountService
             return new EmailVerificationResult
             {
                 IsSuccess = false,
-                Message = "Invalid or expired token."
+                // Invalid request
+                Message = "Invalid request"
             };
         }
 
@@ -129,23 +184,15 @@ public class AccountService : IAccountService
             };
         }
 
-        // Check if the email is already confirmed
-        if (lHost.EmailConfirmed)
-        {
-            return new EmailVerificationResult
-            {
-                IsSuccess = false,
-                IsAlreadyConfirmed = true,
-                Message = "This email has already been confirmed. Please log in."
-            };
-        }
-        // Determine what to do with the return types
+        // Determine what to do with the bool return type
         await hostRepository.UpdateLHostPartialAsync(lHost, host =>
         {
             // Confirm the email and clear the token
             host.EmailConfirmed = true;
             // Invalidate the token after use
-            host.EmailVerificationToken = null;  
+            host.EmailVerificationToken = null;
+            // There's no token stored in the db
+            host.EmailVTokenExpiresAt = default;
         });
 
         return new EmailVerificationResult
