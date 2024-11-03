@@ -11,10 +11,18 @@
 @if (string.IsNullOrEmpty(TotpSecret))
 {
     <EditForm Model="registerModel" OnValidSubmit="HandleRegister">
+        <DataAnnotationsValidator />
+
         <InputText @bind-Value="registerModel.FirstName" placeholder="FirstName" />
+        <ValidationMessage For="@(() => registerModel.FirstName)" />
         <InputText @bind-Value="registerModel.LastName" placeholder="LastName" />
+        <ValidationMessage For="@(() => registerModel.LastName)" />
         <InputText @bind-Value="registerModel.Email" placeholder="Email" />
+        <ValidationMessage For="@(() => registerModel.Email)" />
         <InputText @bind-Value="registerModel.Password" placeholder="Password" type="password" />
+        <ValidationMessage For="@(() => registerModel.Password)" />
+        <InputText @bind-Value="registerModel.ConfirmPassword" placeholder="Confirm Password" type="password" />
+        <ValidationMessage For="@(() => registerModel.ConfirmPassword)" />
         <button type="submit">Register</button>
     </EditForm>
 }

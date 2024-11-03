@@ -1,9 +1,9 @@
-﻿namespace RentalCheckIn.Dtos;
+﻿namespace RentalCheckIn.DTOs;
 
 public class HostLoginDto
 {
-    [Required]
-    public string Email { get; set; }
-    [Required]
-    public string Password { get; set; }
+    [Required, EmailAddress]
+    public string Email { get; set; } = string.Empty;
+    [Required, DataType(DataType.Password)]
+    public string Password { get; set; } = string.Empty;
 }
