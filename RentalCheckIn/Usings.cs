@@ -9,3 +9,7 @@ global using RentalCheckIn.Data;
 global using System.ComponentModel.DataAnnotations;
 global using RentalCheckIn.DTOs;
 global using RentalCheckIn.Repositories;
+global using Microsoft.Extensions.Options;
+global using RentalCheckIn.Configuration.Email;
+global using System.Net;
+global using System.Net.Mail;

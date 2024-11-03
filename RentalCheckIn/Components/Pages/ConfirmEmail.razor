@@ -1,0 +1,86 @@
+﻿@page "/email-confirmation"
+@using Microsoft.AspNetCore.WebUtilities
+@using static RentalCheckIn.Responses.CustomResponses
+@inject HttpClient Http
+@inject NavigationManager Navigation
+
+<h3>Email Verification</h3>
+
+@if (isLoading)
+{
+    <p>Verifying your email, please wait...</p>
+}
+else if (isSuccess)
+{
+    <p class="text-success">@Message</p>
+}
+else if (!string.IsNullOrEmpty(errorMessage))
+{
+    <p class="text-danger">Error verifying your email: @errorMessage</p>
+}
+
+<button class="btn btn-success" onclick="@(() => HandleVerifyEmail())">Verify Email</button>
+
+@code {
+    private bool isLoading = true;
+    private bool isSuccess = false;
+    private string? errorMessage;
+    private string? Message;
+    private bool isFirstRender;
+    private EmailVerificationResult verificationResult;
+
+
+    private async Task HandleVerifyEmail()
+    {
+        // Parse the current URI to extract query parameters
+        var uri = Navigation.ToAbsoluteUri(Navigation.Uri);
+        var queryParams = QueryHelpers.ParseQuery(uri.Query);
+
+        if (queryParams.TryGetValue("token", out var tokenValues))
+        {
+            string token = tokenValues.FirstOrDefault();
+
+            if (!string.IsNullOrWhiteSpace(token))
+            {
+                try
+                {
+
+                    // Call the API endpoint to verify the email token
+                    var response = await Http.PostAsJsonAsync("api/Auth/verify-email", token);
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        verificationResult = await response.Content.ReadFromJsonAsync<EmailVerificationResult>();
+                    }
+
+                    if (!verificationResult.IsSuccess)
+                    {
+                        errorMessage = verificationResult.Message;
+                    }
+                    else if (verificationResult.IsSuccess)
+                    {
+                        isSuccess = true;
+                        Message = verificationResult.Message;
+                    }
+
+                }
+                catch (Exception ex)
+                {
+                    // Handle any unexpected errors
+                    errorMessage = ex.Message;
+                }
+            }
+            else
+            {
+                errorMessage = "The verification token is missing or invalid.";
+            }
+        }
+        else
+        {
+            errorMessage = "No verification token was provided in the URL.";
+        }
+
+        isLoading = false;
+    }
+
+}

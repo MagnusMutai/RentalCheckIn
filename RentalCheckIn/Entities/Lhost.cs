@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace RentalCheckIn.Entities;
+﻿namespace RentalCheckIn.Entities;
 
 public partial class Lhost
 {
@@ -19,10 +16,14 @@ public partial class Lhost
 
     public string MailAddress { get; set; } = null!;
 
-    //public string? VerificationToken { get; set; }
- 
+    public string? EmailVerificationToken { get; set; }
+
+    public DateTime EmailVTokenExpiresAt { get; set; }
+    
+    public bool EmailConfirmed { get; set; }
+
     //public DateTime? VerifiedAt { get; set; }
- 
+
     //public string? PasswordResetToken { get; set; }
 
     //public DateTime? ResetTokenExpires { get; set; }

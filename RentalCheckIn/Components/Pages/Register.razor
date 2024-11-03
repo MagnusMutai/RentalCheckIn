@@ -7,6 +7,10 @@
 {
     <div class="alert alert-danger">@ErrorMessage</div>
 }
+@if (!string.IsNullOrEmpty(SuccessMessage))
+{
+    <div class="alert alert-success">@SuccessMessage</div>
+}
 
 @if (string.IsNullOrEmpty(TotpSecret))
 {
@@ -36,6 +40,7 @@ else
 @code {
     private HostSignUpDto registerModel = new();
     private string ErrorMessage;
+    private string SuccessMessage;
     private string TotpSecret;
     [Inject]
     private IAuthService AuthService { get; set; }
@@ -47,6 +52,7 @@ else
         if (result.Success)
         {
             TotpSecret = result.Host.TotpSecret;
+            SuccessMessage = "You are successfully registered, check your email to confirm your account";
         }
 
         ErrorMessage = result.Message;
