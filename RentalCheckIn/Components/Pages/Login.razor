@@ -10,8 +10,12 @@
 }
 
 <EditForm Model="loginModel" OnValidSubmit="HandleLogin">
+    <DataAnnotationsValidator />
+
     <InputText @bind-Value="loginModel.Email" placeholder="Email" />
+    <ValidationMessage For="@(() => loginModel.Email)" />
     <InputText @bind-Value="loginModel.Password" placeholder="Password" type="password" />
+    <ValidationMessage For="@(() => loginModel.Password)" />
     <button type="submit">Login</button>
 </EditForm>
 

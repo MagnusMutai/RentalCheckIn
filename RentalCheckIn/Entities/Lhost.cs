@@ -8,15 +8,24 @@ public partial class Lhost
     public uint HostId { get; set; }
 
     public string FirstName { get; set; }
+
     public string LastName { get; set; }
+
     public string Username { get; set; } = null!;
 
     public string PasswordHash { get; set; } = null!;
 
     public string TotpSecret { get; set; }
 
-
     public string MailAddress { get; set; } = null!;
+
+    //public string? VerificationToken { get; set; }
+ 
+    //public DateTime? VerifiedAt { get; set; }
+ 
+    //public string? PasswordResetToken { get; set; }
+
+    //public DateTime? ResetTokenExpires { get; set; }
 
     public DateTime? LastLogin { get; set; }
 
