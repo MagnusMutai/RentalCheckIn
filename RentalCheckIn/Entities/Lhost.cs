@@ -41,4 +41,7 @@ public partial class LHost
     public DateTime CreationDate { get; set; }
 
     public virtual ICollection<Reservation> Reservations { get; set; } = new List<Reservation>();
+
+    // Navigation property for related refresh tokens
+    public ICollection<RefreshToken> RefreshTokens { get; set; }
 }

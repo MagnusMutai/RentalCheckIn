@@ -280,6 +280,19 @@ public partial class AppDbContext : DbContext
             entity.Property(e => e.StatusLabel).HasMaxLength(20);
         });
 
+        // Define the relationship between Host and RefreshToken
+        modelBuilder.Entity<RefreshToken>(entity =>
+        {
+            entity.HasKey(rt => rt.Id);
+
+            entity.HasOne(rt => rt.LHost)
+            .WithMany(u => u.RefreshTokens)
+            .HasForeignKey(rt => rt.HostId)
+            // Delete tokens if Host is deleted
+            .OnDelete(DeleteBehavior.Cascade); 
+        });
+
+
         OnModelCreatingPartial(modelBuilder);
     }
 

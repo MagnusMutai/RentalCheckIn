@@ -1,4 +1,4 @@
-﻿namespace RentalCheckIn.Services;
+﻿namespace RentalCheckIn.Services.Core;
 
 public class JwtService
 {
@@ -20,7 +20,7 @@ public class JwtService
             new Claim(ClaimTypes.Name, lHost.FirstName),
             new Claim(ClaimTypes.Role, "Host")
         };
-        
+
         var tokenDescriptor = new SecurityTokenDescriptor
         {
             Issuer = configuration["Jwt:Issuer"],
