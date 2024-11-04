@@ -6,8 +6,6 @@ namespace RentalCheckIn.Services;
 public class CustomAuthStateProvider : AuthenticationStateProvider
 {
     private readonly HttpClient http;
-    private bool isInitialized = false;
-    private string token = string.Empty;
 
     public CustomAuthStateProvider(HttpClient http)
     {

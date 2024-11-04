@@ -10,38 +10,38 @@ public class HostRepository : IHostRepository
         this.context = context;
     }
 
-    public async Task AddLHostAsync(Lhost lHost)
+    public async Task AddLHostAsync(LHost lHost)
     {
-        context.Lhosts.Add(lHost);
+        context.LHosts.Add(lHost);
         await context.SaveChangesAsync();
     }
 
-    public async Task<Lhost> GetByEmailAsync(string mailAddress)
+    public async Task<LHost> GetByEmailAsync(string mailAddress)
     {
-        return await context.Lhosts.FirstOrDefaultAsync(h => h.MailAddress == mailAddress);
+        return await context.LHosts.FirstOrDefaultAsync(h => h.MailAddress == mailAddress);
     }
 
-    public async Task<Lhost> GetByIdAsync(int id)
+    public async Task<LHost> GetByIdAsync(int id)
     {
-        return await context.Lhosts.FindAsync(id);
+        return await context.LHosts.FindAsync(id);
     }
 
-    public async Task UpdateLHostAsync(Lhost lHost)
+    public async Task UpdateLHostAsync(LHost lHost)
     {
-        context.Lhosts.Update(lHost);
+        context.LHosts.Update(lHost);
         await context.SaveChangesAsync();
     }
 
-    public async Task<Lhost> GetUserByEmailVerificationTokenAsync(string token)
+    public async Task<LHost> GetUserByEmailVerificationTokenAsync(string token)
     {
-        return await context.Lhosts
+        return await context.LHosts
             .FirstOrDefaultAsync(u => u.EmailVerificationToken == token && u.EmailVTokenExpiresAt > DateTime.UtcNow);
     }
 
-    public async Task<bool> UpdateLHostPartialAsync(Lhost lHost, Action<Lhost> patchData)
+    public async Task<bool> UpdateLHostPartialAsync(LHost lHost, Action<LHost> patchData)
     {
         // Attach user if not already tracked
-        context.Lhosts.Attach(lHost);
+        context.LHosts.Attach(lHost);
 
         patchData(lHost);
 

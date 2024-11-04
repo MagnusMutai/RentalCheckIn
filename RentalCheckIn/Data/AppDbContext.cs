@@ -27,7 +27,7 @@ public partial class AppDbContext : DbContext
 
     public virtual DbSet<Language> Languages { get; set; }
 
-    public virtual DbSet<Lhost> Lhosts { get; set; }
+    public virtual DbSet<LHost> LHosts { get; set; }
 
     public virtual DbSet<Quest> Quests { get; set; }
 
@@ -143,7 +143,7 @@ public partial class AppDbContext : DbContext
                 .HasCharSet("utf8mb3");
         });
 
-        modelBuilder.Entity<Lhost>(entity =>
+        modelBuilder.Entity<LHost>(entity =>
         {
             entity.HasKey(e => e.HostId).HasName("PRIMARY");
 

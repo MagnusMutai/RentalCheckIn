@@ -1,10 +1,10 @@
 ﻿namespace RentalCheckIn.Repositories;
 public interface IHostRepository
 {
-    Task<Lhost> GetByEmailAsync(string mailAddress);
-    Task<Lhost> GetByIdAsync(int id);
-    Task AddLHostAsync(Lhost lHost);
-    Task UpdateLHostAsync(Lhost lHost);
-    Task<bool> UpdateLHostPartialAsync(Lhost lHost, Action<Lhost> patchData);
-    Task<Lhost> GetUserByEmailVerificationTokenAsync(string token);
+    Task<LHost> GetByEmailAsync(string mailAddress);
+    Task<LHost> GetByIdAsync(int id);
+    Task AddLHostAsync(LHost lHost);
+    Task UpdateLHostAsync(LHost lHost);
+    Task<bool> UpdateLHostPartialAsync(LHost lHost, Action<LHost> patchData);
+    Task<LHost> GetUserByEmailVerificationTokenAsync(string token);
 }

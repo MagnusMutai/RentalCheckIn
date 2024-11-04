@@ -8,7 +8,7 @@ public class JwtService
         this.configuration = configuration;
     }
 
-    public string GenerateToken(Lhost lHost)
+    public string GenerateToken(LHost lHost)
     {
         var secretKey = configuration["Jwt:SecretKey"];
         var key = Encoding.ASCII.GetBytes(secretKey);

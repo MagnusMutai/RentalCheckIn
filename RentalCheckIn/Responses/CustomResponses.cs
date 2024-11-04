@@ -6,7 +6,7 @@ public class CustomResponses
         public bool Success { get; set; }
         public string Message { get; set; }
         // Optional, for successful login
-        public Lhost Host { get; set; } 
+        public LHost Host { get; set; } 
     }
 
     public class EmailVerificationResult
