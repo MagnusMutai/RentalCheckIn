@@ -1,6 +1,6 @@
 ﻿namespace RentalCheckIn.Entities;
 
-public partial class Lhost
+public partial class LHost
 {
     public uint HostId { get; set; }
 

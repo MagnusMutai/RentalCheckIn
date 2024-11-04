@@ -128,7 +128,7 @@ public class AccountService : IAccountService
         var totpService = new TotpService();
         var totpSecret = totpService.GenerateSecret();
 
-        var lHost = new Lhost
+        var lHost = new LHost
         {
             FirstName = hostSignUpDto.FirstName,
             LastName = hostSignUpDto.LastName,
@@ -146,7 +146,7 @@ public class AccountService : IAccountService
         lHost.TotpSecret = totpSecret;
         var encodedToken = HttpUtility.UrlEncode(lHost.EmailVerificationToken);
         // Send the new verification email
-        var verificationLink = $"{configuration["ApplicatioSettings:AppUrl"]}/email-confirmation?token={encodedToken}";
+        var verificationLink = $"{configuration["ApplicatioSettings:AppUrl"]}/email-confirmation?emailToken={encodedToken}";
         await emailService.SendEmailAsync(lHost.MailAddress, "Confirm your email", $"Please confirm your email by clicking <a href=\"{verificationLink}\">here</a>.");
 
         return new AuthenticationResult

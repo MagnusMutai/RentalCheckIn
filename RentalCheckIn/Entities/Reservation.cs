@@ -57,7 +57,7 @@ public partial class Reservation
 
     public virtual Currency Currency { get; set; } = null!;
 
-    public virtual Lhost? Host { get; set; }
+    public virtual LHost? Host { get; set; }
 
     public virtual Quest Quest { get; set; } = null!;
 

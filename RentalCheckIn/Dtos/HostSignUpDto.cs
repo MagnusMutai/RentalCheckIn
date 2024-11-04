@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace RentalCheckIn.DTOs;
+﻿namespace RentalCheckIn.DTOs;
 public class HostSignUpDto
 {
     [Required]

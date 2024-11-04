@@ -32,15 +32,15 @@ else if (!string.IsNullOrEmpty(errorMessage))
         var uri = Navigation.ToAbsoluteUri(Navigation.Uri);
         var queryParams = QueryHelpers.ParseQuery(uri.Query);
 
-        if (queryParams.TryGetValue("token", out var tokenValues))
+        if (queryParams.TryGetValue("emailToken", out var tokenValues))
         {
-            var token = tokenValues.FirstOrDefault();
-            if (!string.IsNullOrWhiteSpace(token))
+            var emailToken = tokenValues.FirstOrDefault();
+            if (!string.IsNullOrWhiteSpace(emailToken))
             {
                 try
                 {
                     // Call the API endpoint to verify the email token
-                    var response = await Http.PostAsJsonAsync("api/Auth/verify-email", token);
+                    var response = await Http.PostAsJsonAsync("api/Auth/verify-email", emailToken);
 
                     if (response.IsSuccessStatusCode)
                     {
