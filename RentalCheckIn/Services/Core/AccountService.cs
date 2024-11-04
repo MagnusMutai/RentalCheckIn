@@ -2,9 +2,9 @@
 using RentalCheckIn.Services;
 using System.Security.Cryptography;
 using System.Web;
-using static RentalCheckIn.Responses.CustomResponses;
+using static RentalCheckIn.DTOs.CustomResponses;
 
-namespace RentalCheckIn.BusinessServices;
+namespace RentalCheckIn.Services.Core;
 public class AccountService : IAccountService
 {
     private readonly IHostRepository hostRepository;
@@ -211,13 +211,13 @@ public class AccountService : IAccountService
     public string GenerateEmailVerificationToken()
     {
         // 256 bits of randomness
-        byte[] randomBytes = new byte[32]; 
+        byte[] randomBytes = new byte[32];
         using (var rng = RandomNumberGenerator.Create())
         {
             rng.GetBytes(randomBytes);
         }
         // Unique token
-        return Convert.ToBase64String(randomBytes); 
+        return Convert.ToBase64String(randomBytes);
     }
 
 }

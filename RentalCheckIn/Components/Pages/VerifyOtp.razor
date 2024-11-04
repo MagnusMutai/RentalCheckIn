@@ -43,6 +43,7 @@
     {
         try
         {
+            // This should be an api endpoint
             var user = await HostRepository.GetByEmailAsync(otpModel.Email);
             if (user == null)
                 throw new Exception("User not found");

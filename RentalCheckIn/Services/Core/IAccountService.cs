@@ -1,6 +1,6 @@
-﻿using static RentalCheckIn.Responses.CustomResponses;
+﻿using static RentalCheckIn.DTOs.CustomResponses;
 
-namespace RentalCheckIn.BusinessServices;
+namespace RentalCheckIn.Services.Core;
 
 public interface IAccountService
 {

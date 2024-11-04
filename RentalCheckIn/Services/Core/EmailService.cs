@@ -1,6 +1,4 @@
-﻿
-
-namespace RentalCheckIn.BusinessServices;
+﻿namespace RentalCheckIn.Services.Core;
 
 public class EmailService : IEmailService
 {

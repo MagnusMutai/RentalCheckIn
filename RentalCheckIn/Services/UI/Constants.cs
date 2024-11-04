@@ -1,4 +1,4 @@
-﻿namespace RentalCheckIn.Services
+﻿namespace RentalCheckIn.Services.UI
 {
     public static class Constants
     {
