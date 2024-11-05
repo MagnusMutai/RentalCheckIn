@@ -1,8 +1,4 @@
-﻿using System.Security.Cryptography;
-using System.Web;
-using static RentalCheckIn.DTOs.CustomResponses;
-
-namespace RentalCheckIn.Services.Core;
+﻿namespace RentalCheckIn.Services.Core;
 public class AccountService : IAccountService
 {
     private readonly IHostRepository hostRepository;

@@ -1,6 +1,4 @@
-﻿using static RentalCheckIn.DTOs.CustomResponses;
-
-namespace RentalCheckIn.Services.UI;
+﻿namespace RentalCheckIn.Services.UI;
 
 public class AuthService : IAuthService
 {

@@ -18,3 +18,8 @@ global using RentalCheckIn.Services.UI;
 global using RentalCheckIn.Utilities;
 global using System.Security.Cryptography;
 global using static RentalCheckIn.DTOs.CustomResponses;
+global using System.Web;
+global using OtpNet;
+global using Microsoft.AspNetCore.Components.Authorization;
+global using RentalCheckIn.Components;
+global using RentalCheckIn.Services.Core;

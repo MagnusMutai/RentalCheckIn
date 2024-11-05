@@ -1,11 +1,3 @@
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
-using RentalCheckIn.Components;
-using RentalCheckIn.Configuration.Email;
-using RentalCheckIn.Services.Core;
-using RentalCheckIn.Services.UI;
-
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
