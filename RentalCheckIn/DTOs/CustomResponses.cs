@@ -1,6 +1,8 @@
 ﻿namespace RentalCheckIn.DTOs;
 public class CustomResponses
 {
+
+    // Use a generic response for some of the identical return types
     public class AuthenticationResponse
     {
         public bool Success { get; set; }
@@ -39,6 +41,12 @@ public class CustomResponses
     {
         public string NewAccessToken { get; set; }
         public string NewRefreshToken { get; set; }
+    }
+
+    public class ResetPasswordResponse
+    {
+        public bool Success { get; set; }
+        public string Message { get; set; }
     }
 
 }

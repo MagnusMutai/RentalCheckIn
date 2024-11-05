@@ -11,4 +11,6 @@ public interface IAccountService
     Task<EmailVerificationResponse> VerifyEmailTokenAsync(string token);
     Task<RefreshTokenResponse> GetRefreshTokenAsync(string refreshToken);
     Task<LHost> GetLHostByIdAsync(uint id);
+    Task <LHost>GetLHostByEmailAsync(string email);
+    Task<ResetPasswordResponse> ForgotPassword(LHost lHost);
 }

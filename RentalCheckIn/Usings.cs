@@ -26,3 +26,5 @@ global using RentalCheckIn.Services.Core;
 global using Microsoft.AspNetCore.Authorization;
 global using Microsoft.AspNetCore.Mvc;
 global using static RentalCheckIn.DTOs.CustomRequests;
+global using System.Text.Json;
+global using static RentalCheckIn.Components.Pages.PasswordReset;

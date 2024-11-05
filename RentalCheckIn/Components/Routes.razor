@@ -25,7 +25,6 @@
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
 
-
         await AuthService.RefreshTokenAsync();
 
         await AuthStateProvider.GetAuthenticationStateAsync();
