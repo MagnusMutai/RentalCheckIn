@@ -1,6 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-
-namespace RentalCheckIn.Repositories;
+﻿namespace RentalCheckIn.Repositories;
 
 public class RefreshTokenRepository : IRefreshTokenRepository
 {

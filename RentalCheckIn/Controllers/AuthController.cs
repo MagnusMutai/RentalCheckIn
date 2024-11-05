@@ -23,7 +23,7 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("login")]
-    public async Task<ActionResult<AuthenticationResult>> Login(HostLoginDto request)
+    public async Task<ActionResult<AuthenticationResponse>> Login(HostLoginDto request)
     {
 
         var result = await accountService.LoginAsync(request);
@@ -31,7 +31,7 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("register")]
-    public async Task<ActionResult<AuthenticationResult>> Register(HostSignUpDto request)
+    public async Task<ActionResult<AuthenticationResponse>> Register(HostSignUpDto request)
     {
         var result = await accountService.RegisterAsync(request);
         return Ok(result);
@@ -39,7 +39,7 @@ public class AuthController : ControllerBase
 
     [AllowAnonymous]
     [HttpPost("verify-email")]
-    public async Task<ActionResult<EmailVerificationResult>> VerifyEmail([FromBody] string token)
+    public async Task<ActionResult<EmailVerificationResponse>> VerifyEmail([FromBody] string token)
     {
         var result = await accountService.VerifyEmailTokenAsync(token);
         return Ok(result);

@@ -1,6 +1,4 @@
-﻿using OtpNet;
-
-namespace RentalCheckIn.Services.Core;
+﻿namespace RentalCheckIn.Services.Core;
 
 public class TotpService
 {
