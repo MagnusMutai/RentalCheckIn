@@ -1,7 +1,6 @@
-﻿namespace RentalCheckIn.Services.Core
+﻿namespace RentalCheckIn.Services.Core;
+
+public interface IEmailService
 {
-    public interface IEmailService
-    {
-        Task SendEmailAsync(string toEmail, string subject, string body);
-    }
+    Task SendEmailAsync(string toEmail, string subject, string body);
 }

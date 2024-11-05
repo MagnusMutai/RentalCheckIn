@@ -24,16 +24,16 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     new MySqlServerVersion(new Version(8, 0, 40))));
 
 //Register HttpClient with BaseAddress
-builder.Services.AddScoped<HttpClient>(sp =>
-{
-    var navigationManager = sp.GetRequiredService<NavigationManager>();
-return new HttpClient
-{
-    BaseAddress = new Uri(navigationManager.BaseUri)
-};
-});
+//builder.Services.AddScoped<HttpClient>(sp =>
+//{
+//    var navigationManager = sp.GetRequiredService<NavigationManager>();
+//    return new HttpClient
+//    {
+//        BaseAddress = new Uri(navigationManager.BaseUri)
+//    };
+//});
 
-//builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri ("https://localhost:7110")});
+builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://localhost:7110") });
 
 // Configure JWT Authentication
 var secretKey = builder.Configuration["Jwt:SecretKey"];
@@ -70,12 +70,15 @@ builder.Services.AddAuthentication(options =>
 //builder.Services.AddScoped<IHostRepository, HostRepository>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IHostRepository, HostRepository>();
+builder.Services.AddScoped<ILHostService, LHostService>();
+builder.Services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<JwtService>();
 builder.Services.AddScoped<TotpService>();
 builder.Services.AddScoped<ProtectedLocalStorage>();
 builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
 builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddScoped<RefreshTokenService>();
 
 var app = builder.Build();
 

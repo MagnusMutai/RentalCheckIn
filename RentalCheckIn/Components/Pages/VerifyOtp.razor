@@ -21,9 +21,11 @@
     [Inject]
     private ProtectedLocalStorage LocalStorage { get; set; }
     [Inject]
-    private IHostRepository HostRepository { get; set; }
+    private ILHostService LHostService { get; set; }
     [Inject]
     private AuthenticationStateProvider AuthStateProvider { get; set; }
+    [Inject]
+    private RefreshTokenService RefreshTokenService { get; set; }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -44,17 +46,19 @@
         try
         {
             // This should be an api endpoint
-            var user = await HostRepository.GetByEmailAsync(otpModel.Email);
-            if (user == null)
+            var lHost = await LHostService.GetLHostByEmail(otpModel.Email);
+            if (lHost == null)
                 throw new Exception("User not found");
 
-            if (!TotpService.VerifyCode(user.TotpSecret, otpModel.Code))
+            if (!TotpService.VerifyCode(lHost.TotpSecret, otpModel.Code))
                 throw new Exception("Invalid OTP code");
 
-            var token = JwtService.GenerateToken(user);
-            Constants.JWTToken = token;
-            // Store the token (e.g., in local storage)
-            await LocalStorage.SetAsync("token", token);
+            var refreshToken = await RefreshTokenService.GenerateRefreshToken(lHost.HostId);
+            await LocalStorage.SetAsync("refreshToken", refreshToken.Token);
+            var accessToken = JwtService.GenerateToken(lHost);
+            Constants.JWTToken = accessToken;
+            // Store the token in local storage
+            await LocalStorage.SetAsync("token", accessToken);
 
             await AuthStateProvider.GetAuthenticationStateAsync();
 

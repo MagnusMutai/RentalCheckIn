@@ -19,4 +19,19 @@ public class CustomResponses
         // A message for the user
         public string Message { get; set; }
     }
+
+    public class RefreshTokenResult
+    {
+        public bool Success { get; set; }
+        public RefreshToken RefreshToken { get; set; }
+        public string ErrorMessage { get; set; }
+    }
+
+    public class LHostResult
+    {
+        public bool Success { get; set; }
+        public LHost LHost { get; set; }
+        public string ErrorMessage { get; set; }
+    }
+
 }

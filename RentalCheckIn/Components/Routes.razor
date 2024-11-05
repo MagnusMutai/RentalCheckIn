@@ -19,14 +19,20 @@
     private ProtectedLocalStorage localStorage { get; set; }
     [Inject]
     private AuthenticationStateProvider AuthStateProvider { get; set; }
+    [Inject]
+    private RefreshTokenService RefreshTokenService { get; set; }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        var response = await localStorage.GetAsync<string>("token");
-        if (response.Success)
-        {
-            Constants.JWTToken = response.Value;
-        }
+        await RefreshTokenService.ValidateAndRefreshTokensAsync();
+        
+        // var response = await localStorage.GetAsync<string>("token");
+        // if (response.Success)
+        // {
+        //     Constants.JWTToken = response.Value;
+        // }
+
         await AuthStateProvider.GetAuthenticationStateAsync();
+
     }
 }

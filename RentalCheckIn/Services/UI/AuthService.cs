@@ -12,15 +12,55 @@ public class AuthService : IAuthService
     }
     public async Task<AuthenticationResult> LoginAsync(HostLoginDto hostLoginDto)
     {
-        var response = await httpClient.PostAsJsonAsync("api/auth/login", hostLoginDto);
-        var result = await response.Content.ReadFromJsonAsync<AuthenticationResult>();
-        return result;
+        try
+        {
+
+            var response = await httpClient.PostAsJsonAsync("api/auth/login", hostLoginDto);
+            if (response.IsSuccessStatusCode)
+            {
+                if (response.StatusCode == HttpStatusCode.NoContent)
+                {
+                    return default(AuthenticationResult);
+                }
+                return await response.Content.ReadFromJsonAsync<AuthenticationResult>();
+            }
+            else
+            {
+                var message = await response.Content.ReadAsStringAsync();
+                throw new Exception(message);
+            }
+        }
+        catch (Exception)
+        {
+            // Log exception
+            throw;
+        }
     }
 
     public async Task<AuthenticationResult> RegisterAsync(HostSignUpDto hostSignUpDto)
     {
-        var response = await httpClient.PostAsJsonAsync("api/auth/register", hostSignUpDto);
-        var result = await response.Content.ReadFromJsonAsync<AuthenticationResult>();
-        return result;
+        try
+        {
+            var response = await httpClient.PostAsJsonAsync("api/auth/register", hostSignUpDto);
+            if (response.IsSuccessStatusCode)
+            {
+                if (response.StatusCode == HttpStatusCode.NoContent)
+                {
+                    return default(AuthenticationResult);
+                }
+                return await response.Content.ReadFromJsonAsync<AuthenticationResult>();
+            }
+            else
+            {
+                var message = await response.Content.ReadAsStringAsync();
+                throw new Exception(message);
+            }
+        }
+        catch (Exception)
+        {
+            // Log exception
+            throw;
+        }
     }
+
 }
