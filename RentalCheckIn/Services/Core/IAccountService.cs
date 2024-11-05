@@ -9,4 +9,6 @@ public interface IAccountService
     bool VerifyPassword(string password, string passwordHash);
     string HashPassword(string password);
     Task<EmailVerificationResult> VerifyEmailTokenAsync(string token);
+    Task<RefreshTokenResult> GetRefreshTokenAsync(string refreshToken);
+    Task<LHost> GetLHostByIdAsync(uint id);
 }

@@ -15,6 +15,9 @@ public class CustomAuthStateProvider : AuthenticationStateProvider
 
     public override async Task<AuthenticationState> GetAuthenticationStateAsync()
     {
+        if (string.IsNullOrEmpty(Constants.JWTToken))
+        {
+        }
         var identity = new ClaimsIdentity();
         http.DefaultRequestHeaders.Authorization = null;
 

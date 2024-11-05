@@ -16,12 +16,12 @@ public class HostRepository : IHostRepository
         await context.SaveChangesAsync();
     }
 
-    public async Task<LHost> GetByEmailAsync(string mailAddress)
+    public async Task<LHost> GetLHostByEmailAsync(string mailAddress)
     {
         return await context.LHosts.FirstOrDefaultAsync(h => h.MailAddress == mailAddress);
     }
 
-    public async Task<LHost> GetByIdAsync(int id)
+    public async Task<LHost> GetLHostByIdAsync(uint id)
     {
         return await context.LHosts.FindAsync(id);
     }
@@ -32,7 +32,7 @@ public class HostRepository : IHostRepository
         await context.SaveChangesAsync();
     }
 
-    public async Task<LHost> GetUserByEmailVerificationTokenAsync(string token)
+    public async Task<LHost> GetLHostByEmailVerificationTokenAsync(string token)
     {
         return await context.LHosts
             .FirstOrDefaultAsync(u => u.EmailVerificationToken == token && u.EmailVTokenExpiresAt > DateTime.UtcNow);
@@ -56,5 +56,4 @@ public class HostRepository : IHostRepository
         // Save changes
         return await context.SaveChangesAsync() > 0; 
     }
-
 }

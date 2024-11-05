@@ -26,7 +26,8 @@ public class JwtService
             Issuer = configuration["Jwt:Issuer"],
             Audience = configuration["Jwt:Audience"],
             Subject = new ClaimsIdentity(claims),
-            Expires = DateTime.UtcNow.AddDays(7), // Token valid for 7 days
+            // Token valid for 1 day
+            Expires = DateTime.UtcNow.AddHours(1), 
             SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
         };
 

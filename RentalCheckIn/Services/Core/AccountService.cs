@@ -1,6 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using RentalCheckIn.Services;
-using System.Security.Cryptography;
+﻿using System.Security.Cryptography;
 using System.Web;
 using static RentalCheckIn.DTOs.CustomResponses;
 
@@ -10,16 +8,18 @@ public class AccountService : IAccountService
     private readonly IHostRepository hostRepository;
     private readonly IConfiguration configuration;
     private readonly IEmailService emailService;
+    private readonly IRefreshTokenRepository refreshTokenRepository;
 
-    public AccountService(IHostRepository hostRepository, IConfiguration configuration, IEmailService emailService)
+    public AccountService(IHostRepository hostRepository, IConfiguration configuration, IEmailService emailService, IRefreshTokenRepository refreshTokenRepository)
     {
         this.hostRepository = hostRepository;
         this.configuration = configuration;
         this.emailService = emailService;
+        this.refreshTokenRepository = refreshTokenRepository;
     }
     public async Task<AuthenticationResult> LoginAsync(HostLoginDto hostLoginDto)
     {
-        var lHost = await hostRepository.GetByEmailAsync(hostLoginDto.Email);
+        var lHost = await hostRepository.GetLHostByEmailAsync(hostLoginDto.Email);
         if (lHost == null)
         {
             return new AuthenticationResult
@@ -115,7 +115,7 @@ public class AccountService : IAccountService
 
     public async Task<AuthenticationResult> RegisterAsync(HostSignUpDto hostSignUpDto)
     {
-        var existingHost = await hostRepository.GetByEmailAsync(hostSignUpDto.Email);
+        var existingHost = await hostRepository.GetLHostByEmailAsync(hostSignUpDto.Email);
         if (existingHost != null)
         {
             return new AuthenticationResult
@@ -159,7 +159,7 @@ public class AccountService : IAccountService
     public async Task<EmailVerificationResult> VerifyEmailTokenAsync(string token)
     {
         // Retrieve user by token from the repository
-        var lHost = await hostRepository.GetUserByEmailVerificationTokenAsync(token);
+        var lHost = await hostRepository.GetLHostByEmailVerificationTokenAsync(token);
 
         // Check if user or token is invalid
         // Counter-check the purpose of the logic
@@ -202,6 +202,26 @@ public class AccountService : IAccountService
         };
     }
 
+    public async Task<RefreshTokenResult> GetRefreshTokenAsync(string refreshToken)
+    {
+        // Implement response Dto to handle edge cases
+       var tokenEntity = await refreshTokenRepository.GetRefreshTokenAsync(refreshToken);
+        // Check if the token was found
+        if (tokenEntity == null)
+        {
+            return new RefreshTokenResult
+            {
+                Success = false,
+                ErrorMessage = "Refresh token not found."
+            };
+        }
+
+        return new RefreshTokenResult
+        {
+            Success = true,
+            RefreshToken = tokenEntity
+        };
+    }
 
     public bool VerifyPassword(string password, string passwordHash)
     {
@@ -220,4 +240,8 @@ public class AccountService : IAccountService
         return Convert.ToBase64String(randomBytes);
     }
 
+    public Task<LHost> GetLHostByIdAsync(uint id)
+    {
+        return hostRepository.GetLHostByIdAsync(id);
+    }
 }
