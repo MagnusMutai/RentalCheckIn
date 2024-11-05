@@ -23,3 +23,6 @@ global using OtpNet;
 global using Microsoft.AspNetCore.Components.Authorization;
 global using RentalCheckIn.Components;
 global using RentalCheckIn.Services.Core;
+global using Microsoft.AspNetCore.Authorization;
+global using Microsoft.AspNetCore.Mvc;
+global using static RentalCheckIn.DTOs.CustomRequests;
