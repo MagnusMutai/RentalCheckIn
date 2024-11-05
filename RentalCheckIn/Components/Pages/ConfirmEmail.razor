@@ -23,7 +23,7 @@ else if (!string.IsNullOrEmpty(errorMessage))
     private string? errorMessage;
     private string? Message;
     private bool isFirstRender;
-    private EmailVerificationResult verificationResult;
+    private EmailVerificationResponse verificationResult;
 
 
     private async Task HandleVerifyEmail()
@@ -44,7 +44,7 @@ else if (!string.IsNullOrEmpty(errorMessage))
 
                     if (response.IsSuccessStatusCode)
                     {
-                        verificationResult = await response.Content.ReadFromJsonAsync<EmailVerificationResult>();
+                        verificationResult = await response.Content.ReadFromJsonAsync<EmailVerificationResponse>();
                     }
 
                     if (!verificationResult.IsSuccess)

@@ -1,9 +1,4 @@
-﻿using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
-using RentalCheckIn.Services.UI;
-using RentalCheckIn.Utilities;
-using System.Security.Cryptography;
-
-namespace RentalCheckIn.Services.Core;
+﻿namespace RentalCheckIn.Services.Core;
 
 public class RefreshTokenService
 {
@@ -33,7 +28,7 @@ public class RefreshTokenService
         {
             Token = GenerateSecureToken(),
             // Set refresh token lifespan
-            Expires = DateTime.UtcNow.AddDays(7),
+            Expires = DateTime.UtcNow.AddSeconds(10),
             Created = DateTime.UtcNow,
             IsRevoked = false,
             HostId = lHostId
@@ -65,9 +60,16 @@ public class RefreshTokenService
         var accessToken = await RetrieveToken("token");
         var refreshToken = await RetrieveToken("refreshToken");
 
-        if (!string.IsNullOrEmpty(accessToken) && !Extensions.IsTokenExpired(accessToken)) 
+        if (!string.IsNullOrEmpty(accessToken))
         {
-            Constants.JWTToken = accessToken;
+            if (!Extensions.IsTokenExpired(accessToken)) 
+            { 
+                Constants.JWTToken = accessToken; 
+            }
+            else
+            {
+                Constants.JWTToken = "";
+            }
         }
 
         if (string.IsNullOrEmpty(refreshToken) || string.IsNullOrEmpty(accessToken))
@@ -118,9 +120,4 @@ public class RefreshTokenService
     }
 }
 
-public class TokenResponse
-{
-    public string NewAccessToken { get; set; }
-    public string NewRefreshToken { get; set; }
-}
 

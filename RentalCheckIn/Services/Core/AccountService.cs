@@ -17,12 +17,12 @@ public class AccountService : IAccountService
         this.emailService = emailService;
         this.refreshTokenRepository = refreshTokenRepository;
     }
-    public async Task<AuthenticationResult> LoginAsync(HostLoginDto hostLoginDto)
+    public async Task<AuthenticationResponse> LoginAsync(HostLoginDto hostLoginDto)
     {
         var lHost = await hostRepository.GetLHostByEmailAsync(hostLoginDto.Email);
         if (lHost == null)
         {
-            return new AuthenticationResult
+            return new AuthenticationResponse
             {
                 Success = false,
                 Message = "The account is not registered"
@@ -40,7 +40,7 @@ public class AccountService : IAccountService
                 // User is still blocked
                 string formattedRemainingTime = $"{remainingTime.Minutes} minutes and {remainingTime.Seconds} seconds";
 
-                return new AuthenticationResult
+                return new AuthenticationResponse
                 {
                     Success = false,
                     Message = $"Your account is blocked. Please wait for {formattedRemainingTime} before trying again."
@@ -66,7 +66,7 @@ public class AccountService : IAccountService
                 }
             });
 
-            return new AuthenticationResult
+            return new AuthenticationResponse
             {
                 Success = false,
                 Message = "Invalid email or password, please try again"
@@ -86,7 +86,7 @@ public class AccountService : IAccountService
                 }
             });
 
-            return new AuthenticationResult
+            return new AuthenticationResponse
             {
                 Success = false,
                 Message = "The verification link has been sent to your email, please check your spam folder."
@@ -101,7 +101,7 @@ public class AccountService : IAccountService
             host.LoginAttempts = 0;
         });
 
-        return new AuthenticationResult
+        return new AuthenticationResponse
         {
             Success = true,
             Host = lHost,
@@ -113,12 +113,12 @@ public class AccountService : IAccountService
         return BCrypt.Net.BCrypt.HashPassword(password);
     }
 
-    public async Task<AuthenticationResult> RegisterAsync(HostSignUpDto hostSignUpDto)
+    public async Task<AuthenticationResponse> RegisterAsync(HostSignUpDto hostSignUpDto)
     {
         var existingHost = await hostRepository.GetLHostByEmailAsync(hostSignUpDto.Email);
         if (existingHost != null)
         {
-            return new AuthenticationResult
+            return new AuthenticationResponse
             {
                 Success = false,
                 Message = "User already exists"
@@ -149,14 +149,14 @@ public class AccountService : IAccountService
         var verificationLink = $"{configuration["ApplicatioSettings:AppUrl"]}/email-confirmation?emailToken={encodedToken}";
         await emailService.SendEmailAsync(lHost.MailAddress, "Confirm your email", $"Please confirm your email by clicking <a href=\"{verificationLink}\">here</a>.");
 
-        return new AuthenticationResult
+        return new AuthenticationResponse
         {
             Success = true,
             Host = lHost
         };
     }
 
-    public async Task<EmailVerificationResult> VerifyEmailTokenAsync(string token)
+    public async Task<EmailVerificationResponse> VerifyEmailTokenAsync(string token)
     {
         // Retrieve user by token from the repository
         var lHost = await hostRepository.GetLHostByEmailVerificationTokenAsync(token);
@@ -165,7 +165,7 @@ public class AccountService : IAccountService
         // Counter-check the purpose of the logic
         if (lHost == null)
         {
-            return new EmailVerificationResult
+            return new EmailVerificationResponse
             {
                 IsSuccess = false,
                 // Invalid request
@@ -176,7 +176,7 @@ public class AccountService : IAccountService
         // Check if the token has expired
         if (lHost.EmailVTokenExpiresAt < DateTime.UtcNow)
         {
-            return new EmailVerificationResult
+            return new EmailVerificationResponse
             {
                 IsSuccess = false,
                 IsExpired = true,
@@ -195,28 +195,28 @@ public class AccountService : IAccountService
             host.EmailVTokenExpiresAt = default;
         });
 
-        return new EmailVerificationResult
+        return new EmailVerificationResponse
         {
             IsSuccess = true,
             Message = "Email confirmed successfully."
         };
     }
 
-    public async Task<RefreshTokenResult> GetRefreshTokenAsync(string refreshToken)
+    public async Task<RefreshTokenResponse> GetRefreshTokenAsync(string refreshToken)
     {
         // Implement response Dto to handle edge cases
        var tokenEntity = await refreshTokenRepository.GetRefreshTokenAsync(refreshToken);
         // Check if the token was found
         if (tokenEntity == null)
         {
-            return new RefreshTokenResult
+            return new RefreshTokenResponse
             {
                 Success = false,
                 ErrorMessage = "Refresh token not found."
             };
         }
 
-        return new RefreshTokenResult
+        return new RefreshTokenResponse
         {
             Success = true,
             RefreshToken = tokenEntity

@@ -13,3 +13,8 @@ global using Microsoft.Extensions.Options;
 global using RentalCheckIn.Configuration.Email;
 global using System.Net;
 global using System.Net.Mail;
+global using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
+global using RentalCheckIn.Services.UI;
+global using RentalCheckIn.Utilities;
+global using System.Security.Cryptography;
+global using static RentalCheckIn.DTOs.CustomResponses;

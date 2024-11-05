@@ -10,7 +10,7 @@ public class AuthService : IAuthService
     {
         this.httpClient = httpClient;
     }
-    public async Task<AuthenticationResult> LoginAsync(HostLoginDto hostLoginDto)
+    public async Task<AuthenticationResponse> LoginAsync(HostLoginDto hostLoginDto)
     {
         try
         {
@@ -20,9 +20,9 @@ public class AuthService : IAuthService
             {
                 if (response.StatusCode == HttpStatusCode.NoContent)
                 {
-                    return default(AuthenticationResult);
+                    return default(AuthenticationResponse);
                 }
-                return await response.Content.ReadFromJsonAsync<AuthenticationResult>();
+                return await response.Content.ReadFromJsonAsync<AuthenticationResponse>();
             }
             else
             {
@@ -37,7 +37,7 @@ public class AuthService : IAuthService
         }
     }
 
-    public async Task<AuthenticationResult> RegisterAsync(HostSignUpDto hostSignUpDto)
+    public async Task<AuthenticationResponse> RegisterAsync(HostSignUpDto hostSignUpDto)
     {
         try
         {
@@ -46,9 +46,9 @@ public class AuthService : IAuthService
             {
                 if (response.StatusCode == HttpStatusCode.NoContent)
                 {
-                    return default(AuthenticationResult);
+                    return default(AuthenticationResponse);
                 }
-                return await response.Content.ReadFromJsonAsync<AuthenticationResult>();
+                return await response.Content.ReadFromJsonAsync<AuthenticationResponse>();
             }
             else
             {

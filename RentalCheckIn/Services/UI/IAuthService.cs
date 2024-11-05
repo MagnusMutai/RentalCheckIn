@@ -4,6 +4,6 @@ namespace RentalCheckIn.Services.UI;
 
 public interface IAuthService
 {
-    Task<AuthenticationResult> RegisterAsync(HostSignUpDto hostSignUpDto);
-    Task<AuthenticationResult> LoginAsync(HostLoginDto hostLoginDto);
+    Task<AuthenticationResponse> RegisterAsync(HostSignUpDto hostSignUpDto);
+    Task<AuthenticationResponse> LoginAsync(HostLoginDto hostLoginDto);
 }
