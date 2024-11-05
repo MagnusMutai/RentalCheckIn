@@ -1,12 +1,17 @@
-﻿namespace RentalCheckIn.Services.UI;
+﻿using RentalCheckIn.Entities;
+using System.Text.Json;
+
+namespace RentalCheckIn.Services.UI;
 
 public class AuthService : IAuthService
 {
     private readonly HttpClient httpClient;
+    private readonly ProtectedLocalStorage localStorage;
 
-    public AuthService(HttpClient httpClient)
+    public AuthService(HttpClient httpClient, ProtectedLocalStorage localStorage)
     {
         this.httpClient = httpClient;
+        this.localStorage = localStorage;
     }
     public async Task<AuthenticationResponse> LoginAsync(HostLoginDto hostLoginDto)
     {
@@ -61,4 +66,30 @@ public class AuthService : IAuthService
         }
     }
 
+    public async Task RefreshTokenAsync()
+    {
+        var accessToken = await RetrieveToken("token");
+        var refreshToken = await RetrieveToken("refreshToken");
+
+
+        var data = new
+        {
+            AccessToken = accessToken,
+            RefreshToken = refreshToken
+        };
+
+        var json = JsonSerializer.Serialize(data);
+        var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+        var response = await httpClient.PostAsync("api/auth/refresh-token", content);
+    }
+
+    private async Task<string> RetrieveToken(string key)
+    {
+        // Retrieve token from local storage
+        var response = await localStorage.GetAsync<string>(key);
+        return response.Value;
+    }
 }
+
+

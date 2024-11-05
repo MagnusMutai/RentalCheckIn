@@ -5,12 +5,16 @@ public class RefreshTokenService
     private readonly IRefreshTokenRepository refreshTokenRepository;
     private readonly ProtectedLocalStorage localStorage;
     private readonly HttpClient httpClient;
+    private readonly IAccountService accountService;
+    private readonly JwtService jwtService;
 
-    public RefreshTokenService(IRefreshTokenRepository refreshTokenRepository, ProtectedLocalStorage localStorage, HttpClient httpClient)
+    public RefreshTokenService(IRefreshTokenRepository refreshTokenRepository, ProtectedLocalStorage localStorage, HttpClient httpClient, IAccountService accountService, JwtService jwtService)
     {
         this.refreshTokenRepository = refreshTokenRepository;
         this.localStorage = localStorage;
         this.httpClient = httpClient;
+        this.accountService = accountService;
+        this.jwtService = jwtService;
     }
 
     public async Task<RefreshToken> GenerateRefreshToken(uint lHostId)
@@ -28,7 +32,7 @@ public class RefreshTokenService
         {
             Token = GenerateSecureToken(),
             // Set refresh token lifespan
-            Expires = DateTime.UtcNow.AddSeconds(10),
+            Expires = DateTime.UtcNow.AddDays(7),
             Created = DateTime.UtcNow,
             IsRevoked = false,
             HostId = lHostId
@@ -55,10 +59,10 @@ public class RefreshTokenService
         }
     }
 
-    public async Task ValidateAndRefreshTokensAsync()
+    public async Task ValidateAndRefreshTokensAsync(string accessToken, string refreshToken)
     {
-        var accessToken = await RetrieveToken("token");
-        var refreshToken = await RetrieveToken("refreshToken");
+        //var accessToken = await RetrieveToken("token");
+        //var refreshToken = await RetrieveToken("refreshToken");
 
         if (!string.IsNullOrEmpty(accessToken))
         {
@@ -82,27 +86,46 @@ public class RefreshTokenService
         // Check if the access token is expired
         if (Extensions.IsTokenExpired(accessToken))
         {
-            // Wrap the refreshToken string in StringContent and format it as JSON
-            var requestContent = new StringContent($"\"{refreshToken}\"", Encoding.UTF8, "application/json");
-
-            // Call backend to refresh tokens if refresh token is valid
-            var response = await httpClient.PostAsync("/api/auth/refresh-token", requestContent);
-
-            if (response.IsSuccessStatusCode)   
+            // Validate the refresh token by retrieving it from the database
+            var refreshTokenEntity = await accountService.GetRefreshTokenAsync(refreshToken);
+            if (refreshTokenEntity == null)
             {
-                var responseContent = await response.Content.ReadFromJsonAsync<TokenResponse>();
-                if (responseContent != null)
-                {
-                    StoreToken("token", responseContent.NewAccessToken);
-                    StoreToken("refreshToken", responseContent.NewRefreshToken);
-                    Console.WriteLine("Tokens refreshed successfully.");
-                }
+                Console.WriteLine("You're not authorized");
+                return;
             }
-            else
+
+            var returnedToken = refreshTokenEntity.RefreshToken;
+
+            if (returnedToken == null || !returnedToken.IsActive)
             {
-                Console.WriteLine("Refresh token invalid or expired, redirecting to login...");
-                // Redirect to login or show login UI
+                Console.WriteLine("Invalid or expired refresh token.");
+                return;
             }
+
+            // Retrieve the host associated with this refresh token
+            var host = await accountService.GetLHostByIdAsync(returnedToken.HostId);
+            if (host == null)
+            {
+                Console.WriteLine("Associated host not found.");
+                return;
+            }
+
+            // Generate new tokens
+            var newAccessToken = jwtService.GenerateToken(host);
+            var newRefreshToken = await GenerateRefreshToken(host.HostId);
+
+            var newRefreshTokenEntity = new RefreshToken
+            {
+                Token = newRefreshToken.Token,
+                Created = DateTime.UtcNow,
+                // Set your desired expiration
+                Expires = DateTime.UtcNow.AddDays(7), 
+                HostId = host.HostId
+            };
+
+            StoreToken("token", newAccessToken);
+            StoreToken("refreshToken", newRefreshToken.Token);
+            Console.WriteLine("Tokens refreshed successfully.");
         }
     }
 

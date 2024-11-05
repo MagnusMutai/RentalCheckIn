@@ -20,19 +20,16 @@
     [Inject]
     private AuthenticationStateProvider AuthStateProvider { get; set; }
     [Inject]
-    private RefreshTokenService RefreshTokenService { get; set; }
+    private IAuthService AuthService { get; set; }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        await RefreshTokenService.ValidateAndRefreshTokensAsync();
-        
-        // var response = await localStorage.GetAsync<string>("token");
-        // if (response.Success)
-        // {
-        //     Constants.JWTToken = response.Value;
-        // }
+
+
+        await AuthService.RefreshTokenAsync();
 
         await AuthStateProvider.GetAuthenticationStateAsync();
 
     }
+
 }
