@@ -1,5 +1,4 @@
-﻿using RentalCheckIn.Entities;
-using System.Text.Json;
+﻿using static System.Net.WebRequestMethods;
 
 namespace RentalCheckIn.Services.UI;
 
@@ -68,27 +67,89 @@ public class AuthService : IAuthService
 
     public async Task RefreshTokenAsync()
     {
-        var accessToken = await RetrieveToken("token");
-        var refreshToken = await RetrieveToken("refreshToken");
 
-
-        var data = new
+        try
         {
-            AccessToken = accessToken,
-            RefreshToken = refreshToken
-        };
+            var accessToken = await RetrieveToken("token");
+            var refreshToken = await RetrieveToken("refreshToken");
 
-        var json = JsonSerializer.Serialize(data);
-        var content = new StringContent(json, Encoding.UTF8, "application/json");
+            var data = new
+            {
+                AccessToken = accessToken,
+                RefreshToken = refreshToken
+            };
 
-        var response = await httpClient.PostAsync("api/auth/refresh-token", content);
+            var json = JsonSerializer.Serialize(data);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+            var response = await httpClient.PostAsync("api/auth/refresh-token", content);
+
+            async Task<string> RetrieveToken(string key)
+            {
+                // Retrieve token from local storage
+                var response = await localStorage.GetAsync<string>(key);
+                return response.Value;
+            }
+        }
+        catch(Exception) 
+        {
+            throw;
+        }
     }
 
-    private async Task<string> RetrieveToken(string key)
+    public async Task<ResetPasswordResponse> ForgotPassword(PasswordResetDto PasswordResetDto)
     {
-        // Retrieve token from local storage
-        var response = await localStorage.GetAsync<string>(key);
-        return response.Value;
+        try
+        {
+            var json = JsonSerializer.Serialize(PasswordResetDto.Email);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+            var response = await httpClient.PostAsync($"api/auth/forgot-password", content);
+
+            if (response.IsSuccessStatusCode)
+            {
+                if (response.StatusCode == HttpStatusCode.NoContent) 
+                {
+                    return default;
+                }
+                return await response.Content.ReadFromJsonAsync<ResetPasswordResponse>();
+            }
+            else
+            {
+                var message = await response.Content.ReadAsStringAsync();
+                throw new Exception(message);
+            }
+        }
+        catch (Exception)
+        {
+            throw;
+        }
+    }
+
+    public async Task<EmailVerificationResponse> VerifyEmailAsync(string eleVerificationToken)
+    {
+        try
+        {
+            // Call the API endpoint to verify the email token
+            var response = await httpClient.PostAsJsonAsync("api/Auth/verify-email", eleVerificationToken);
+
+            if (response.IsSuccessStatusCode)
+            {
+                if (response.StatusCode == HttpStatusCode.NoContent)
+                {
+                    return default;
+                }
+               return await response.Content.ReadFromJsonAsync<EmailVerificationResponse>();
+            }
+            else
+            {
+                var message = await response.Content.ReadAsStringAsync();
+                throw new Exception(message);
+            }
+        }
+        catch (Exception ex)
+        {
+            throw;
+        }
     }
 }
 

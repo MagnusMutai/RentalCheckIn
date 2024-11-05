@@ -7,4 +7,5 @@ public static class Extensions
         var jwt = new JwtSecurityTokenHandler().ReadJwtToken(token);
         return jwt.ValidTo < DateTime.UtcNow;
     }
+
 }

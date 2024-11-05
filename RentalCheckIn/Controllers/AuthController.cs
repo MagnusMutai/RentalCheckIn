@@ -6,16 +6,11 @@ public class AuthController : ControllerBase
 {
     private readonly IAccountService accountService;
     private readonly RefreshTokenService refreshTokenService;
-    private readonly RefreshTokenRepository refreshTokenRepository;
-    private readonly JwtService jwtService;
- 
 
     public AuthController(IAccountService accountService, RefreshTokenService refreshTokenService) 
     {
         this.accountService = accountService;
         this.refreshTokenService = refreshTokenService;
-        this.refreshTokenRepository = refreshTokenRepository;
-        this.jwtService = jwtService;
     }
 
     [HttpPost("login")]
@@ -56,5 +51,18 @@ public class AuthController : ControllerBase
 
         await refreshTokenService.ValidateAndRefreshTokensAsync(accessToken, refreshToken);
         return Ok();
+    }
+
+    [HttpPost("forgot-password")]
+    public async Task<IActionResult> ForgotPassword([FromBody] string email)
+    {
+        var lHost = await accountService.GetLHostByEmailAsync(email);
+        if (lHost == null)
+        {
+            return BadRequest("Host not found");
+        }
+
+        var result = await accountService.ForgotPassword(lHost);
+        return Ok(result);    
     }
 }

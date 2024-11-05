@@ -1,0 +1,42 @@
+﻿@page "/password-reset-request"
+
+<h3>Reset Your Password</h3>
+
+@if (isEmailSent)
+{
+    <p>An email with password reset instructions has been sent to your email address.</p>
+}
+else
+{
+    <EditForm Model="resetModel" OnValidSubmit="HandleValidSubmit">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div class="form-group">
+            <label for="email">Enter your email address:</label>
+            <InputText @bind-Value="resetModel.Email" id="email" class="form-control" />
+            <ValidationMessage For="@(() => resetModel.Email)" />
+        </div>
+
+        <button type="submit" class="btn btn-primary">Send Reset Link</button>
+    </EditForm>
+
+    @if (!string.IsNullOrEmpty(ErrorMessage))
+    {
+        <p class="text-danger">@ErrorMessage</p>
+    }
+}
+
+@code {
+    private PasswordResetDto resetModel = new PasswordResetDto();
+    private bool isEmailSent = false;
+    private string ErrorMessage;
+
+    [Inject]
+    private IAuthService AuthService { get; set; }
+
+    private async Task HandleValidSubmit()
+    {
+       var result = await AuthService.ForgotPassword(resetModel);
+    }
+}

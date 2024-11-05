@@ -132,7 +132,7 @@ public class AccountService : IAccountService
             TotpSecret = totpSecret,
             Username = hostSignUpDto.Email,
             MailAddress = hostSignUpDto.Email,
-            EmailVerificationToken = GenerateEmailVerificationToken(),
+            EmailVerificationToken = GenerateRandomToken(),
             EmailVTokenExpiresAt = DateTime.UtcNow.AddHours(24)
         };
 
@@ -142,7 +142,7 @@ public class AccountService : IAccountService
         lHost.TotpSecret = totpSecret;
         var encodedToken = HttpUtility.UrlEncode(lHost.EmailVerificationToken);
         // Send the new verification email
-        var verificationLink = $"{configuration["ApplicatioSettings:AppUrl"]}/email-confirmation?emailToken={encodedToken}";
+        var verificationLink = $"{configuration["ApplicationSettings:AppUrl"]}/email-confirmation?emailToken={encodedToken}";
         await emailService.SendEmailAsync(lHost.MailAddress, "Confirm your email", $"Please confirm your email by clicking <a href=\"{verificationLink}\">here</a>.");
 
         return new AuthenticationResponse
@@ -224,7 +224,7 @@ public class AccountService : IAccountService
         return BCrypt.Net.BCrypt.Verify(password, passwordHash);
     }
 
-    public string GenerateEmailVerificationToken()
+    public string GenerateRandomToken()
     {
         // 256 bits of randomness
         byte[] randomBytes = new byte[32];
@@ -240,4 +240,41 @@ public class AccountService : IAccountService
     {
         return hostRepository.GetLHostByIdAsync(id);
     }
+
+    public Task<LHost> GetLHostByEmailAsync(string email)
+    {
+        return hostRepository.GetLHostByEmailAsync(email);
+    }
+
+    public async Task<ResetPasswordResponse> ForgotPassword(LHost lHost)
+    {
+        string passResetToken = GenerateRandomToken();
+
+        bool result = await hostRepository.UpdateLHostPartialAsync(lHost, host =>
+        {
+            host.PasswordResetToken = passResetToken;
+            host.ResetTokenExpires = DateTime.UtcNow.AddHours(1);
+        });
+
+        if (!result)
+        {
+            return new ResetPasswordResponse
+            {
+                Success = false,
+                Message = "An error occurred."
+            };
+        }
+
+        var encodedToken = HttpUtility.UrlEncode(passResetToken);
+        // Send the new verification email
+        var resetLink = $"{configuration["ApplicationSettings:AppUrl"]}/password-reset?resetToken={encodedToken}";
+        await emailService.SendEmailAsync(lHost.MailAddress, "Confirm your email", $"Please click <a href=\"{resetLink}\">here</a> to reset your password.");
+
+        return new ResetPasswordResponse
+        {
+            Success = true,
+            Message = "Password reset request successful, check your email to reset your password."
+        };
+    }
+
 }

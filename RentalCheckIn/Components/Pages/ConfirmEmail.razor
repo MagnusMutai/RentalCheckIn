@@ -21,7 +21,8 @@ else if (!string.IsNullOrEmpty(errorMessage))
     private string? Message;
     private bool isFirstRender;
     private EmailVerificationResponse verificationResult;
-
+    [Inject]
+    private IAuthService AuthService { get; set; }
 
     private async Task HandleVerifyEmail()
     {
@@ -31,35 +32,20 @@ else if (!string.IsNullOrEmpty(errorMessage))
 
         if (queryParams.TryGetValue("emailToken", out var tokenValues))
         {
-            var emailToken = tokenValues.FirstOrDefault();
-            if (!string.IsNullOrWhiteSpace(emailToken))
+            var eVerificationToken = tokenValues.FirstOrDefault();
+            if (!string.IsNullOrWhiteSpace(eVerificationToken))
             {
-                try
-                {
-                    // Call the API endpoint to verify the email token
-                    var response = await Http.PostAsJsonAsync("api/Auth/verify-email", emailToken);
+                verificationResult = await AuthService.VerifyEmailAsync(eVerificationToken);
+            }
 
-                    if (response.IsSuccessStatusCode)
-                    {
-                        verificationResult = await response.Content.ReadFromJsonAsync<EmailVerificationResponse>();
-                    }
-
-                    if (!verificationResult.IsSuccess)
-                    {
-                        errorMessage = verificationResult.Message;
-                    }
-                    else if (verificationResult.IsSuccess)
-                    {
-                        isSuccess = true;
-                        Message = verificationResult.Message;
-                    }
-
-                }
-                catch (Exception ex)
-                {
-                    // Handle any unexpected errors
-                    errorMessage = ex.Message;
-                }
+            if (verificationResult.IsSuccess)
+            {
+                isSuccess = true;
+                Message = verificationResult.Message;
+            }
+            else
+            {
+                errorMessage = verificationResult.Message;
             }
         }
         else
