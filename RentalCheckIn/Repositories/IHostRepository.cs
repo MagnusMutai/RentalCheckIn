@@ -7,4 +7,5 @@ public interface IHostRepository
     Task UpdateLHostAsync(LHost lHost);
     Task<bool> UpdateLHostPartialAsync(LHost lHost, Action<LHost> patchData);
     Task<LHost> GetLHostByEmailVerificationTokenAsync(string token);
+    Task<LHost> GetLHostByPasswordResetTokenAsync(string token);
 }

@@ -28,7 +28,7 @@ else
 }
 
 @code {
-    private PasswordResetDto resetModel = new PasswordResetDto();
+    private ResetRequestDto resetModel = new ResetRequestDto();
     private bool isEmailSent = false;
     private string ErrorMessage;
 
@@ -37,6 +37,6 @@ else
 
     private async Task HandleValidSubmit()
     {
-       var result = await AuthService.ForgotPassword(resetModel);
+       var result = await AuthService.ForgotPasswordAsync(resetModel);
     }
 }

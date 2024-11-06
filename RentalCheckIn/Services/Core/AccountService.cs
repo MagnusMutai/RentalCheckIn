@@ -1,4 +1,8 @@
-﻿namespace RentalCheckIn.Services.Core;
+﻿using Microsoft.AspNetCore.Identity.Data;
+using Microsoft.EntityFrameworkCore;
+using RentalCheckIn.Entities;
+
+namespace RentalCheckIn.Services.Core;
 public class AccountService : IAccountService
 {
     private readonly IHostRepository hostRepository;
@@ -246,7 +250,7 @@ public class AccountService : IAccountService
         return hostRepository.GetLHostByEmailAsync(email);
     }
 
-    public async Task<ResetPasswordResponse> ForgotPassword(LHost lHost)
+    public async Task<ResetPasswordResponse> ForgotPasswordAsync(LHost lHost)
     {
         string passResetToken = GenerateRandomToken();
 
@@ -267,7 +271,7 @@ public class AccountService : IAccountService
 
         var encodedToken = HttpUtility.UrlEncode(passResetToken);
         // Send the new verification email
-        var resetLink = $"{configuration["ApplicationSettings:AppUrl"]}/password-reset?resetToken={encodedToken}";
+        var resetLink = $"{configuration["ApplicationSettings:AppUrl"]}/reset-password?resetToken={encodedToken}";
         await emailService.SendEmailAsync(lHost.MailAddress, "Confirm your email", $"Please click <a href=\"{resetLink}\">here</a> to reset your password.");
 
         return new ResetPasswordResponse
@@ -277,4 +281,40 @@ public class AccountService : IAccountService
         };
     }
 
+    public async Task<ResetPasswordResponse> ResetPasswordAsync(PasswordResetRequest request)
+    {
+        var lHost = await hostRepository.GetLHostByPasswordResetTokenAsync(request.ResetToken);
+        if (lHost == null)
+        {
+            return new ResetPasswordResponse
+            {
+                Success = false,
+                Message = "Invalid reset link"
+            };
+        }
+
+
+        // Determine what to do with the bool return type
+       bool result =  await hostRepository.UpdateLHostPartialAsync(lHost, host =>
+        {
+            host.PasswordHash = HashPassword(request.NewPassword);
+            host.PasswordResetToken = null;
+            host.ResetTokenExpires = null;
+        });
+
+        if (!result) 
+        {
+            return new ResetPasswordResponse
+            {
+                Success = false,
+                Message = "An error occurred while reseting your password."
+            };
+        }
+
+        return new ResetPasswordResponse
+        {
+            Success = true,
+            Message = "Your password has been changed successfully."
+        };
+    }
 }

@@ -1,4 +1,5 @@
-﻿using static RentalCheckIn.DTOs.CustomResponses;
+﻿using Microsoft.AspNetCore.Identity.Data;
+using static RentalCheckIn.DTOs.CustomResponses;
 
 namespace RentalCheckIn.Services.Core;
 
@@ -12,5 +13,7 @@ public interface IAccountService
     Task<RefreshTokenResponse> GetRefreshTokenAsync(string refreshToken);
     Task<LHost> GetLHostByIdAsync(uint id);
     Task <LHost>GetLHostByEmailAsync(string email);
-    Task<ResetPasswordResponse> ForgotPassword(LHost lHost);
+    Task<ResetPasswordResponse> ForgotPasswordAsync(LHost lHost);
+
+    Task<ResetPasswordResponse> ResetPasswordAsync(PasswordResetRequest passwordRequest);
 }
