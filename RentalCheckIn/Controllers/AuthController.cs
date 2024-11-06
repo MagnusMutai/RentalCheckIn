@@ -1,4 +1,7 @@
-﻿namespace RentalCheckIn.Controllers;
+﻿using Microsoft.AspNetCore.Identity.Data;
+using Microsoft.EntityFrameworkCore;
+
+namespace RentalCheckIn.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
@@ -62,7 +65,19 @@ public class AuthController : ControllerBase
             return BadRequest("Host not found");
         }
 
-        var result = await accountService.ForgotPassword(lHost);
+        var result = await accountService.ForgotPasswordAsync(lHost);
         return Ok(result);    
     }
+
+    [HttpPost("reset-password")]
+    public async Task<IActionResult> ResetPassword([FromBody] PasswordResetRequest request)
+    {
+        var response = await accountService.ResetPasswordAsync(request);
+        if (response == null)
+        {
+            return BadRequest("We could not reset your password");
+        }
+        return Ok(response);
+    }
+
 }

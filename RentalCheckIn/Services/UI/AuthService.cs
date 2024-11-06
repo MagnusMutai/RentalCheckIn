@@ -1,4 +1,7 @@
-﻿using static System.Net.WebRequestMethods;
+﻿using Microsoft.AspNetCore.Identity.Data;
+using RentalCheckIn.Components.Pages;
+using RentalCheckIn.DTOs;
+using static System.Net.WebRequestMethods;
 
 namespace RentalCheckIn.Services.UI;
 
@@ -97,11 +100,11 @@ public class AuthService : IAuthService
         }
     }
 
-    public async Task<ResetPasswordResponse> ForgotPassword(PasswordResetDto PasswordResetDto)
+    public async Task<ResetPasswordResponse> ForgotPasswordAsync(ResetRequestDto resetRequestDto)
     {
         try
         {
-            var json = JsonSerializer.Serialize(PasswordResetDto.Email);
+            var json = JsonSerializer.Serialize(resetRequestDto.Email);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
             var response = await httpClient.PostAsync($"api/auth/forgot-password", content);
 
@@ -144,6 +147,38 @@ public class AuthService : IAuthService
             {
                 var message = await response.Content.ReadAsStringAsync();
                 throw new Exception(message);
+            }
+        }
+        catch (Exception ex)
+        {
+            throw;
+        }
+    }
+    public async Task<ResetPasswordResponse> ResetPasswordAsync(string token, PasswordResetDto passwordResetDto)
+    {
+        try
+        {
+            var payload = new PasswordResetRequest
+            {
+                ResetToken = token,
+                NewPassword = passwordResetDto.NewPassword,
+            };
+
+            // Send the new password and token to the backend
+            var response = await httpClient.PostAsJsonAsync("api/auth/reset-password", payload);
+
+            if (response.IsSuccessStatusCode)
+            {
+                if (response.StatusCode == HttpStatusCode.NotFound)
+                {
+                    return default;
+                }
+                return await response.Content.ReadFromJsonAsync<ResetPasswordResponse>();
+            }
+            else
+            {
+                var message = await response.Content.ReadAsStringAsync();
+                throw new Exception($"{message}");
             }
         }
         catch (Exception ex)

@@ -8,5 +8,6 @@ public interface IAuthService
     Task<AuthenticationResponse> LoginAsync(HostLoginDto hostLoginDto);
     Task<EmailVerificationResponse> VerifyEmailAsync(string eVerificationToken);
     Task RefreshTokenAsync();
-    Task<ResetPasswordResponse> ForgotPassword(PasswordResetDto PasswordResetDto);
+    Task<ResetPasswordResponse> ForgotPasswordAsync(ResetRequestDto resetRequestDto);
+    Task<ResetPasswordResponse> ResetPasswordAsync(string token, PasswordResetDto passwordResetDto);
 }
