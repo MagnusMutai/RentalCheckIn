@@ -1,43 +1,25 @@
 ﻿@page "/login"
-@inject IAuthService AuthService
-@inject NavigationManager NavigationManager
-@inject HttpClient Http
-<h3>Login</h3>
+@inherits LoginBase
 
 @if (!string.IsNullOrEmpty(ErrorMessage))
 {
     <div class="alert alert-danger">@ErrorMessage</div>
 }
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-6 full-height" style="background-color: red;">
+            @* <img src="images/snowylodge .jpg" alt="An image of the apartment" /> *@
+        </div>
+        <div class="col-6 full-height" style="background-color: green;">
+            <EditForm Model="loginModel" OnValidSubmit="HandleLogin">
+                <DataAnnotationsValidator />
 
-<EditForm Model="loginModel" OnValidSubmit="HandleLogin">
-    <DataAnnotationsValidator />
-
-    <InputText @bind-Value="loginModel.Email" placeholder="Email" />
-    <ValidationMessage For="@(() => loginModel.Email)" />
-    <InputText @bind-Value="loginModel.Password" placeholder="Password" type="password" />
-    <ValidationMessage For="@(() => loginModel.Password)" />
-    <button type="submit">Login</button>
-</EditForm>
-
-@code {
-    private HostLoginDto loginModel = new();
-    private string ErrorMessage;
-    [Inject]
-    private ProtectedLocalStorage LocalStorage { get; set; }
-
-    private async Task HandleLogin()
-    {
-        var result = await AuthService.LoginAsync(loginModel);
-        if (result.Success)
-        {
-            var lHost = result.Host;
-            // Store email for OTP verification
-            await LocalStorage.SetAsync("emailForOtp", lHost.MailAddress);
-            NavigationManager.NavigateTo("/verify-otp");
-        }
-        else
-        {
-            ErrorMessage = result.Message;
-        }
-    }
-}
+                <InputText @bind-Value="loginModel.Email" placeholder="Email" />
+                <ValidationMessage For="@(() => loginModel.Email)" />
+                <InputText @bind-Value="loginModel.Password" placeholder="Password" type="password" />
+                <ValidationMessage For="@(() => loginModel.Password)" />
+                <button type="submit">Login</button>
+            </EditForm>
+        </div>
+    </div>
+</div>

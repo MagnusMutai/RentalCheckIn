@@ -1,5 +1,5 @@
 ﻿@page "/register"
-@inject NavigationManager NavigationManager
+@inherits RegisterBase
 
 <h3>Register</h3>
 
@@ -35,26 +35,4 @@ else
     <p>Please add the following secret to your authenticator app:</p>
     <p><strong>@TotpSecret</strong></p>
     <p>After adding, proceed to <a href="/login">Login</a>.</p>
-}
-
-@code {
-    private HostSignUpDto registerModel = new();
-    private string ErrorMessage;
-    private string SuccessMessage;
-    private string TotpSecret;
-    [Inject]
-    private IAuthService AuthService { get; set; }
-
-    private async Task HandleRegister()
-    {
-        var result = await AuthService.RegisterAsync(registerModel);
-
-        if (result.Success)
-        {
-            TotpSecret = result.Host.TotpSecret;
-            SuccessMessage = "You are successfully registered, check your email to confirm your account";
-        }
-
-        ErrorMessage = result.Message;
-    }
 }
