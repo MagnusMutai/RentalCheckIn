@@ -1,7 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity.Data;
-using Microsoft.EntityFrameworkCore;
-
-namespace RentalCheckIn.Controllers;
+﻿namespace RentalCheckIn.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]

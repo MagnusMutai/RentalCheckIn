@@ -1,6 +1,5 @@
 ﻿@page "/email-confirmation"
-@inject HttpClient Http
-@inject NavigationManager Navigation
+@inherits ConfirmEmailBase
 
 <h3>Email Verification</h3>
 @if (isSuccess)
@@ -13,48 +12,3 @@ else if (!string.IsNullOrEmpty(errorMessage))
 }
 
 <button class="btn btn-success" onclick="@(() => HandleVerifyEmail())">Verify Email</button>
-
-@code {
-    private bool isLoading = true;
-    private bool isSuccess = false;
-    private string? errorMessage;
-    private string? Message;
-    private bool isFirstRender;
-    private EmailVerificationResponse verificationResult;
-    [Inject]
-    private IAuthService AuthService { get; set; }
-
-    private async Task HandleVerifyEmail()
-    {
-        // Parse the current URI to extract query parameters
-        var uri = Navigation.ToAbsoluteUri(Navigation.Uri);
-        var queryParams = QueryHelpers.ParseQuery(uri.Query);
-
-        if (queryParams.TryGetValue("emailToken", out var tokenValues))
-        {
-            var eVerificationToken = tokenValues.FirstOrDefault();
-            if (!string.IsNullOrWhiteSpace(eVerificationToken))
-            {
-                verificationResult = await AuthService.VerifyEmailAsync(eVerificationToken);
-            }
-
-            if (verificationResult.IsSuccess)
-            {
-                isSuccess = true;
-                Message = verificationResult.Message;
-            }
-            else
-            {
-                errorMessage = verificationResult.Message;
-            }
-        }
-        else
-        {
-            // No verification token was provided in the URL.
-            errorMessage = "Verification is invalid, please contact support";
-        }
-
-        isLoading = false;
-    }
-
-}

@@ -1,7 +1,5 @@
 ﻿@page "/verify-otp"
-@inject JwtService JwtService
-@inject TotpService TotpService
-@inject NavigationManager NavigationManager
+@inherits VerifyOtpBase
 
 <h3>Verify OTP</h3>
 
@@ -14,60 +12,3 @@
     <InputText @bind-Value="otpModel.Code" placeholder="OTP Code" />
     <button type="submit">Verify</button>
 </EditForm>
-
-@code {
-    private OtpDto otpModel = new();
-    private string ErrorMessage;
-    [Inject]
-    private ProtectedLocalStorage LocalStorage { get; set; }
-    [Inject]
-    private ILHostService LHostService { get; set; }
-    [Inject]
-    private AuthenticationStateProvider AuthStateProvider { get; set; }
-    [Inject]
-    private RefreshTokenService RefreshTokenService { get; set; }
-
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        var result = await LocalStorage.GetAsync<string>("emailForOtp");
-
-        if (result.Success)
-        {
-            otpModel.Email = result.Value;
-        }
-        if (string.IsNullOrEmpty(otpModel.Email))
-        {
-            NavigationManager.NavigateTo("/login");
-        }
-    }
-
-    private async Task HandleVerifyOtp()
-    {
-        try
-        {
-            // This should be an api endpoint
-            var lHost = await LHostService.GetLHostByEmail(otpModel.Email);
-            if (lHost == null)
-                throw new Exception("User not found");
-
-            if (!TotpService.VerifyCode(lHost.TotpSecret, otpModel.Code))
-                throw new Exception("Invalid OTP code");
-
-            var refreshToken = await RefreshTokenService.GenerateRefreshToken(lHost.HostId);
-            await LocalStorage.SetAsync("refreshToken", refreshToken.Token);
-            var accessToken = JwtService.GenerateToken(lHost);
-            Constants.JWTToken = accessToken;
-            // Store the token in local storage
-            await LocalStorage.SetAsync("token", accessToken);
-
-            await AuthStateProvider.GetAuthenticationStateAsync();
-
-            // Navigate to the home page or dashboard
-            NavigationManager.NavigateTo("/");
-        }
-        catch (Exception ex)
-        {
-            ErrorMessage = ex.Message;
-        }
-    }
-}
