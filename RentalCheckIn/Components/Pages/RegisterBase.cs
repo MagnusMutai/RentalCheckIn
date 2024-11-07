@@ -17,7 +17,7 @@ public class RegisterBase : ComponentBase
         if (result.Success)
         {
             TotpSecret = result.Host.TotpSecret;
-            SuccessMessage = "You are successfully registered, check your email to confirm your account";
+            SuccessMessage = "Your account was created successfully, check your email for an account confirmation link";
         }
 
         ErrorMessage = result.Message;
