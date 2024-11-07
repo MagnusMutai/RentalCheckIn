@@ -10,10 +10,18 @@
         <div class="col-12 col-md-6 full-height">
             @if (!string.IsNullOrEmpty(ErrorMessage))
             {
-                <div class="alert alert-danger">@ErrorMessage</div>
+                <div class="toast @DisplayToast bg-danger">
+                    <div class="d-flex">
+                        <div class="toast-body">
+                            <p>@ErrorMessage</p>
+                            <input type="text" name="name" @bind-value="@ErrorMessage" hidden />
+                        </div>
+                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close" @onclick="HandleCloseToast"></button>
+                    </div>
+                </div>
             }
             <div class="mx-auto col-8 mt-5 pt-2">
-                <p class="fs-3 mt-5">Welcome Back!</p>
+                <p class="fs-3 mt-5 pt-3">Welcome Back!</p>
                 <p class="mb-5">
                     Don't have an account? <a class="ms-2" href="register">Sign up.</a>
                 </p>

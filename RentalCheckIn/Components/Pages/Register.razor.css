@@ -7,14 +7,24 @@
     height: 100vh;
 }
 
+/* Fade-in and fade-out effect for the toast */
+.toast {
+    animation: fade-in 1s;
+}
+
+@keyframes fade-in {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
 ::deep .form-control {
     border: 2px solid #FFC857 !important;
 }
-
-    /*::deep .border:focus {
-    border: 2px solid #FFC857 !important;
-    box-shadow: none !important;
-}*/
 
     ::deep .form-control.invalid {
         border: 1px solid #dc3545 !important;
@@ -35,6 +45,34 @@
 
 ::deep ::placeholder {
     color: white;
+}
+
+@keyframes fadeDropDown {
+    0% {
+        opacity: 0;
+        /* Start slightly above */
+        transform: translateY(-40px);
+    }
+
+    100% {
+        opacity: 1;
+        /* End in the normal position */
+        transform: translateY(0);
+    }
+}
+
+.totp-msg {
+    /* Initial state */
+    opacity: 0;
+    /* Duration and easing */
+    animation: fadeDropDown 1.5s ease forwards;
+}
+
+.totp-code {
+    /* Initial state */
+    opacity: 0;
+    /* Duration and easing */
+    animation: fadeDropDown 1.8s ease forwards;
 }
 
 @media (max-width: 768px) {

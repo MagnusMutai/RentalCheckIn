@@ -5,12 +5,44 @@ public class LoginBase : ComponentBase
 {
     protected HostLoginDto loginModel = new();
     protected string ErrorMessage;
+
+    private string displayToast = "";
+
+    public string DisplayToast
+    {
+        get => displayToast;
+        set
+        {
+            if (displayToast != value)
+            {
+                displayToast = value;
+                // Trigger additional logic here when value changes
+                HandleToastTiming(); 
+            }
+        }
+    }
+
     [Inject]
     private ProtectedLocalStorage LocalStorage { get; set; }
     [Inject]
     private NavigationManager NavigationManager { get; set; }
     [Inject]
     private IAuthService AuthService { get; set; }
+    [Inject]
+    private AuthenticationStateProvider AuthStateProvider { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Get the current authentication state
+        var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+
+        // Check if the user is authenticated
+        if (authState.User.Identity is { IsAuthenticated: true })
+        {
+            // Redirect to the home page if the user is already logged in
+            NavigationManager.NavigateTo("/");
+        }
+    }
 
     protected async Task HandleLogin()
     {
@@ -25,6 +57,18 @@ public class LoginBase : ComponentBase
         else
         {
             ErrorMessage = result.Message;
+            DisplayToast = "d-block";
         }
+    }
+
+    protected void HandleCloseToast()
+    {
+        DisplayToast = "";
+    }
+
+    protected void HandleToastTiming()
+    {
+        Task.Delay(5000);
+        DisplayToast = "";
     }
 }

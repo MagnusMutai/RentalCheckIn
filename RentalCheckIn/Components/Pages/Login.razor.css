@@ -7,6 +7,12 @@
     height: 100vh;
 }
 
+.toast {
+    position: fixed;
+    top: 10px;
+    right: 15px;
+}
+
 ::deep .form-control {
     border: 2px solid #FFC857 !important;
 }

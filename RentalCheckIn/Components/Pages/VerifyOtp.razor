@@ -1,12 +1,7 @@
 ﻿@page "/verify-otp"
 @inherits VerifyOtpBase
 
-<PageTitle>Verify OTP</PageTitle>
-
-@if (!string.IsNullOrEmpty(ErrorMessage))
-{
-    <div class="alert alert-danger">@ErrorMessage</div>
-}
+<PageTitle>Verify TOTP</PageTitle>
 
 <div class="container-fluid text-white">
     <div class="row">
@@ -14,6 +9,10 @@
             <h3 class="mt-5 pt-4">Unwind, Relax, and Stay Awhile</h3>
         </div>
         <div class="col-12 col-md-6 full-height">
+        @if (!string.IsNullOrEmpty(ErrorMessage))
+        {
+            <div class="alert alert-danger">@ErrorMessage</div>
+        }
             <div class="mx-auto col-8 mt-5 pt-2">
                 <p class="fs-3 mt-5">Verify Your Identity</p>
                 <p class="mb-5">
@@ -21,7 +20,7 @@
                 </p>
                 <EditForm Model="otpModel" OnValidSubmit="HandleVerifyOtp">
                     <InputText class="bg-transparent text-white rounded-pill form-control" @bind-Value="otpModel.Code" placeholder="TOTP Code" />
-                    <button type="submit" class="btn btn-primary myregister-btn">Verify</button>
+                    <button type="submit" class="btn btn-primary myverifyotp-btn">Verify</button>
                 </EditForm>
             </div>
         </div>

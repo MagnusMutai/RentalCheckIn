@@ -12,11 +12,26 @@
                 <div class="mx-auto col-8 mt-1">
                 @if (!string.IsNullOrEmpty(ErrorMessage))
                 {
-                    <div class="alert alert-danger">@ErrorMessage</div>
+                    <div class="toast align-items-center bg-danger position-fixed top-0 end-0 @DisplayToast" role="alert" aria-live="assertive" aria-atomic="true">
+                        <div class="d-flex mx-auto">
+                            <div class="toast-body">
+                                <p>@ErrorMessage</p>
+                            </div>
+                            <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close" @onclick="HandleCloseToast"></button>
+                        </div>
+                    </div>
                 }
                 @if (!string.IsNullOrEmpty(SuccessMessage))
                 {
-                    <div class="alert alert-success">@SuccessMessage</div>
+                    <div class="toast align-items-center p-2 bg-success position-fixed top-0 start-50 @DisplayToast" role="alert" aria-live="assertive" aria-atomic="true">
+                        <div class="d-flex">
+                            <div class="toast-body">
+                                <strong>Success!</strong>
+                                @SuccessMessage
+                            </div>
+                            <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close" @onclick="HandleCloseToast"></button>
+                        </div>
+                    </div>
                 }
                 @if (string.IsNullOrEmpty(TotpSecret))
                 {
@@ -28,35 +43,34 @@
                         <DataAnnotationsValidator />
                         <div class="row">
                             <div class="mb-4 col">
-                                <InputText class="bg-transparent text-white rounded-pill form-control" @bind-Value="registerModel.FirstName" placeholder="FirstName" />
-                                <ValidationMessage For="@(() => registerModel.FirstName)" />
+                                <InputText class="bg-transparent text-white rounded-pill form-control" @bind-Value="registerModel.FirstName" placeholder="First name" />
+                                <ValidationMessage For="@(() => registerModel.FirstName)" class="ms-2 text-danger" />
                             </div>
                             <div class="mb-4 col">
-                                <InputText class="bg-transparent text-white rounded-pill form-control" @bind-Value="registerModel.LastName" placeholder="LastName" />
-                                <ValidationMessage For="@(() => registerModel.LastName)" />
+                                <InputText class="bg-transparent text-white rounded-pill form-control" @bind-Value="registerModel.LastName" placeholder="Last name" />
+                                <ValidationMessage For="@(() => registerModel.LastName)" class="ms-2 text-danger" />
                             </div>
                         </div>
                         <div class="mb-4">
                             <InputText class="bg-transparent text-white rounded-pill form-control" @bind-Value="registerModel.Email" placeholder="Email" />
-                            <ValidationMessage For="@(() => registerModel.Email)" />
+                            <ValidationMessage For="@(() => registerModel.Email)" class="ms-2 text-danger" />
                         </div>
                         <div class="mb-4">
                             <InputText class="bg-transparent text-white rounded-pill form-control" @bind-Value="registerModel.Password" placeholder="Password" type="password" />
-                            <ValidationMessage For="@(() => registerModel.Password)" />
+                            <ValidationMessage For="@(() => registerModel.Password)" class="ms-2 text-danger" />
                         </div>
                         <div class="mb-5 py-2">
-                            <InputText class="bg-transparent text-white rounded-pill form-control" @bind-Value="registerModel.ConfirmPassword" placeholder="Confirm Password" type="password" />
-                            <ValidationMessage For="@(() => registerModel.ConfirmPassword)" />
+                            <InputText class="bg-transparent text-white rounded-pill form-control" @bind-Value="registerModel.ConfirmPassword" placeholder="Confirm password" type="password" />
+                            <ValidationMessage For="@(() => registerModel.ConfirmPassword)" class="ms-2 text-danger" />
                         </div>
                         <button type="submit" class="btn btn-primary myregister-btn">Register</button>
                     </EditForm>
                 }
                 else
                 {
-                    <div class="card text-black p-4">
-                        <p>Please add the following secret to an authenticator <strong>app</strong> in your phone like <strong> Microsoft Authenticator.</strong></p>
-                        <p><strong>@TotpSecret</strong></p>
-                        <p>After adding, proceed to <a href="login">Login</a>.</p>
+                    <div class="text-center mt-5 pt-5">
+                        <p class="mt-5 totp-msg">Please add the following secret to an authenticator <strong>app</strong> like <strong> Microsoft Authenticator</strong> in your phone then proceed to <a href="login">Login</a>.</p>
+                        <p class="my-4 totp-code"><strong>@TotpSecret</strong></p>
                     </div>
                 }
                 </div>

@@ -21,11 +21,12 @@ public class AccountService : IAccountService
             return new AuthenticationResponse
             {
                 Success = false,
-                Message = "The account is not registered"
+                Message = "Invalid login credentials"
             };
         }
+
         // Check if user is blocked
-        else if (lHost.IsBlockedSince.HasValue)
+        if (lHost.IsBlockedSince.HasValue)
         {
             // Lift the block after 15 minutes
             TimeSpan blockDuration = TimeSpan.FromMinutes(15);
@@ -49,7 +50,28 @@ public class AccountService : IAccountService
                 lHost.LoginAttempts = 0;
             }
         }
-        else if (!VerifyPassword(hostLoginDto.Password, lHost.PasswordHash) && lHost.EmailConfirmed)
+
+        // Step 3: Check if email is confirmed
+        if (!lHost.EmailConfirmed)
+        {
+            // Increase login attempts for unsuccessful logins
+            await hostRepository.UpdateLHostPartialAsync(lHost, host =>
+            {
+                host.LoginAttempts += 1;
+                // Block user if login attempts exceed limit
+                if (lHost.LoginAttempts > 5)
+                {
+                    host.IsBlockedSince = DateTime.UtcNow;
+                }
+            });
+            return new AuthenticationResponse
+            {
+                Success = false,
+                Message = "Please verify your email address. A verification link was sent to your email."
+            };
+        }
+
+        if (!VerifyPassword(hostLoginDto.Password, lHost.PasswordHash))
         {
             // Increase login attempts for unsuccessful logins
             await hostRepository.UpdateLHostPartialAsync(lHost, host =>
@@ -65,31 +87,11 @@ public class AccountService : IAccountService
             return new AuthenticationResponse
             {
                 Success = false,
-                Message = "Invalid email or password, please try again"
+                Message = "Invalid login credentials"
             };
 
         }
-        else if (!lHost.EmailConfirmed)
-        {
-            // Increase login attempts for unsuccessful logins
-            await hostRepository.UpdateLHostPartialAsync(lHost, host =>
-            {
-                host.LoginAttempts += 1;
-                // Block user if login attempts exceed limit
-                if (lHost.LoginAttempts > 5)
-                {
-                    host.IsBlockedSince = DateTime.UtcNow;
-                }
-            });
-
-            return new AuthenticationResponse
-            {
-                Success = false,
-                Message = "An account verification link has been sent to your email, please check your spam folder."
-            };
-        }
-
-        // Determine what to do with the bool return type
+        
         await hostRepository.UpdateLHostPartialAsync(lHost, host =>
         {
             host.LastLogin = DateTime.Now;
@@ -148,7 +150,7 @@ public class AccountService : IAccountService
         return new AuthenticationResponse
         {
             Success = true,
-            Host = lHost
+            Host = lHost,
         };
     }
 
