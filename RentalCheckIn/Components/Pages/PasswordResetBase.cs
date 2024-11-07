@@ -11,8 +11,6 @@ public class PasswordResetBase : ComponentBase
     protected bool IsLoading { get; set; } = false;
     protected ResetPasswordResponse ResetPasswordResponse { get; set; }
 
-    [Parameter] 
-    public string Token { get; set; }
     [Inject]
     protected IAuthService AuthService { get; set; }
     [Inject]
@@ -32,10 +30,12 @@ public class PasswordResetBase : ComponentBase
             if (!string.IsNullOrWhiteSpace(eVerificationToken))
             {
                 ResetPasswordResponse = await AuthService.ResetPasswordAsync(eVerificationToken, resetPasswordModel);
+                if (!ResetPasswordResponse.Success)
+                {
+                    ErrorMessage = ResetPasswordResponse.Message;
+                }
             }
         }
-
-        await AuthService.ResetPasswordAsync(Token, resetPasswordModel);
 
         IsLoading = false;
 

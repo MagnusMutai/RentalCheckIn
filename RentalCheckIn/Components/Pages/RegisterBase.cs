@@ -7,8 +7,25 @@ public class RegisterBase : ComponentBase
     protected string ErrorMessage;
     protected string SuccessMessage;
     protected string TotpSecret;
+    public string DisplayToast { get; set; } = "d-block";
     [Inject]
     protected IAuthService AuthService { get; set; }
+    [Inject]
+    private AuthenticationStateProvider AuthStateProvider { get; set; }
+    [Inject]
+    private NavigationManager NavigationManager { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+        // Get the current authentication state
+        var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+
+        // Check if the user is authenticated
+        if (authState.User.Identity is { IsAuthenticated: true })
+        {
+            // Redirect to the home page if the user is already logged in
+            NavigationManager.NavigateTo("/");
+        }
+    }
 
     protected async Task HandleRegister()
     {
@@ -17,9 +34,15 @@ public class RegisterBase : ComponentBase
         if (result.Success)
         {
             TotpSecret = result.Host.TotpSecret;
-            SuccessMessage = "Your account was created successfully, check your email for an account confirmation link";
+            SuccessMessage = "Your account was created successfully. An account confirmation link has been sent to your email.";
         }
-
         ErrorMessage = result.Message;
+        DisplayToast = "d-block";
+    }
+
+    protected void HandleCloseToast()
+    {
+        DisplayToast = "";
+
     }
 }

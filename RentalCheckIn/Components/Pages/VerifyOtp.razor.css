@@ -20,7 +20,7 @@
         border: 1px solid #dc3545 !important;
     }
 
-::deep .myregister-btn {
+::deep .myverifyotp-btn {
     display: block;
     font-size: 1rem;
     font-weight: 500;
