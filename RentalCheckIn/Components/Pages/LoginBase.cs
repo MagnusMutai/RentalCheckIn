@@ -5,23 +5,7 @@ public class LoginBase : ComponentBase
 {
     protected HostLoginDto loginModel = new();
     protected string ErrorMessage;
-
-    private string displayToast = "";
-
-    public string DisplayToast
-    {
-        get => displayToast;
-        set
-        {
-            if (displayToast != value)
-            {
-                displayToast = value;
-                // Trigger additional logic here when value changes
-                HandleToastTiming(); 
-            }
-        }
-    }
-
+    public string DisplayToast { get; set; } = "d-block";
     [Inject]
     private ProtectedLocalStorage LocalStorage { get; set; }
     [Inject]
@@ -66,9 +50,4 @@ public class LoginBase : ComponentBase
         DisplayToast = "";
     }
 
-    protected void HandleToastTiming()
-    {
-        Task.Delay(5000);
-        DisplayToast = "";
-    }
 }
