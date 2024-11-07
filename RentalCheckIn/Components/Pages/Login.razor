@@ -1,30 +1,37 @@
 ﻿@page "/login"
 @inherits LoginBase
 
-<style>
-
-</style>
-
-@if (!string.IsNullOrEmpty(ErrorMessage))
-{
-    <div class="alert alert-danger">@ErrorMessage</div>
-}
-<div class="container-fluid text-white text-center">
+<PageTitle>Login</PageTitle>
+<div class="container-fluid text-white">
     <div class="row">
-        <div class="col-12 col-md-6 full-height left-half">
+        <div class="col-12 col-md-6 full-height text-center left-half">
             <h3 class="mt-5 pt-4">Unwind, Relax, and Stay Awhile</h3>
         </div>
         <div class="col-12 col-md-6 full-height">
-            <p class="" >Welcome Back!</p>
-            <EditForm Model="loginModel" OnValidSubmit="HandleLogin">
-                <DataAnnotationsValidator />
-
-                <InputText @bind-Value="loginModel.Email" placeholder="Email" />
-                <ValidationMessage For="@(() => loginModel.Email)" />
-                <InputText @bind-Value="loginModel.Password" placeholder="Password" type="password" />
-                <ValidationMessage For="@(() => loginModel.Password)" />
-                <button type="submit">Login</button>
-            </EditForm>
+            @if (!string.IsNullOrEmpty(ErrorMessage))
+            {
+                <div class="alert alert-danger">@ErrorMessage</div>
+            }
+            <div class="mx-auto col-8 mt-5 pt-2">
+                <p class="fs-3 mt-5">Welcome Back!</p>
+                <p class="mb-5">
+                    Don't have an account? <a class="ms-2" href="register">Sign up.</a>
+                </p>
+                <EditForm Model="loginModel" OnValidSubmit="HandleLogin">
+                    <DataAnnotationsValidator />
+                    <div class="mb-4">
+                        <InputText class="bg-transparent text-white rounded-pill form-control" @bind-Value="loginModel.Email" placeholder="Email" />
+                        <ValidationMessage For="@(() => loginModel.Email)" class="ms-2 text-danger" />
+                    </div>
+                    <div class="mb-5 py-2">
+                        <InputText class="bg-transparent text-white rounded-pill form-control" @bind-Value="loginModel.Password" placeholder="Password" type="password" />
+                        <ValidationMessage For="@(() => loginModel.Password)" class="ms-2 text-danger" />
+                    </div>
+                    <div>
+                        <button type="submit" class="btn btn-primary mylogin-btn">Log in</button>
+                    </div>
+                </EditForm>
+            </div>
         </div>
     </div>
 </div>

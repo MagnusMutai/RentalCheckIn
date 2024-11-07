@@ -1,12 +1,40 @@
-﻿
-
-.left-half {
+﻿.left-half {
     background-image: url(../images/snowylodge.jpg);
     background-size: cover;
 }
 
 .full-height {
     height: 100vh;
+}
+
+::deep .form-control {
+    border: 2px solid #FFC857 !important;
+}
+
+/*::deep .border:focus {
+    border: 2px solid #FFC857 !important;
+    box-shadow: none !important;
+}*/
+
+    ::deep .form-control.invalid {
+        border: 1px solid #dc3545 !important;
+    }
+
+::deep .mylogin-btn {
+    display: block;
+    font-size: 1rem;
+    font-weight: 500;
+    width: 100%;
+    background-color: white;
+    border-radius: 15px;
+    color: black;
+    padding-top: .8rem;
+    padding-bottom: .8rem;
+    margin-top: 15px;
+}
+
+::deep ::placeholder {
+    color: white;
 }
 
 @media (max-width: 768px) {

@@ -1,8 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity.Data;
-using Microsoft.EntityFrameworkCore;
-using RentalCheckIn.Entities;
-
-namespace RentalCheckIn.Services.Core;
+﻿namespace RentalCheckIn.Services.Core;
 public class AccountService : IAccountService
 {
     private readonly IHostRepository hostRepository;
@@ -89,7 +85,7 @@ public class AccountService : IAccountService
             return new AuthenticationResponse
             {
                 Success = false,
-                Message = "The verification link has been sent to your email, please check your spam folder."
+                Message = "An account verification link has been sent to your email, please check your spam folder."
             };
         }
 

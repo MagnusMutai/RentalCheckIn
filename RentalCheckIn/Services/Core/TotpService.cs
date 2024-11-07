@@ -10,6 +10,9 @@ public class TotpService
 
     public bool VerifyCode(string secret, string code)
     {
+        if (string.IsNullOrEmpty(code) || string.IsNullOrEmpty(secret))
+            return false;
+
         var totp = new Totp(Base32Encoding.ToBytes(secret));
         return totp.VerifyTotp(code, out long timeStepMatched, VerificationWindow.RfcSpecifiedNetworkDelay);
     }
