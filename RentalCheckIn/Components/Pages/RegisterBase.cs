@@ -34,15 +34,15 @@ public class RegisterBase : ComponentBase
         if (result.Success)
         {
             TotpSecret = result.Host.TotpSecret;
-            SuccessMessage = "Your account was created successfully. An account confirmation link has been sent to your email.";
+            SuccessMessage = "Your account was created. An account confirmation link has been sent to your email.";
         }
         ErrorMessage = result.Message;
-        DisplayToast = "d-block";
+        DisplayToast = DisplayToast ?? "d-block";
     }
 
     protected void HandleCloseToast()
     {
-        DisplayToast = "";
+        DisplayToast = null;
 
     }
 }

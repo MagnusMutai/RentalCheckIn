@@ -51,7 +51,7 @@ public class AccountService : IAccountService
             }
         }
 
-        // Step 3: Check if email is confirmed
+        // Check if email is confirmed
         if (!lHost.EmailConfirmed)
         {
             // Increase login attempts for unsuccessful logins

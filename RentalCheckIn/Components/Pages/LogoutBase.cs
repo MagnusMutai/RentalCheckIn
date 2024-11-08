@@ -13,6 +13,8 @@ public class LogoutBase : ComponentBase
 
     protected override async Task OnInitializedAsync()
     {
+        // Delete email for TOTP
+        await LocalStorage.DeleteAsync("emailForOtp");
         // Mark user as logged out
         await LocalStorage.DeleteAsync("token");
         Constants.JWTToken = "";
