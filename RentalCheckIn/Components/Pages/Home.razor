@@ -3,16 +3,63 @@
 
 <PageTitle>Reservations</PageTitle>
 
-<h3>Welcome to the Protected Home Page!</h3>
-
 <AuthorizeView>
     <Authorized>
-        <p>Hello, @context.User.FindFirst("unique_name")?.Value!</p>
-        <p>Your role: @context.User.FindFirst("role")?.Value!</p>
-        <p><a href="/logout">Logout</a></p>
+        <div class="text-white text-center">
+            <p>Hello, @context.User.FindFirst("unique_name")?.Value!</p>
+            <p>Your role: @context.User.FindFirst("role")?.Value!</p>
+            <p><a href="/logout">Logout</a></p>
+        </div>
     </Authorized>
-    <NotAuthorized>
-        <p>You are not authorized to view this page. Please <a href="/login">login</a>.</p>
-    </NotAuthorized>
 </AuthorizeView>
+
+<div class="content">
+
+    <div class="container">
+
+        <div class="table-responsive custom-table-responsive">
+
+            <table class="table custom-table">
+                <thead class="text-nowrap text-white">
+                    <tr>
+                        <th scope="col">Check-In</th>
+                        <th scope="col">Check-Out</th>
+                        <th scope="col">Appartment</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Quests</th>
+                        <th scope="col">Nights</th>
+                        <th scope="col">Price</th>
+                        <th scope="col">Channel</th>
+                        <th scope="col">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr scope="row">
+                        <td>2024-10-15</td>
+                        <td>2024-10-21</td>
+                        <td>Snowy</td>
+                        <td>Charly</td>
+                        <td>5</td>
+                        <td>6</td>
+                        <td>US 567,29</td>
+                        <td>Booking.com</td>
+                        <td></td>
+                    </tr>
+                    <tr class="spacer"><td colspan="100"></td></tr>
+                  
+                </tbody>
+            </table>
+        </div>
+
+
+    </div>
+
+</div>
+
+
+
+
+
+
+
 

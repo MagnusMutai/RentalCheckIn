@@ -5,7 +5,7 @@ public class LoginBase : ComponentBase
 {
     protected HostLoginDto loginModel = new();
     protected string ErrorMessage;
-    public string DisplayToast { get; set; } = "d-block";
+    public string? DisplayToast { get; set; } = "d-block";
     [Inject]
     private ProtectedLocalStorage LocalStorage { get; set; }
     [Inject]
@@ -41,13 +41,13 @@ public class LoginBase : ComponentBase
         else
         {
             ErrorMessage = result.Message;
-            DisplayToast = "d-block";
+            DisplayToast = DisplayToast ?? "d-block";
         }
     }
 
     protected void HandleCloseToast()
     {
-        DisplayToast = "";
+        DisplayToast = null;
     }
 
 }

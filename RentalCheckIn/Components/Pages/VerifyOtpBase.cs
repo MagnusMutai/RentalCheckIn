@@ -21,6 +21,20 @@ public class VerifyOtpBase : ComponentBase
     protected ILHostService LHostService { get; set; }
     [Inject]
     protected AuthenticationStateProvider AuthStateProvider { get; set; }
+
+    //protected override async Task OnInitializedAsync()
+    //{
+    //    // Get the current authentication state
+    //    var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+
+    //    // Check if the user is authenticated
+    //    if (authState.User.Identity is { IsAuthenticated: false })
+    //    {
+    //        // Redirect to the home page if the user is already logged in
+    //        NavigationManager.NavigateTo("/login");
+    //    }
+    //}
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         var result = await LocalStorage.GetAsync<string>("emailForOtp");

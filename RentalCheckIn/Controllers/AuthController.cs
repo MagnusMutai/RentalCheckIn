@@ -35,7 +35,7 @@ public class AuthController : ControllerBase
         var result = await accountService.VerifyEmailTokenAsync(token);
         return Ok(result);
     }
-
+    // Implement error handling
     [HttpPost("refresh-token")]
     public async Task<IActionResult> RefreshToken([FromBody] TokenRequest tokenRequest)
     {

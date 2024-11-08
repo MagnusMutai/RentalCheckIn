@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Components;
-using static System.Net.WebRequestMethods;
 namespace RentalCheckIn.Components.Pages;
 
 public class PasswordResetBase : ComponentBase
