@@ -7,9 +7,18 @@ public class HomeBase : ComponentBase
     private NavigationManager NavigationManager { get; set; }
     [Inject]
     private AuthenticationStateProvider AuthStateProvider { get; set; }
+    [Inject]
+    private ProtectedLocalStorage LocalStorage { get; set; }
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
+        // Get the accessToken if it exists
+        var response = await LocalStorage.GetAsync<string>("token");
+        if (response.Success)
+        {
+            Constants.JWTToken = response.Value;
+        }
+
         // Get the current authentication state
         var authState = await AuthStateProvider.GetAuthenticationStateAsync();
 
@@ -17,7 +26,8 @@ public class HomeBase : ComponentBase
         if (authState.User.Identity is { IsAuthenticated: false })
         {
             // Redirect to the home page if the user is already logged in
-            NavigationManager.NavigateTo("/login");
+            NavigationManager.NavigateTo("/login", forceLoad: true);
         }
     }
+
 }

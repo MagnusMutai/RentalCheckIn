@@ -7,6 +7,7 @@ public class RegisterBase : ComponentBase
     protected string ErrorMessage;
     protected string SuccessMessage;
     protected string TotpSecret;
+    protected bool ShouldSpin;
     public string DisplayToast { get; set; } = "d-block";
     [Inject]
     protected IAuthService AuthService { get; set; }
@@ -29,6 +30,7 @@ public class RegisterBase : ComponentBase
 
     protected async Task HandleRegister()
     {
+        ShouldSpin = true;
         var result = await AuthService.RegisterAsync(registerModel);
 
         if (result.Success)
@@ -38,11 +40,11 @@ public class RegisterBase : ComponentBase
         }
         ErrorMessage = result.Message;
         DisplayToast = DisplayToast ?? "d-block";
+        ShouldSpin = false;
     }
 
     protected void HandleCloseToast()
     {
         DisplayToast = null;
-
     }
 }

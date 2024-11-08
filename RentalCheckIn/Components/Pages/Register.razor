@@ -63,7 +63,13 @@
                             <InputText class="bg-transparent text-white rounded-pill form-control" @bind-Value="registerModel.ConfirmPassword" placeholder="Confirm password" type="password" />
                             <ValidationMessage For="@(() => registerModel.ConfirmPassword)" class="ms-2 text-danger" />
                         </div>
-                        <button type="submit" class="btn btn-primary myregister-btn">Register</button>
+                        <button type="submit" class="btn btn-primary myregister-btn">
+                            @if (ShouldSpin)
+                            {
+                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                            }
+                            Register
+                        </button>
                     </EditForm>
                 }
                 else

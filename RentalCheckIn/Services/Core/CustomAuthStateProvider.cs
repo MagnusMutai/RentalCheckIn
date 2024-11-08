@@ -15,17 +15,19 @@ public class CustomAuthStateProvider : AuthenticationStateProvider
 
     public override async Task<AuthenticationState> GetAuthenticationStateAsync()
     {
-        if (string.IsNullOrEmpty(Constants.JWTToken))
-        {
-        }
+
         var identity = new ClaimsIdentity();
         http.DefaultRequestHeaders.Authorization = null;
-
+        
         if (!string.IsNullOrEmpty(Constants.JWTToken))
-        {
-            identity = new ClaimsIdentity(ParseClaimsFromJwt(Constants.JWTToken), "jwt");
-            http.DefaultRequestHeaders.Authorization =
-                new AuthenticationHeaderValue("Bearer", Constants.JWTToken.Replace("\"", ""));
+        { 
+            var tokenExpired = Extensions.IsTokenExpired(Constants.JWTToken);
+            if (!tokenExpired) 
+            {
+                identity = new ClaimsIdentity(ParseClaimsFromJwt(Constants.JWTToken), "jwt");
+                http.DefaultRequestHeaders.Authorization =
+                    new AuthenticationHeaderValue("Bearer", Constants.JWTToken.Replace("\"", ""));
+            }
         }
 
         var user = new ClaimsPrincipal(identity);

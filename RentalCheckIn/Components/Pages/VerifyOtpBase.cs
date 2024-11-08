@@ -5,6 +5,7 @@ public class VerifyOtpBase : ComponentBase
 {
     protected OtpDto otpModel = new();
     protected string ErrorMessage;
+    protected bool ShouldSpin;
 
     [Inject]
     private RefreshTokenService RefreshTokenService { get; set; }
@@ -22,19 +23,6 @@ public class VerifyOtpBase : ComponentBase
     [Inject]
     protected AuthenticationStateProvider AuthStateProvider { get; set; }
 
-    //protected override async Task OnInitializedAsync()
-    //{
-    //    // Get the current authentication state
-    //    var authState = await AuthStateProvider.GetAuthenticationStateAsync();
-
-    //    // Check if the user is authenticated
-    //    if (authState.User.Identity is { IsAuthenticated: false })
-    //    {
-    //        // Redirect to the home page if the user is already logged in
-    //        NavigationManager.NavigateTo("/login");
-    //    }
-    //}
-
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         var result = await LocalStorage.GetAsync<string>("emailForOtp");
@@ -51,6 +39,7 @@ public class VerifyOtpBase : ComponentBase
 
     protected async Task HandleVerifyOtp()
     {
+        ShouldSpin = true;
         try
         {
             // This should be an api endpoint
@@ -77,6 +66,7 @@ public class VerifyOtpBase : ComponentBase
         {
             ErrorMessage = ex.Message;
         }
+        ShouldSpin = false;
     }
 
 }

@@ -19,8 +19,16 @@
                     Enter the one time password that is displayed in your authenticator <strong>app</strong>
                 </p>
                 <EditForm Model="otpModel" OnValidSubmit="HandleVerifyOtp">
+                    <DataAnnotationsValidator />
                     <InputText class="bg-transparent text-white rounded-pill form-control" @bind-Value="otpModel.Code" placeholder="TOTP Code" />
-                    <button type="submit" class="btn btn-primary myverifyotp-btn">Verify</button>
+                    <ValidationMessage For="@(() => otpModel.Code)" class="ms-2 text-danger" />
+                    <button type="submit" class="btn btn-primary myverifyotp-btn">
+                        @if (ShouldSpin)
+                        {
+                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                        }
+                        Verify
+                    </button>
                 </EditForm>
             </div>
         </div>
