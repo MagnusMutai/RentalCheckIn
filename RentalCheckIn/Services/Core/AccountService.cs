@@ -21,7 +21,7 @@ public class AccountService : IAccountService
             return new AuthenticationResponse
             {
                 Success = false,
-                Message = "Invalid login credentials"
+                Message = "Create an account to proceed."
             };
         }
 

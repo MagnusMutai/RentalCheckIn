@@ -35,7 +35,13 @@
                         <ValidationMessage For="@(() => loginModel.Password)" class="ms-2 text-danger" />
                     </div>
                     <div>
-                        <button type="submit" class="btn btn-primary mylogin-btn">Log in</button>
+                        <button type="submit" class="btn btn-primary mylogin-btn">
+                            @if (ShouldSpin)
+                            {
+                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                            }
+                            Log in
+                        </button>
                     </div>
                 </EditForm>
             </div>
