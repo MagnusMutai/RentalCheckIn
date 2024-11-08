@@ -17,7 +17,7 @@
     border: 2px solid #FFC857 !important;
 }
 
-/*::deep .border:focus {
+    /*::deep .border:focus {
     border: 2px solid #FFC857 !important;
     box-shadow: none !important;
 }*/
@@ -40,6 +40,10 @@
 }
 
 ::deep ::placeholder {
+    color: white;
+}
+
+::deep .eye-icon {
     color: white;
 }
 

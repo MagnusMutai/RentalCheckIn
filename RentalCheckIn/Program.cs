@@ -16,15 +16,6 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     new MySqlServerVersion(new Version(8, 0, 40))));
 
 //Register HttpClient with BaseAddress
-//builder.Services.AddScoped<HttpClient>(sp =>
-//{
-//    var navigationManager = sp.GetRequiredService<NavigationManager>();
-//    return new HttpClient
-//    {
-//        BaseAddress = new Uri(navigationManager.BaseUri)
-//    };
-//});
-
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://localhost:7110") });
 
 // Configure JWT Authentication
@@ -65,6 +56,9 @@ builder.Services.AddScoped<IHostRepository, HostRepository>();
 builder.Services.AddScoped<ILHostService, LHostService>();
 builder.Services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
 builder.Services.AddScoped<IAccountService, AccountService>();
+builder.Services.AddScoped<IReservationRepository, ReservationRepository>();
+builder.Services.AddScoped<IReservationBusinessService, ReservationBusinessService>();
+builder.Services.AddScoped<IReservationService, ReservationService>();
 builder.Services.AddScoped<JwtService>();
 builder.Services.AddScoped<TotpService>();
 builder.Services.AddScoped<ProtectedLocalStorage>();
