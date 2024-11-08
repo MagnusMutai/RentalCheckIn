@@ -3,12 +3,22 @@
 namespace RentalCheckIn.Components.Pages;
 public class HomeBase : ComponentBase
 {
+
+    protected List<Reservation> Reservation = new List<Reservation>();
+
     [Inject]
     private NavigationManager NavigationManager { get; set; }
     [Inject]
     private AuthenticationStateProvider AuthStateProvider { get; set; }
     [Inject]
     private ProtectedLocalStorage LocalStorage { get; set; }
+    [Inject]
+    private IReservationService ReservationService { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Reservation = (await ReservationService.GetAllReservationsAsync()).ToList() ;
+    }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {

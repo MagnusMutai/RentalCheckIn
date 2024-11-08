@@ -33,19 +33,24 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr scope="row">
-                                <td>2024-10-15</td>
-                                <td>2024-10-21</td>
-                                <td>Snowy</td>
-                                <td>Charly</td>
-                                <td>5</td>
-                                <td>6</td>
-                                <td>US 567,29</td>
-                                <td>Booking.com</td>
-                                <td></td>
-                            </tr>
-                            <tr class="spacer"><td colspan="100"></td></tr>
-
+                            @foreach (var reservation in Reservation)
+                            {
+                                <tr scope="row">
+                                    <td>@reservation.CheckInDate</td>
+                                    <td>@reservation.CheckOutDate</td>
+                                    <td>@reservation.Apartment</td>
+                                    <td>@reservation.Quest</td>
+                                    <td>@reservation.NumberOfQuests</td>
+                                    <td>@reservation.NumberOfNights</td>
+                                    <td>@reservation.TotalPrice</td>
+                                    <td>@reservation.Apartment</td>
+                                    <td>@reservation.Status</td>
+                                    <td>
+                                        <button class="btn btn-success btn-sm">View</button>
+                                    </td>
+                                </tr>
+                                <tr class="spacer"><td colspan="100"></td></tr>
+                            }
                         </tbody>
                     </table>
                 </div>

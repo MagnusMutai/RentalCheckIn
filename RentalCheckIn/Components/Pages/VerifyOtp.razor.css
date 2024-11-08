@@ -11,11 +11,6 @@
     border: 1px solid #FFC857 !important;
 }
 
-    /*::deep .border:focus {
-    border: 2px solid #FFC857 !important;
-    box-shadow: none !important;
-}*/
-
     ::deep .form-control.invalid {
         border: 1px solid #dc3545 !important;
     }
