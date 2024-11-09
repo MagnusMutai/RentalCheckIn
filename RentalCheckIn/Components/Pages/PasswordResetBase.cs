@@ -3,6 +3,7 @@ namespace RentalCheckIn.Components.Pages;
 
 public class PasswordResetBase : ComponentBase
 {
+    protected bool ShouldSpin;
 
     protected PasswordResetDto resetPasswordModel = new PasswordResetDto();
     protected string ErrorMessage { get; set; }
@@ -18,7 +19,7 @@ public class PasswordResetBase : ComponentBase
     protected async Task HandleResetPassword()
     {
 
-        IsLoading = true;
+        ShouldSpin = true;
         // Parse the current URI to extract query parameters
         var uri = NavigationManager.ToAbsoluteUri(NavigationManager.Uri);
         var queryParams = QueryHelpers.ParseQuery(uri.Query);
@@ -35,8 +36,11 @@ public class PasswordResetBase : ComponentBase
                 }
             }
         }
+        else
+        {
+            ErrorMessage = "Invalid request.";
+        }
 
-        IsLoading = false;
-
+        ShouldSpin = false;
     }
 }

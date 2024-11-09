@@ -1,7 +1,5 @@
-﻿using Microsoft.AspNetCore.Components.Authorization;
-using RentalCheckIn.Services.UI;
-using System.Net.Http.Headers;
-using System.Text.Json;
+﻿using System.Net.Http.Headers;
+
 namespace RentalCheckIn.Services.Core;
 
 public class CustomAuthStateProvider : AuthenticationStateProvider

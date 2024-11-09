@@ -60,6 +60,6 @@ public class HostRepository : IHostRepository
     public async Task<LHost> GetLHostByPasswordResetTokenAsync(string token)
     {
         return await context.LHosts
-          .FirstOrDefaultAsync(h => h.PasswordResetToken == token && h.ResetTokenExpires > DateTime.UtcNow);
+          .FirstOrDefaultAsync(h => h.PasswordResetToken == token && h.ResetTokenExpires > DateTime.Now);
     }
 }

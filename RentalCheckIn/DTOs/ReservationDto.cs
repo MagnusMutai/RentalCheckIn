@@ -10,6 +10,7 @@
         public decimal? TotalPrice { get; set; }
         public string ApartmentName { get; set; }
         public string ChannelName { get; set; }
-        public string StatusLebel { get; set; }
+        public string StatusLabel { get; set; }
+        public string CurrencySymbol { get; set; }
     }
 }

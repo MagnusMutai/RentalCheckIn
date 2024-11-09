@@ -2,6 +2,6 @@
 {
     public interface IReservationRepository
     {
-        Task<IEnumerable<Reservation>> GetAllReservationsAsync();
+        Task<IEnumerable<ReservationDto>> GetAllReservationsAsync();
     }
 }

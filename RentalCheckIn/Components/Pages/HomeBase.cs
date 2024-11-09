@@ -3,8 +3,10 @@
 namespace RentalCheckIn.Components.Pages;
 public class HomeBase : ComponentBase
 {
+    protected int currentPage = 1;
+    protected int itemsPerPage = 5; // Set the number of items per page
 
-    protected List<Reservation> Reservation = new List<Reservation>();
+    protected List<ReservationDto> Reservation = new List<ReservationDto>();
 
     [Inject]
     private NavigationManager NavigationManager { get; set; }
@@ -17,7 +19,7 @@ public class HomeBase : ComponentBase
 
     protected override async Task OnInitializedAsync()
     {
-        Reservation = (await ReservationService.GetAllReservationsAsync()).ToList() ;
+        Reservation = (await ReservationService.GetAllReservationsAsync()).ToList();
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -28,16 +30,42 @@ public class HomeBase : ComponentBase
         {
             Constants.JWTToken = response.Value;
         }
-
-        // Get the current authentication state
         var authState = await AuthStateProvider.GetAuthenticationStateAsync();
-
         // Check if the user is authenticated
         if (authState.User.Identity is { IsAuthenticated: false })
         {
-            // Redirect to the home page if the user is already logged in
             NavigationManager.NavigateTo("/login", forceLoad: true);
         }
+    }
+
+
+    protected int totalPages => (int)Math.Ceiling((double)Reservation?.Count() / itemsPerPage);
+
+    protected IEnumerable<ReservationDto> PaginatedReservations => Reservation
+        .Skip((currentPage - 1) * itemsPerPage)
+        .Take(itemsPerPage);
+
+    protected void NextPage()
+    {
+        if (currentPage < totalPages)
+        {
+            currentPage++;
+        }
+    }
+
+    protected void PreviousPage()
+    {
+        if (currentPage > 1)
+        {
+            currentPage--;
+        }
+    }
+
+    protected void GoToPage(int pageNumber)
+    {
+        if (pageNumber > totalPages)
+            throw new Exception("Nonsense");
+        currentPage = pageNumber;
     }
 
 }
