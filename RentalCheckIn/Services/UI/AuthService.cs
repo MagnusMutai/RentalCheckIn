@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity.Data;
 using RentalCheckIn.Components.Pages;
 using RentalCheckIn.DTOs;
+using System.Net.Http.Json;
 using static System.Net.WebRequestMethods;
 
 namespace RentalCheckIn.Services.UI;
@@ -68,7 +69,7 @@ public class AuthService : IAuthService
         }
     }
 
-    public async Task RefreshTokenAsync()
+    public async Task<TokenValidateResult> RefreshTokenAsync()
     {
 
         try
@@ -86,12 +87,25 @@ public class AuthService : IAuthService
             var content = new StringContent(json, Encoding.UTF8, "application/json");
 
             var response = await httpClient.PostAsync("api/auth/refresh-token", content);
+            if (response.IsSuccessStatusCode)
+            {
+                if (response.StatusCode == HttpStatusCode.NotFound)
+                {
+                    return default(TokenValidateResult);
+                }
+                return await response.Content.ReadFromJsonAsync<TokenValidateResult>();
+            }
+            else
+            {
+                var message = await response.Content.ReadAsStringAsync();
+                throw new Exception(message);
+            }
 
             async Task<string> RetrieveToken(string key)
             {
                 // Retrieve token from local storage
-                var response = await localStorage.GetAsync<string>(key);
-                return response.Value;
+                var result = await localStorage.GetAsync<string>(key);
+                return result.Value;
             }
         }
         catch(Exception) 

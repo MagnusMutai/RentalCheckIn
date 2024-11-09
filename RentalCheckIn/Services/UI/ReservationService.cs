@@ -1,4 +1,5 @@
 ﻿
+
 namespace RentalCheckIn.Services.UI;
 public class ReservationService : IReservationService
 {
@@ -13,7 +14,7 @@ public class ReservationService : IReservationService
     {
         try
         {
-            var response = await httpClient.GetAsync("api/reservation");
+            var response = await httpClient.GetAsync("api/reservation/AllReservations");
             if (response.IsSuccessStatusCode)
             {
                 if (response.StatusCode == HttpStatusCode.NotFound)
@@ -21,6 +22,32 @@ public class ReservationService : IReservationService
                     return new List<ReservationDto>();
                 }
                 return await response.Content.ReadFromJsonAsync<IEnumerable<ReservationDto>>();
+            }
+            else
+            {
+                var message = await response.Content.ReadAsStringAsync();
+                throw new Exception($"{message}");
+            }
+        }
+        catch (Exception ex)
+        {
+            throw;
+        }
+
+    }
+
+    public async Task<IEnumerable<Setting>> GetSettingsAsync()
+    {
+        try
+        {
+            var response = await httpClient.GetAsync("api/reservation/settings");
+            if (response.IsSuccessStatusCode)
+            {
+                if (response.StatusCode == HttpStatusCode.NotFound)
+                {
+                    return new List<Setting>();
+                }
+                return await response.Content.ReadFromJsonAsync<IEnumerable<Setting>>();
             }
             else
             {

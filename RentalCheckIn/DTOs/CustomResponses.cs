@@ -37,10 +37,12 @@ public class CustomResponses
         public string ErrorMessage { get; set; }
     }
 
-    public class TokenResponse
+    public class TokenValidateResult
     {
-        public string NewAccessToken { get; set; }
-        public string NewRefreshToken { get; set; }
+        public bool IsSuccess { get; set; }
+        public string AccessToken { get; set; }
+        public string RefreshToken { get; set; }
+        public string Message { get; set; }
     }
 
     public class ResetPasswordResponse

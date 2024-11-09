@@ -1,12 +1,14 @@
 ﻿using Microsoft.AspNetCore.Components;
+using System.Linq;
 
 namespace RentalCheckIn.Components.Pages;
 public class HomeBase : ComponentBase
 {
-    protected int currentPage = 1;
-    protected int itemsPerPage = 5; // Set the number of items per page
+    protected uint currentPage = 1;
+    protected uint itemsPerPage;
 
     protected List<ReservationDto> Reservation = new List<ReservationDto>();
+    protected List<Setting> Settings = new List<Setting>();
 
     [Inject]
     private NavigationManager NavigationManager { get; set; }
@@ -20,30 +22,40 @@ public class HomeBase : ComponentBase
     protected override async Task OnInitializedAsync()
     {
         Reservation = (await ReservationService.GetAllReservationsAsync()).ToList();
+        Settings = (await ReservationService.GetSettingsAsync()).ToList();
+        itemsPerPage = Settings[0].RowsPerPage;
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        // Get the accessToken if it exists
-        var response = await LocalStorage.GetAsync<string>("token");
-        if (response.Success)
+        try
         {
-            Constants.JWTToken = response.Value;
+
+            // Get the accessToken if it exists
+            var response = await LocalStorage.GetAsync<string>("token");
+            if (response.Success)
+            {
+                Constants.JWTToken = response.Value;
+            }
+            var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+            // Check if the user is authenticated
+            if (authState.User.Identity is { IsAuthenticated: false })
+            {
+                NavigationManager.NavigateTo("/login", forceLoad: true);
+            }
         }
-        var authState = await AuthStateProvider.GetAuthenticationStateAsync();
-        // Check if the user is authenticated
-        if (authState.User.Identity is { IsAuthenticated: false })
+        catch(Exception ex)
         {
-            NavigationManager.NavigateTo("/login", forceLoad: true);
+            Console.WriteLine(ex.Message);
         }
     }
 
 
-    protected int totalPages => (int)Math.Ceiling((double)Reservation?.Count() / itemsPerPage);
+    protected uint totalPages => (uint)Math.Ceiling((double)Reservation?.Count() / itemsPerPage);
 
     protected IEnumerable<ReservationDto> PaginatedReservations => Reservation
-        .Skip((currentPage - 1) * itemsPerPage)
-        .Take(itemsPerPage);
+        .Skip((int)((currentPage - 1) * itemsPerPage))
+        .Take((int)itemsPerPage);
 
     protected void NextPage()
     {
@@ -61,11 +73,12 @@ public class HomeBase : ComponentBase
         }
     }
 
-    protected void GoToPage(int pageNumber)
+    protected void GoToPage(uint pageNumber)
     {
-        if (pageNumber > totalPages)
-            throw new Exception("Nonsense");
-        currentPage = pageNumber;
+        if (pageNumber <= totalPages)
+        {
+            currentPage = pageNumber;
+        }
     }
 
 }
