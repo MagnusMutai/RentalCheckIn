@@ -15,18 +15,38 @@
 </CascadingAuthenticationState>
 
 @code{
+
     [Inject]
     private AuthenticationStateProvider AuthStateProvider { get; set; }
     [Inject]
     private IAuthService AuthService { get; set; }
+    [Inject]
+    private ProtectedLocalStorage LocalStorage { get; set;  }
+    public bool isTokenRefreshed;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
+        if (firstRender && !isTokenRefreshed)
+        {
+            // isTokenRefreshed = true;
 
-        await AuthService.RefreshTokenAsync();
+            var response = await AuthService.RefreshTokenAsync();
 
-        await AuthStateProvider.GetAuthenticationStateAsync();
+            if (response.IsSuccess)
+            {
+                await LocalStorage.SetAsync("refreshToken", response.RefreshToken);
+                await LocalStorage.SetAsync("token", response.AccessToken);
+                Constants.JWTToken = response.AccessToken;
+            }
 
+            var result = await LocalStorage.GetAsync<string>("refreshToken");
+            if (result.Success)
+            {
+                var storedRToken = result.Value;
+            }
+            await AuthStateProvider.GetAuthenticationStateAsync();
+
+        }
     }
 
 }

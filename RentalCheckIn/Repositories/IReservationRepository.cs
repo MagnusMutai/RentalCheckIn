@@ -3,5 +3,6 @@
     public interface IReservationRepository
     {
         Task<IEnumerable<ReservationDto>> GetAllReservationsAsync();
+        Task<IEnumerable<Setting>> GetSettingsAsync();
     }
 }

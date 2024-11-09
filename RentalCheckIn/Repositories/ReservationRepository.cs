@@ -1,4 +1,5 @@
 ﻿
+
 namespace RentalCheckIn.Repositories
 {
     public class ReservationRepository : IReservationRepository
@@ -34,6 +35,11 @@ namespace RentalCheckIn.Repositories
                         StatusLabel = r.Status.StatusLabel
                         // Map other fields as needed
                     }).ToListAsync();
+        }
+
+        public async Task<IEnumerable<Setting>> GetSettingsAsync()
+        {
+            return await context.Settings.ToListAsync();
         }
     }
 }

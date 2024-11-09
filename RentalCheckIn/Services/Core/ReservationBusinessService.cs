@@ -1,4 +1,5 @@
 ﻿
+
 namespace RentalCheckIn.Services.Core;
 
 public class ReservationBusinessService : IReservationBusinessService
@@ -20,6 +21,18 @@ public class ReservationBusinessService : IReservationBusinessService
         {
             // Return an empty list on error
             return Enumerable.Empty<ReservationDto>(); 
+        }
+    }
+
+    public async Task<IEnumerable<Setting>> GetSettingsAsync()
+    {
+        try
+        {
+            return await reservationRepository.GetSettingsAsync();
+        }
+        catch (Exception ex)
+        {
+            return Enumerable.Empty<Setting>();
         }
     }
 }

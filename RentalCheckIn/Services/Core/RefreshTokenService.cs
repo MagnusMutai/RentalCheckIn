@@ -1,4 +1,6 @@
-﻿namespace RentalCheckIn.Services.Core;
+﻿using System.Linq;
+
+namespace RentalCheckIn.Services.Core;
 
 public class RefreshTokenService
 {
@@ -35,6 +37,7 @@ public class RefreshTokenService
                 Token = GenerateSecureToken(),
                 // Set refresh token lifespan
                 Expires = DateTime.UtcNow.AddDays(7),
+                // Make the db do auto initialization
                 Created = DateTime.UtcNow,
                 IsRevoked = false,
                 HostId = lHostId
@@ -64,33 +67,43 @@ public class RefreshTokenService
     }
 
     // Implement a return type to give a meaningful feedback
-    public async Task ValidateAndRefreshTokensAsync(string accessToken, string refreshToken)
+    public async Task<TokenValidateResult> ValidateAndRefreshTokensAsync(string accessToken, string refreshToken)
     {
         try
         {
+
+            if (string.IsNullOrEmpty(refreshToken) || string.IsNullOrEmpty(accessToken))
+            {
+                Console.WriteLine("No tokens found");
+                return new TokenValidateResult
+                {
+                    IsSuccess = false,
+                    Message = "No tokens found"
+                };
+            }
 
             // Check if the access token is valid
             if (!string.IsNullOrEmpty(accessToken) && !Extensions.IsTokenExpired(accessToken))
             {
                 // Access token is valid, no need to refresh
                 Constants.JWTToken = accessToken;
-                return;
+                return new TokenValidateResult
+                {
+                    IsSuccess = false,
+                    Message = "Token is valid."
+                };
             }
-
-            if (string.IsNullOrEmpty(refreshToken) || string.IsNullOrEmpty(accessToken))
-            {
-                Console.WriteLine("No tokens found, redirecting to login...");
-                // Redirect to login 
-                return;
-            }
-
 
             // Validate the refresh token by retrieving it from the database
             var refreshTokenEntity = await accountService.GetRefreshTokenAsync(refreshToken);
             if (refreshTokenEntity == null)
             {
-                Console.WriteLine("You're not authorized");
-                return;
+                Console.WriteLine("You're not authorized.");
+                return new TokenValidateResult
+                {
+                    IsSuccess = false,
+                    Message = "You're not authorized."
+                };
             }
 
             var returnedToken = refreshTokenEntity.RefreshToken;
@@ -98,43 +111,46 @@ public class RefreshTokenService
             if (returnedToken == null || !returnedToken.IsActive)
             {
                 Console.WriteLine("Invalid or expired refresh token.");
-                return;
+                return new TokenValidateResult
+                {
+                    IsSuccess = false,
+                    Message = "Invalid or expired refresh token."
+                };
             }
-
+            // AND We have an Active refreshToken in the 
             // Retrieve the host associated with this refresh token
             var host = await accountService.GetLHostByIdAsync(returnedToken.HostId);
             if (host == null)
             {
                 Console.WriteLine("Associated host not found.");
-                return;
+                return new TokenValidateResult
+                {
+                    IsSuccess = false,
+                    Message = "Associated host not found."
+                };
             }
-
             // Generate new tokens
             var newAccessToken = jwtService.GenerateToken(host);
             var newRefreshToken = await GenerateRefreshToken(host.HostId);
 
-            StoreToken("token", newAccessToken);
-            StoreToken("refreshToken", newRefreshToken.Token);
             Console.WriteLine("Tokens refreshed successfully.");
+            return new TokenValidateResult
+            {
+                IsSuccess = true,
+                AccessToken = newAccessToken,
+                RefreshToken = newRefreshToken.Token
+            };
+
         }
         catch (Exception ex)
         {
             Console.WriteLine($"An error occurred during token validation or refresh: {ex.Message}");
-            return; // Indicate failure to the caller
+            return new TokenValidateResult
+            {
+                IsSuccess = false,
+                Message = $"An error occurred during token validation or refresh: {ex.Message}"
+            };
         }
-    }
-
-    private async Task<string> RetrieveToken(string key)
-    {
-        // Retrieve token from local storage 
-        var response = await localStorage.GetAsync<string>(key);
-        return response.Value;
-    }
-
-    private void StoreToken(string key, string token)
-    {
-        // Store token securely in local storage 
-        localStorage.SetAsync(key, token);
     }
 }
 

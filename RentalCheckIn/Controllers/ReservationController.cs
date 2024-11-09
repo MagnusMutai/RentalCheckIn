@@ -12,7 +12,7 @@ public class ReservationController : ControllerBase
         this.reservationService = reservationService;
     }
 
-    [HttpGet]
+    [HttpGet("AllReservations")]
     public async Task<IActionResult> GetAllReservations()
     {
         try
@@ -25,6 +25,29 @@ public class ReservationController : ControllerBase
             else
             {
                 return Ok(reservations);
+            }
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError,
+                  "Error retrieving Data from Database");
+        }
+    }
+    
+    
+    [HttpGet("Settings")]
+    public async Task<IActionResult> GetSettingsAsync()
+    {
+        try
+        {
+            var settings = await reservationService.GetSettingsAsync();
+            if (settings == null )
+            {
+                return NotFound();
+            }
+            else
+            {
+                return Ok(settings);
             }
         }
         catch (Exception ex)

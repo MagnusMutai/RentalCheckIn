@@ -49,8 +49,8 @@ public class AuthController : ControllerBase
         var accessToken = tokenRequest.AccessToken;
         var refreshToken = tokenRequest.RefreshToken;
 
-        await refreshTokenService.ValidateAndRefreshTokensAsync(accessToken, refreshToken);
-        return Ok();
+        var response = await refreshTokenService.ValidateAndRefreshTokensAsync(accessToken, refreshToken);
+        return Ok(response);
     }
 
     [HttpPost("forgot-password")]

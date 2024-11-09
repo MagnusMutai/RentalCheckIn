@@ -59,9 +59,9 @@
                     <div class="pagination-controls text-center mt-3">
                         <button class="btn btn-primary btn-sm me-2" @onclick="PreviousPage" disabled="@(currentPage == 1)">Previous</button>
 
-                        @for (int page = 1; page <= totalPages; page++)
+                        @for (uint page = 1; page <= totalPages; page++)
                         {
-                            int numPage = page;
+                            uint numPage = page;
                             <button class="btn btn-secondary btn-sm me-1 @(currentPage == page ? "active" : "")" disabled="@(currentPage == page)" @onclick="() => GoToPage(numPage)">
                                 @numPage
                             </button>
