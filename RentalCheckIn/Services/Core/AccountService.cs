@@ -94,7 +94,7 @@ public class AccountService : IAccountService
         
         await hostRepository.UpdateLHostPartialAsync(lHost, host =>
         {
-            host.LastLogin = DateTime.Now;
+            host.LastLogin = DateTime.UtcNow;
             // Reset login attempt to zero for a successful login
             host.LoginAttempts = 0;
         });
@@ -255,7 +255,7 @@ public class AccountService : IAccountService
         bool result = await hostRepository.UpdateLHostPartialAsync(lHost, host =>
         {
             host.PasswordResetToken = passResetToken;
-            host.ResetTokenExpires = DateTime.UtcNow.AddHours(1);
+            host.ResetTokenExpires = DateTime.UtcNow.AddDays(2);
         });
 
         if (!result)

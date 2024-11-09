@@ -33,30 +33,47 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var reservation in Reservation)
+                            @if (PaginatedReservations != null || !PaginatedReservations.Any())
                             {
-                                <tr scope="row">
-                                    <td>@reservation.CheckInDate</td>
-                                    <td>@reservation.CheckOutDate</td>
-                                    <td>@reservation.Apartment</td>
-                                    <td>@reservation.Quest</td>
-                                    <td>@reservation.NumberOfQuests</td>
-                                    <td>@reservation.NumberOfNights</td>
-                                    <td>@reservation.TotalPrice</td>
-                                    <td>@reservation.Apartment</td>
-                                    <td>@reservation.Status</td>
-                                    <td>
-                                        <button class="btn btn-success btn-sm">View</button>
-                                    </td>
-                                </tr>
-                                <tr class="spacer"><td colspan="100"></td></tr>
+                                @foreach (var reservation in PaginatedReservations)
+                                {
+                                    <tr scope="row">
+                                        <td>@reservation.CheckInDate</td>
+                                        <td>@reservation.CheckOutDate</td>
+                                        <td>@reservation.ApartmentName</td>
+                                        <td>@reservation.QuestName</td>
+                                        <td>@reservation.NumberOfQuests</td>
+                                        <td>@reservation.NumberOfNights</td>
+                                        <td>@reservation.CurrencySymbol @reservation.TotalPrice</td>
+                                        <td>@reservation.ChannelName</td>
+                                        <td>@reservation.StatusLabel</td>
+                                        <td>
+                                            <button class="btn btn-success btn-sm border-0 rounded-3">View</button>
+                                        </td>
+                                    </tr>
+                                    <tr class="spacer"><td colspan="100"></td></tr>
+                                }
                             }
                         </tbody>
                     </table>
+                    <div class="pagination-controls text-center mt-3">
+                        <button class="btn btn-primary btn-sm me-2" @onclick="PreviousPage" disabled="@(currentPage == 1)">Previous</button>
+
+                        @for (int page = 1; page <= totalPages; page++)
+                        {
+                            int numPage = page;
+                            <button class="btn btn-secondary btn-sm me-1 @(currentPage == page ? "active" : "")" disabled="@(currentPage == page)" @onclick="() => GoToPage(numPage)">
+                                @numPage
+                            </button>
+                        }
+
+                        <button class="btn btn-primary btn-sm ms-2" @onclick="NextPage" disabled="@(currentPage == totalPages)">Next</button>
+                    </div>
                 </div>
 
 
             </div>
+
 
         </div>
     </Authorized>

@@ -9,7 +9,7 @@ namespace RentalCheckIn.Repositories
         {
             this.context = context;
         }
-        public async Task<IEnumerable<Reservation>> GetAllReservationsAsync()
+        public async Task<IEnumerable<ReservationDto>> GetAllReservationsAsync()
         {
             return await context.Reservations
                 .Include(r => r.Apartment)
@@ -18,7 +18,22 @@ namespace RentalCheckIn.Repositories
                 .Include(r => r.Host)
                 .Include(r => r.Quest)
                 .Include(r => r.Status)
-                .ToListAsync();
+                .Where(r => r.StatusId < 3)
+                .OrderBy(r => r.CheckInDate)
+                    .Select(r => new ReservationDto
+                    {
+                        CheckInDate = r.CheckInDate,
+                        CheckOutDate = r.CheckOutDate,
+                        QuestName = r.Quest.FirstName,
+                        NumberOfQuests = r.NumberOfQuests,
+                        NumberOfNights = r.NumberOfNights,
+                        TotalPrice = r.TotalPrice,
+                        ApartmentName = r.Apartment.ApartmentName,
+                        ChannelName = r.Channel.ChannelLabel,
+                        CurrencySymbol = r.Currency.CurrencySymbol,
+                        StatusLabel = r.Status.StatusLabel
+                        // Map other fields as needed
+                    }).ToListAsync();
         }
     }
 }

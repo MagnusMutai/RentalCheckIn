@@ -2,5 +2,5 @@
 
 public interface IReservationBusinessService
 {
-    Task<IEnumerable<Reservation>> GetAllReservationsAsync();
+    Task<IEnumerable<ReservationDto>> GetAllReservationsAsync();
 }

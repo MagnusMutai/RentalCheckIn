@@ -56,3 +56,8 @@
     border-radius: 0 !important;
     background: transparent !important;
 }
+
+.btn-success {
+    background-color: #1BE299;
+    color: #680979;
+}
