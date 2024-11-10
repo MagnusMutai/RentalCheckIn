@@ -83,14 +83,14 @@ public class RefreshTokenService
             }
 
             // Check if the access token is valid
-            if (!string.IsNullOrEmpty(accessToken) && !Extensions.IsTokenExpired(accessToken))
+            if (!string.IsNullOrEmpty(accessToken) && !Extensions.IsTokenAlmostExpired(accessToken))
             {
                 // Access token is valid, no need to refresh
                 Constants.JWTToken = accessToken;
                 return new TokenValidateResult
                 {
                     IsSuccess = false,
-                    Message = "Token is valid."
+                    Message = "The existing token is still Valid"
                 };
             }
 
@@ -132,7 +132,8 @@ public class RefreshTokenService
             // Generate new tokens
             var newAccessToken = jwtService.GenerateToken(host);
             var newRefreshToken = await GenerateRefreshToken(host.HostId);
-
+            Constants.JWTToken = newAccessToken;
+            await authStateProvider.GetAuthenticationStateAsync();
             Console.WriteLine("Tokens refreshed successfully.");
             return new TokenValidateResult
             {

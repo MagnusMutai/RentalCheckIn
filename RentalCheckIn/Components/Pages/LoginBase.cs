@@ -22,7 +22,7 @@ public class LoginBase : ComponentBase
         var authState = await AuthStateProvider.GetAuthenticationStateAsync();
 
         // Check if the user is authenticated
-        if (authState.User.Identity is { IsAuthenticated: true })
+        if (authState.User.Identity is { IsAuthenticated: true } )
         {
             // Redirect to the home page if the user is already logged in
             NavigationManager.NavigateTo("/", forceLoad:true);

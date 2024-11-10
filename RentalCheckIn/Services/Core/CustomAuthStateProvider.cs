@@ -36,6 +36,35 @@ public class CustomAuthStateProvider : AuthenticationStateProvider
         return state;
     }
 
+    public async Task<AuthenticationState> NotifyUserAuthentication(string token)
+    {
+        //// Optionally, you can store the token if needed
+        //await localStorage.SetAsync("token", token);
+        var identity = new ClaimsIdentity();
+        http.DefaultRequestHeaders.Authorization = null;
+        if (!string.IsNullOrEmpty(Constants.JWTToken))
+        {
+            var tokenExpired = Extensions.IsTokenExpired(Constants.JWTToken);
+            if (!tokenExpired)
+            {
+                identity = new ClaimsIdentity(ParseClaimsFromJwt(token), "jwt");
+                http.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue("Bearer", Constants.JWTToken.Replace("\"", ""));
+            }
+        }
+                var user = new ClaimsPrincipal(identity);
+                var state = new AuthenticationState(user);
+
+        NotifyAuthenticationStateChanged(Task.FromResult(state));
+        return state;
+    }
+
+    public async Task NotifyUserLogout()
+    {
+        var anonymousUser = new ClaimsPrincipal(new ClaimsIdentity());
+        NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(anonymousUser)));
+    }
+
     public static IEnumerable<Claim> ParseClaimsFromJwt(string jwt)
     {
         var payload = jwt.Split('.')[1];

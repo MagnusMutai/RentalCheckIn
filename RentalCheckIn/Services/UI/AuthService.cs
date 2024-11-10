@@ -1,10 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity.Data;
-using RentalCheckIn.Components.Pages;
-using RentalCheckIn.DTOs;
-using System.Net.Http.Json;
-using static System.Net.WebRequestMethods;
-
-namespace RentalCheckIn.Services.UI;
+﻿namespace RentalCheckIn.Services.UI;
 
 public class AuthService : IAuthService
 {
@@ -36,11 +30,12 @@ public class AuthService : IAuthService
                 throw new Exception(message);
             }
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            // Log exception
-            throw;
+            Console.WriteLine(ex.Message);
+            return new AuthenticationResponse();
         }
+
     }
 
     public async Task<AuthenticationResponse> RegisterAsync(HostSignUpDto hostSignUpDto)
@@ -62,11 +57,13 @@ public class AuthService : IAuthService
                 throw new Exception(message);
             }
         }
-        catch (Exception)
+        // Log exception
+        catch (Exception ex)
         {
-            // Log exception
-            throw;
+            Console.WriteLine(ex.Message);
+            return new AuthenticationResponse();
         }
+
     }
 
     public async Task<TokenValidateResult> RefreshTokenAsync()
@@ -77,6 +74,14 @@ public class AuthService : IAuthService
             var accessToken = await RetrieveToken("token");
             var refreshToken = await RetrieveToken("refreshToken");
 
+            if (string.IsNullOrEmpty(accessToken) || string.IsNullOrEmpty(refreshToken))
+            {
+                return new TokenValidateResult
+                {
+                    IsSuccess = false,
+                    Message = "Cannot send empty tokens to the server."
+                };
+            }
             var data = new
             {
                 AccessToken = accessToken,
@@ -100,7 +105,7 @@ public class AuthService : IAuthService
                 var message = await response.Content.ReadAsStringAsync();
                 throw new Exception(message);
             }
-
+            // Put it outside for single responsibility
             async Task<string> RetrieveToken(string key)
             {
                 // Retrieve token from local storage
@@ -108,10 +113,12 @@ public class AuthService : IAuthService
                 return result.Value;
             }
         }
-        catch(Exception) 
+        catch (Exception ex)
         {
-            throw;
+            Console.WriteLine(ex.Message);
+            return new TokenValidateResult();
         }
+
     }
 
     public async Task<ResetPasswordResponse> ForgotPasswordAsync(ResetRequestDto resetRequestDto)
@@ -124,7 +131,7 @@ public class AuthService : IAuthService
 
             if (response.IsSuccessStatusCode)
             {
-                if (response.StatusCode == HttpStatusCode.NoContent) 
+                if (response.StatusCode == HttpStatusCode.NoContent)
                 {
                     return default;
                 }
@@ -136,10 +143,12 @@ public class AuthService : IAuthService
                 throw new Exception(message);
             }
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            throw;
+            Console.WriteLine(ex.Message);
+            return new ResetPasswordResponse();
         }
+
     }
 
     public async Task<EmailVerificationResponse> VerifyEmailAsync(string eleVerificationToken)
@@ -155,7 +164,7 @@ public class AuthService : IAuthService
                 {
                     return default;
                 }
-               return await response.Content.ReadFromJsonAsync<EmailVerificationResponse>();
+                return await response.Content.ReadFromJsonAsync<EmailVerificationResponse>();
             }
             else
             {
@@ -165,7 +174,8 @@ public class AuthService : IAuthService
         }
         catch (Exception ex)
         {
-            throw;
+            Console.WriteLine(ex.Message);
+            return new EmailVerificationResponse();
         }
     }
     public async Task<ResetPasswordResponse> ResetPasswordAsync(string token, PasswordResetDto passwordResetDto)
@@ -197,7 +207,8 @@ public class AuthService : IAuthService
         }
         catch (Exception ex)
         {
-            throw;
+            Console.WriteLine(ex.Message);
+            return new ResetPasswordResponse();
         }
     }
 }

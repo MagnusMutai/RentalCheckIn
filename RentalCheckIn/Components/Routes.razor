@@ -1,4 +1,6 @@
-﻿<CascadingAuthenticationState>
+﻿@implements IAsyncDisposable
+
+<CascadingAuthenticationState>
     <Router AppAssembly="typeof(Program).Assembly">
         <Found Context="routeData">
             <AuthorizeRouteView RouteData="routeData" DefaultLayout="typeof(Layout.MainLayout)">
@@ -14,21 +16,40 @@
     </Router>
 </CascadingAuthenticationState>
 
-@code{
+@code {
 
+    public bool isTokenRefreshed;
+    public bool isFirstTokenRefreshed;
+    private Timer tokenRefreshTimer;
+    private bool isRefreshing = false;
+    private PeriodicTimer timer;
+    private CancellationTokenSource cts;
     [Inject]
     private AuthenticationStateProvider AuthStateProvider { get; set; }
     [Inject]
     private IAuthService AuthService { get; set; }
     [Inject]
-    private ProtectedLocalStorage LocalStorage { get; set;  }
-    public bool isTokenRefreshed;
+    private ProtectedLocalStorage LocalStorage { get; set; }
+    [Inject]
+    private NavigationManager NavigationManager { get; set; }
+
+    protected override void OnInitialized()
+    {
+        // Subscribe to authentication state changes
+        AuthStateProvider.AuthenticationStateChanged += OnAuthenticationStateChanged;
+    }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender && !isTokenRefreshed)
         {
-            // isTokenRefreshed = true;
+            isTokenRefreshed = true;
+            await StartRefreshTokenAsync();
+        }
+
+        if (!isFirstTokenRefreshed)
+        {
+            isFirstTokenRefreshed = true;
 
             var response = await AuthService.RefreshTokenAsync();
 
@@ -37,15 +58,115 @@
                 await LocalStorage.SetAsync("refreshToken", response.RefreshToken);
                 await LocalStorage.SetAsync("token", response.AccessToken);
                 Constants.JWTToken = response.AccessToken;
-            }
 
-            var result = await LocalStorage.GetAsync<string>("refreshToken");
-            if (result.Success)
+                // Notify the authentication state provider
+                if (AuthStateProvider is CustomAuthStateProvider customAuthStateProvider)
+                {
+                    await customAuthStateProvider.NotifyUserAuthentication(Constants.JWTToken);
+                }
+            }
+            else
             {
-                var storedRToken = result.Value;
+                Console.WriteLine("Not authorized");
+                StopRefreshToken();
             }
-            await AuthStateProvider.GetAuthenticationStateAsync();
+        }
+    }
 
+    private async void OnAuthenticationStateChanged(Task<AuthenticationState> task)
+    {
+        var authState = await task;
+        var isAuthenticated = authState.User.Identity?.IsAuthenticated == true;
+
+        if (isAuthenticated)
+        {
+            // User has logged in, start the token refresh loop
+            await StartRefreshTokenAsync();
+        }
+        else
+        {
+            // User has logged out, stop the token refresh loop
+            StopRefreshToken();
+        }
+    }
+
+    private async Task StartRefreshTokenAsync()
+    {
+        if (isRefreshing)
+            return;
+
+        isRefreshing = true;
+        try
+        {
+
+            cts = new CancellationTokenSource();
+            timer = new PeriodicTimer(TimeSpan.FromMinutes(15));
+
+            while (await timer.WaitForNextTickAsync(cts.Token))
+            {
+
+                var response = await AuthService.RefreshTokenAsync();
+                if (response.IsSuccess)
+                {
+                    await LocalStorage.SetAsync("refreshToken", response.RefreshToken);
+                    await LocalStorage.SetAsync("token", response.AccessToken);
+                    Constants.JWTToken = response.AccessToken;
+
+                    // Notify the authentication state provider
+                    if (AuthStateProvider is CustomAuthStateProvider customAuthStateProvider)
+                    {
+                        await customAuthStateProvider.NotifyUserAuthentication(Constants.JWTToken);
+                    }
+                }
+                else
+                {
+                    // Handle token refresh failure
+                    // await InvokeAsync(() =>
+                    // {
+                    //     NavigationManager.NavigateTo("/login");
+                    // });
+                    // break;
+                    Console.WriteLine($"Token refresh failed {response.Message}.");
+                    // StopRefreshToken();
+                }
+            }
+        }
+        catch (OperationCanceledException)
+        {
+            Console.WriteLine("Timer was canceled");
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"Error in token refresh loop: {ex.Message}");
+        }
+        finally
+        {
+            isRefreshing = false;
+        }
+    }
+
+    private void StopRefreshToken()
+    {
+        cts?.Cancel();
+        timer?.Dispose();
+        isRefreshing = false;
+    }
+
+
+    public async ValueTask DisposeAsync()
+    {
+        AuthStateProvider.AuthenticationStateChanged -= OnAuthenticationStateChanged;
+
+        if (cts != null)
+        {
+            cts.Cancel();
+            cts.Dispose();
+            cts = null;
+        }
+        if (timer != null)
+        {
+            timer.Dispose();
+            timer = null;
         }
     }
 
