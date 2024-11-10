@@ -27,7 +27,7 @@ public class JwtService
             Audience = configuration["Jwt:Audience"],
             Subject = new ClaimsIdentity(claims),
             // Token valid for 1 hour
-            Expires = DateTime.UtcNow.AddSeconds(45), 
+            Expires = DateTime.UtcNow.AddHours(1), 
             SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
         };
 

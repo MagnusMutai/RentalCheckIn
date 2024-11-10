@@ -33,18 +33,21 @@ public class HomeBase : ComponentBase
 
             // Get the accessToken if it exists
             var response = await LocalStorage.GetAsync<string>("token");
-            if (response.Success)
+            Constants.JWTToken = response.Success ? response.Value : "";
+
+            if (AuthStateProvider is CustomAuthStateProvider customAuthStateProvider)
             {
-                Constants.JWTToken = response.Value;
+                var authState = await customAuthStateProvider.NotifyUserAuthentication(Constants.JWTToken);
+                if (authState.User.Identity is { IsAuthenticated: false })
+                {
+                    // User is not authenticated; redirect to login
+                    NavigationManager.NavigateTo("/login", forceLoad: false);
+                }
             }
-            var authState = await AuthStateProvider.GetAuthenticationStateAsync();
-            // Check if the user is authenticated
-            if (authState.User.Identity is { IsAuthenticated: false })
-            {
-                NavigationManager.NavigateTo("/login", forceLoad: true);
-            }
+
+
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
             Console.WriteLine(ex.Message);
         }

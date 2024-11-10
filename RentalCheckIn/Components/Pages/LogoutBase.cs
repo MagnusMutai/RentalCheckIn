@@ -19,6 +19,13 @@ public class LogoutBase : ComponentBase
         await LocalStorage.DeleteAsync("token");
         Constants.JWTToken = "";
         await AuthStateProvider.GetAuthenticationStateAsync();
+
+        // Notify the authentication state provider
+        if (AuthStateProvider is CustomAuthStateProvider customAuthStateProvider)
+        {
+            await customAuthStateProvider.NotifyUserLogout();
+        }
+
         // Redirect to login page
         NavigationManager.NavigateTo("/login");
     }
