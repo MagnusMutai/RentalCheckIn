@@ -1,5 +1,8 @@
 ﻿@page "/"
+@using Microsoft.Extensions.Localization
+@using RentalCheckIn.Locales
 @inherits HomeBase
+@inject IStringLocalizer<Resource> Localizer
 
 <PageTitle>Reservations</PageTitle>
 
@@ -15,6 +18,21 @@
         <div class="content">
 
             <div class="container">
+
+                <!-- Dropdown Filter for Apartments -->
+                <div class="row my-4">
+                    <div class="col-md-2">
+                        <label for="apartmentFilter" class="form-label text-white text-nowrap">@Localizer["Filter"]:</label>
+                        <select id="apartmentFilter" class="form-select" @onchange="OnApartmentFilterChanged" value="@SelectedApartment">
+                            @foreach (var apartment in ApartmentNames)
+                            {
+                                <option value="@apartment" selected="@(apartment == SelectedApartment)">
+                                    @apartment
+                                </option>
+                            }
+                        </select>
+                    </div>
+                </div>
 
                 <div class="table-responsive custom-table-responsive">
 
@@ -77,9 +95,6 @@
 
         </div>
     </Authorized>
-    <NotAuthorized>
-        @* <button @onclick="UnimplementedMethod">Try</button> *@
-    </NotAuthorized>
 </AuthorizeView>
 
 
