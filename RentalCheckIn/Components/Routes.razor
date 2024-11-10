@@ -36,7 +36,7 @@
     protected override void OnInitialized()
     {
         // Subscribe to authentication state changes
-        AuthStateProvider.AuthenticationStateChanged += OnAuthenticationStateChanged;
+        AuthStateProvider.AuthenticationStateChanged += async (task) => await OnAuthenticationStateChanged(task);
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -73,7 +73,7 @@
         }
     }
 
-    private async void OnAuthenticationStateChanged(Task<AuthenticationState> task)
+    private async Task OnAuthenticationStateChanged(Task<AuthenticationState> task)
     {
         var authState = await task;
         var isAuthenticated = authState.User.Identity?.IsAuthenticated == true;
@@ -155,7 +155,7 @@
 
     public async ValueTask DisposeAsync()
     {
-        AuthStateProvider.AuthenticationStateChanged -= OnAuthenticationStateChanged;
+        AuthStateProvider.AuthenticationStateChanged -= async (task) => await OnAuthenticationStateChanged(task);
 
         if (cts != null)
         {

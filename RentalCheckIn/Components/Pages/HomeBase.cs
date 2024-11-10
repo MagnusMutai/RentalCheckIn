@@ -1,12 +1,12 @@
 ﻿using Microsoft.AspNetCore.Components;
-using System.Linq;
 
 namespace RentalCheckIn.Components.Pages;
 public class HomeBase : ComponentBase
 {
     protected uint currentPage = 1;
     protected uint itemsPerPage;
-
+    protected string SelectedApartment { get; set; } = "All";
+    protected List<string> ApartmentNames = new List<string>();
     protected List<ReservationDto> Reservation = new List<ReservationDto>();
     protected List<Setting> Settings = new List<Setting>();
 
@@ -23,7 +23,25 @@ public class HomeBase : ComponentBase
     {
         Reservation = (await ReservationService.GetAllReservationsAsync()).ToList();
         Settings = (await ReservationService.GetSettingsAsync()).ToList();
-        itemsPerPage = Settings[0].RowsPerPage;
+        // Determine items per page from settings
+        if (Settings != null && Settings.Any())
+        {
+            itemsPerPage = Settings[0].RowsPerPage;
+        }
+        else
+        {
+            itemsPerPage = 10; // Default value if settings are missing
+        }
+
+        // Extract distinct apartment names for the dropdown
+        ApartmentNames = Reservation
+                         .Select(r => r.ApartmentName)
+                         .Distinct()
+                         .OrderBy(name => name)
+                         .ToList();
+
+        // Add 'All' option to allow viewing all apartments
+        ApartmentNames.Insert(0, "All");
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -53,10 +71,33 @@ public class HomeBase : ComponentBase
         }
     }
 
+    /// <summary>
+    /// Computes the total number of pages based on filtered reservations.
+    /// </summary>
+    protected uint totalPages => (uint)Math.Ceiling((double)FilteredReservations.Count() / itemsPerPage);
 
-    protected uint totalPages => (uint)Math.Ceiling((double)Reservation?.Count() / itemsPerPage);
 
-    protected IEnumerable<ReservationDto> PaginatedReservations => Reservation
+    /// <summary>
+    /// Filters the reservations based on the selected apartment.
+    /// </summary>
+    protected IEnumerable<ReservationDto> FilteredReservations
+    {
+        get
+        {
+            if (SelectedApartment == "All")
+            {
+                return Reservation;
+            }
+            else
+            {
+                return Reservation.Where(r => r.ApartmentName == SelectedApartment);
+            }
+        }
+    }
+    /// <summary>
+    /// Retrieves the reservations for the current page after applying the filter.
+    /// </summary>
+    protected IEnumerable<ReservationDto> PaginatedReservations => FilteredReservations
         .Skip((int)((currentPage - 1) * itemsPerPage))
         .Take((int)itemsPerPage);
 
@@ -82,6 +123,17 @@ public class HomeBase : ComponentBase
         {
             currentPage = pageNumber;
         }
+    }
+
+    /// <summary>
+    /// Handles changes to the apartment filter.
+    /// Resets the current page to 1 and triggers a UI update.
+    /// </summary>
+    /// <param name="newApartment">The newly selected apartment.</param>
+    protected void OnApartmentFilterChanged(ChangeEventArgs e)
+    {
+        SelectedApartment = e.Value?.ToString() ?? "All";
+        currentPage = 1;
     }
 
 }
