@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
+using QRCoder;
 
 namespace RentalCheckIn.Components.Pages;
 public class RegisterBase : ComponentBase
@@ -9,6 +10,7 @@ public class RegisterBase : ComponentBase
     protected string TotpSecret;
     protected bool ShouldSpin;
     public string DisplayToast { get; set; } = "d-block";
+    protected string QrCodeImageData { get; set; }
     [Inject]
     protected IAuthService AuthService { get; set; }
     [Inject]
@@ -36,6 +38,22 @@ public class RegisterBase : ComponentBase
         if (result.Success)
         {
             TotpSecret = result.Host.TotpSecret;
+
+            // Generate the otpauth URI
+            string issuer = "RentalCheckIn"; // Replace with your app's name
+            string account = registerModel.Email;
+            string otpauthUri = $"otpauth://totp/{Uri.EscapeDataString(issuer)}:{Uri.EscapeDataString(account)}?secret={TotpSecret}&issuer={Uri.EscapeDataString(issuer)}";
+
+            // Generate the QR code image
+            var qrGenerator = new QRCodeGenerator();
+            var qrCodeData = qrGenerator.CreateQrCode(otpauthUri, QRCodeGenerator.ECCLevel.Q);
+            var qrCode = new PngByteQRCode(qrCodeData);
+            var qrCodeAsPng = qrCode.GetGraphic(20);
+
+            // Convert the image to a base64 string
+            QrCodeImageData = "data:image/png;base64," + Convert.ToBase64String(qrCodeAsPng);
+
+
             SuccessMessage = "Your account was created. An account confirmation link has been sent to your email.";
         }
         ErrorMessage = result.Message;

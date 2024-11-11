@@ -312,7 +312,8 @@ public class AccountService : IAccountService
         return new ResetPasswordResponse
         {
             Success = true,
-            Message = "Your password has been changed successfully."
+            Message = "Your password has been changed successfully.",
+            Email = lHost.MailAddress
         };
     }
 }

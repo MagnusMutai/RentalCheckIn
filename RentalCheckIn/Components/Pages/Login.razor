@@ -30,9 +30,12 @@
                         <InputText class="bg-transparent text-white rounded-pill form-control" @bind-Value="loginModel.Email" placeholder="Email" />
                         <ValidationMessage For="@(() => loginModel.Email)" class="ms-2 text-danger" />
                     </div>
-                    <div class="mb-5 py-2">
+                    <div class="mb-1 py-2">
                         <InputText class="bg-transparent text-white rounded-pill form-control" @bind-Value="loginModel.Password" placeholder="Password" type="password" />
                         <ValidationMessage For="@(() => loginModel.Password)" class="ms-2 text-danger" />
+                    </div>
+                    <div class="d-flex ms-2">
+                        <a href="password-reset-request">Forgot password?</a>
                     </div>
                     <div>
                         <button type="submit" class="btn btn-primary mylogin-btn">

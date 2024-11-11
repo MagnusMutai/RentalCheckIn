@@ -75,9 +75,13 @@
                 else
                 {
                     <div class="text-center mt-5 pt-5">
-                        <p class="mt-5 totp-msg">Please add the following secret to an authenticator <strong>app</strong> like <strong> Microsoft Authenticator</strong> in your phone then proceed to <a href="login">Login</a>.</p>
+                        <p class="mt-5 totp-msg">
+                            Please scan the following QR code with an authenticator <strong>app</strong> like <strong>Microsoft Authenticator</strong> on your phone, or enter the secret code manually. Then proceed to <a href="login">Login</a>.
+                        </p>
+                        <img class="w-50" src="@QrCodeImageData" alt="QR Code" />
                         <p class="my-4 totp-code"><strong>@TotpSecret</strong></p>
                     </div>
+
                 }
                 </div>
             </div>

@@ -6,7 +6,8 @@ public class PasswordResetBase : ComponentBase
     protected bool ShouldSpin;
 
     protected PasswordResetDto resetPasswordModel = new PasswordResetDto();
-    protected string ErrorMessage { get; set; }
+    protected HostLoginDto autoHostLoginDto = new HostLoginDto();
+    protected string Message { get; set; }
     protected bool IsPasswordResetSuccessful { get; set; } = false;
     protected bool IsLoading { get; set; } = false;
     protected ResetPasswordResponse ResetPasswordResponse { get; set; }
@@ -15,30 +16,53 @@ public class PasswordResetBase : ComponentBase
     protected IAuthService AuthService { get; set; }
     [Inject]
     protected NavigationManager NavigationManager { get; set; }
-
+    [Inject]
+    protected ProtectedLocalStorage LocalStorage { get; set; }
     protected async Task HandleResetPassword()
     {
 
         ShouldSpin = true;
-        // Parse the current URI to extract query parameters
-        var uri = NavigationManager.ToAbsoluteUri(NavigationManager.Uri);
-        var queryParams = QueryHelpers.ParseQuery(uri.Query);
-
-        if (queryParams.TryGetValue("resetToken", out var tokenValues))
+        try
         {
-            var eVerificationToken = tokenValues.FirstOrDefault();
-            if (!string.IsNullOrWhiteSpace(eVerificationToken))
+
+            // Parse the current URI to extract query parameters
+            var uri = NavigationManager.ToAbsoluteUri(NavigationManager.Uri);
+            var queryParams = QueryHelpers.ParseQuery(uri.Query);
+
+            if (queryParams.TryGetValue("resetToken", out var tokenValues))
             {
-                ResetPasswordResponse = await AuthService.ResetPasswordAsync(eVerificationToken, resetPasswordModel);
-                if (!ResetPasswordResponse.Success)
+                var eVerificationToken = tokenValues.FirstOrDefault();
+                if (!string.IsNullOrWhiteSpace(eVerificationToken))
                 {
-                    ErrorMessage = ResetPasswordResponse.Message;
+                    ResetPasswordResponse = await AuthService.ResetPasswordAsync(eVerificationToken, resetPasswordModel);
+                    if (ResetPasswordResponse != null)
+                    {
+                        Message = ResetPasswordResponse.Message;
+                        if (ResetPasswordResponse.Success)
+                        {
+                            autoHostLoginDto.Email = ResetPasswordResponse.Email;
+                            autoHostLoginDto.Password = resetPasswordModel.NewPassword;
+
+                            var result = await AuthService.LoginAsync(autoHostLoginDto);
+                            if (result.Success)
+                            {
+                                var lHost = result.Host;
+                                // Store email for OTP verification
+                                await LocalStorage.SetAsync("emailForOtp", lHost.MailAddress);
+                                NavigationManager.NavigateTo("/verify-otp");
+                            }
+                        }
+                    }
                 }
             }
+            else
+            {
+                Message = "Invalid request.";
+            }
         }
-        else
+        catch (Exception ex) 
         {
-            ErrorMessage = "Invalid request.";
+            Message = "Invalid request.";
         }
 
         ShouldSpin = false;

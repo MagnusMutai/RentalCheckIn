@@ -1,14 +1,26 @@
 ﻿@page "/email-confirmation"
 @inherits ConfirmEmailBase
 
-<h3>Email Verification</h3>
-@if (isSuccess)
-{
-    <p class="text-success">@Message</p>
-}
-else if (!string.IsNullOrEmpty(errorMessage))
-{
-    <p class="text-danger">Error verifying your email: @errorMessage</p>
-}
+<div class="container-fluid text-white">
+    <div class="row">
+        <div class="col-12 col-md-6 full-height text-center left-half">
+            <h3 class="mt-5 pt-4">Unwind, Relax, and Stay Awhile</h3>
+        </div>
+        <div class="col-12 col-md-6 full-height">
+            <div class="mx-auto col-8 mt-1">
 
-<button class="btn btn-success" onclick="@(() => HandleVerifyEmail())">Verify Email</button>
+                <h3>Email Verification</h3>
+                @if (isSuccess)
+                {
+                    <p class="text-success">@Message</p>
+                }
+                else if (!string.IsNullOrEmpty(errorMessage))
+                {
+                    <p class="text-danger">Error verifying your email: @errorMessage</p>
+                }
+
+                <button class="btn btn-success" onclick="@(() => HandleVerifyEmail())">Verify Email</button>
+            </div>
+        </div>
+    </div>
+</div>

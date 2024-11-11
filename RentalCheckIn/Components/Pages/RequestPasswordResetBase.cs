@@ -13,13 +13,20 @@ public class RequestPasswordResetBase : ComponentBase
 
     protected async Task HandleValidSubmit()
     {
-        ShouldSpin = true;
-        var result = await AuthService.ForgotPasswordAsync(resetModel);
-        // In other similar pages remember to go back and check null first.
-        if (result != null)
+        try
         {
-            Message = result.Message;
+            ShouldSpin = true;
+            var result = await AuthService.ForgotPasswordAsync(resetModel);
+            // In other similar pages remember to go back and check null first.
+            if (result != null)
+            {
+                Message = result.Message;
+            }
+            ShouldSpin = false;
         }
-        ShouldSpin = false;
+        catch (Exception ex) 
+        {
+            Message = "An error occurred.";
+        }
     }
 }
