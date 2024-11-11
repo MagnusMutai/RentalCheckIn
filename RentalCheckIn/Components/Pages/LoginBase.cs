@@ -32,18 +32,25 @@ public class LoginBase : ComponentBase
     protected async Task HandleLogin()
     {
         ShouldSpin = true;
-        var result = await AuthService.LoginAsync(loginModel);
-        if (result.Success)
+        try
         {
-            var lHost = result.Host;
-            // Store email for OTP verification
-            await LocalStorage.SetAsync("emailForOtp", lHost.MailAddress);
-            NavigationManager.NavigateTo("/verify-otp");
+            var result = await AuthService.LoginAsync(loginModel);
+            if (result.Success)
+            {
+                var lHost = result.Host;
+                // Store email for OTP verification
+                await LocalStorage.SetAsync("emailForOtp", lHost.MailAddress);
+                NavigationManager.NavigateTo("/verify-otp");
+            }
+            else
+            {
+                ErrorMessage = result.Message;
+                DisplayToast = DisplayToast ?? "d-block";
+            }
         }
-        else
+        catch (Exception ex) 
         {
-            ErrorMessage = result.Message;
-            DisplayToast = DisplayToast ?? "d-block";
+            ErrorMessage = "An error occurred";
         }
         ShouldSpin = false;
     }

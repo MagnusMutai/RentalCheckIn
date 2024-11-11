@@ -5,6 +5,7 @@ public class HomeBase : ComponentBase
 {
     protected uint currentPage = 1;
     protected uint itemsPerPage;
+    protected string Message;
     protected string SelectedApartment { get; set; } = "All";
     protected List<string> ApartmentNames = new List<string>();
     protected List<ReservationDto> Reservation = new List<ReservationDto>();
@@ -18,30 +19,36 @@ public class HomeBase : ComponentBase
     private ProtectedLocalStorage LocalStorage { get; set; }
     [Inject]
     private IReservationService ReservationService { get; set; }
+    [Inject]
+    private IAppartmentService AppartmentService { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        Reservation = (await ReservationService.GetAllReservationsAsync()).ToList();
-        Settings = (await ReservationService.GetSettingsAsync()).ToList();
-        // Determine items per page from settings
-        if (Settings != null && Settings.Any())
+        try
         {
-            itemsPerPage = Settings[0].RowsPerPage;
+            Reservation = (await ReservationService.GetAllReservationsAsync()).ToList();
+            Settings = (await ReservationService.GetSettingsAsync()).ToList();
+            // Extract distinct apartment names for the dropdown
+            ApartmentNames = (await AppartmentService.GetDistinctAppartmentNames()).ToList();
+
+            // Determine items per page from settings
+            if (Settings != null && Settings.Any())
+            {
+                itemsPerPage = Settings[0].RowsPerPage;
+            }
+            else
+            {
+                // Default value if settings are missing
+                itemsPerPage = 10; 
+            }
+
+            // Add 'All' option to allow viewing all apartments
+            ApartmentNames.Insert(0, "All");
         }
-        else
+        catch (Exception ex)
         {
-            itemsPerPage = 10; // Default value if settings are missing
+            Message = "Could not load resources.";
         }
-
-        // Extract distinct apartment names for the dropdown
-        ApartmentNames = Reservation
-                         .Select(r => r.ApartmentName)
-                         .Distinct()
-                         .OrderBy(name => name)
-                         .ToList();
-
-        // Add 'All' option to allow viewing all apartments
-        ApartmentNames.Insert(0, "All");
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -67,19 +74,15 @@ public class HomeBase : ComponentBase
         }
         catch (Exception ex)
         {
-            Console.WriteLine(ex.Message);
+            Message = "An error occurred.";
         }
     }
 
-    /// <summary>
-    /// Computes the total number of pages based on filtered reservations.
-    /// </summary>
+ 
+    // Computes the total number of pages based on filtered reservations.
     protected uint totalPages => (uint)Math.Ceiling((double)FilteredReservations.Count() / itemsPerPage);
 
-
-    /// <summary>
-    /// Filters the reservations based on the selected apartment.
-    /// </summary>
+    // Filters the reservations based on the selected apartment.
     protected IEnumerable<ReservationDto> FilteredReservations
     {
         get
@@ -94,9 +97,8 @@ public class HomeBase : ComponentBase
             }
         }
     }
-    /// <summary>
-    /// Retrieves the reservations for the current page after applying the filter.
-    /// </summary>
+
+    // Retrieves the reservations for the current page after applying the filter.
     protected IEnumerable<ReservationDto> PaginatedReservations => FilteredReservations
         .Skip((int)((currentPage - 1) * itemsPerPage))
         .Take((int)itemsPerPage);
@@ -125,11 +127,8 @@ public class HomeBase : ComponentBase
         }
     }
 
-    /// <summary>
-    /// Handles changes to the apartment filter.
-    /// Resets the current page to 1 and triggers a UI update.
-    /// </summary>
-    /// <param name="newApartment">The newly selected apartment.</param>
+    // Handles changes to the apartment filter.
+    // Resets the current page to 1 and triggers a UI update.
     protected void OnApartmentFilterChanged(ChangeEventArgs e)
     {
         SelectedApartment = e.Value?.ToString() ?? "All";

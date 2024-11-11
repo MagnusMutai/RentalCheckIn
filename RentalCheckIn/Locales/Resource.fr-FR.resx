@@ -118,6 +118,52 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Filter" xml:space="preserve">
-    <value>filtrer par appartement</value>
+    <value>Filtrer par appartement</value>
+  </data>
+  <data name="CheckIn" xml:space="preserve">
+    <value>
+Enregistrement</value>
+  </data>
+  <data name="CheckOut" xml:space="preserve">
+    <value>Départ</value>
+  </data>
+  <data name="Appartment" xml:space="preserve">
+    <value>Appartement</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>Nom</value>
+  </data>
+  <data name="Guests" xml:space="preserve">
+    <value>Invités</value>
+  </data>
+  <data name="Nights" xml:space="preserve">
+    <value>Nuits</value>
+  </data>
+  <data name="Price" xml:space="preserve">
+    <value>Prix</value>
+  </data>
+  <data name="Channel" xml:space="preserve">
+    <value>Canal</value>
+  </data>
+  <data name="Status" xml:space="preserve">
+    <value>Statut</value>
+  </data>
+  <data name="View" xml:space="preserve">
+    <value>Voir</value>
+  </data>
+  <data name="Previous" xml:space="preserve">
+    <value>Précédent</value>
+  </data>
+  <data name="Next" xml:space="preserve">
+    <value>Suivant</value>
+  </data>
+  <data name="Hello" xml:space="preserve">
+    <value>Bonjour</value>
+  </data>
+  <data name="Your role" xml:space="preserve">
+    <value>Votre rôle</value>
+  </data>
+  <data name="Logout" xml:space="preserve">
+    <value>Déconnexion</value>
   </data>
 </root>
