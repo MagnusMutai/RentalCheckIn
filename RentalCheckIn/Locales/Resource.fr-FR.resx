@@ -175,4 +175,10 @@ Enregistrement</value>
   <data name="WelcomeMessage" xml:space="preserve">
     <value>Détendez-vous, relaxez, et restez un moment</value>
   </data>
+  <data name="LoginWelcome" xml:space="preserve">
+    <value>Bon Retour</value>
+  </data>
+  <data name="LoginSecMessage" xml:space="preserve">
+    <value>Vous n'avez pas de compte</value>
+  </data>
 </root>

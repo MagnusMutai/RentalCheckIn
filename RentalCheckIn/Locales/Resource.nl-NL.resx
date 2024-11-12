@@ -175,4 +175,10 @@ Uitchecken</value>
   <data name="WelcomeMessage" xml:space="preserve">
     <value>Ontspan, kom tot rust en blijf even</value>
   </data>
+  <data name="LoginWelcome" xml:space="preserve">
+    <value>Welkom Terug</value>
+  </data>
+  <data name="LoginSecMessage" xml:space="preserve">
+    <value>Heb je geen account</value>
+  </data>
 </root>

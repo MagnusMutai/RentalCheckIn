@@ -23,9 +23,9 @@
                 </div>
             }
             <div class="mx-auto col-10 col-sm-8 col-md-8 col-lg-8 mt-md-5 pt-md-2">
-                <p class="fs-3 mt-5 pt-3">Welcome Back!</p>
+                <p class="fs-3 mt-5 pt-3">@Localizer["LoginWelcome"]!</p>
                 <p class="mb-5">
-                    Don't have an account? <a class="ms-2" href="register">Sign up.</a>
+                    @Localizer["LoginSecMessage"]? <a class="ms-2" href="register">Sign up.</a>
                 </p>
                 <EditForm Model="loginModel" OnValidSubmit="HandleLogin">
                     <DataAnnotationsValidator />

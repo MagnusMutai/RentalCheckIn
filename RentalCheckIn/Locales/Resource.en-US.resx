@@ -174,4 +174,10 @@
   <data name="WelcomeMessage" xml:space="preserve">
     <value>Unwind, Relax, and Stay Awhile</value>
   </data>
+  <data name="LoginWelcome" xml:space="preserve">
+    <value>Welcome Back</value>
+  </data>
+  <data name="LoginSecMessage" xml:space="preserve">
+    <value>Don't have an account</value>
+  </data>
 </root>
