@@ -30,9 +30,9 @@
                 }
                 @if (string.IsNullOrEmpty(TotpSecret))
                 {
-                    <p class="fs-3 mt-4">Create an account</p>
+                    <p class="fs-3 mt-4">@Localizer["RegisterCreateAccount"]</p>
                     <p class="mb-4">
-                        Already have an account? <a class="ms-2" href="login">Login.</a>
+                        @Localizer["RegisterSecMessage"]? <a class="ms-2" href="login">@Localizer["Login"].</a>
                     </p>
                     <EditForm Model="registerModel" OnValidSubmit="HandleRegister">
                         <DataAnnotationsValidator />

@@ -181,4 +181,19 @@ Uitchecken</value>
   <data name="LoginSecMessage" xml:space="preserve">
     <value>Heb je geen account</value>
   </data>
+  <data name="LoginSignUpLink" xml:space="preserve">
+    <value>Aanmelden</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>Wachtwoord</value>
+  </data>
+  <data name="ForgotPasswordLink" xml:space="preserve">
+    <value>Wachtwoord vergeten</value>
+  </data>
+  <data name="RegisterCreateAccount" xml:space="preserve">
+    <value>Account aanmaken</value>
+  </data>
+  <data name="RegisterSecMessage" xml:space="preserve">
+    <value>Heb je al een account</value>
+  </data>
 </root>

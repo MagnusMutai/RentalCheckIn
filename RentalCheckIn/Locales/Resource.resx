@@ -180,4 +180,19 @@
   <data name="LoginSecMessage" xml:space="preserve">
     <value>Don't have an account</value>
   </data>
+  <data name="LoginSignUpLink" xml:space="preserve">
+    <value>Sign Up</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>Password</value>
+  </data>
+  <data name="ForgotPasswordLink" xml:space="preserve">
+    <value>Forgot password</value>
+  </data>
+  <data name="RegisterCreateAccount" xml:space="preserve">
+    <value>Create an account</value>
+  </data>
+  <data name="RegisterSecMessage" xml:space="preserve">
+    <value>Already have an account</value>
+  </data>
 </root>
