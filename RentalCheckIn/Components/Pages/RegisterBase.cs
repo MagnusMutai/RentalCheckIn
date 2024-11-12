@@ -5,11 +5,11 @@ namespace RentalCheckIn.Components.Pages;
 public class RegisterBase : ComponentBase
 {
     protected HostSignUpDto registerModel = new();
-    protected string ErrorMessage;
-    protected string SuccessMessage;
+    protected string Message;
     protected string TotpSecret;
     protected bool ShouldSpin;
     public string DisplayToast { get; set; } = "d-block";
+    public string BackGroundColor { get; set; } = "bg-success";
     protected string QrCodeImageData { get; set; }
     [Inject]
     protected IAuthService AuthService { get; set; }
@@ -52,11 +52,14 @@ public class RegisterBase : ComponentBase
 
             // Convert the image to a base64 string
             QrCodeImageData = "data:image/png;base64," + Convert.ToBase64String(qrCodeAsPng);
-
-
-            SuccessMessage = "Your account was created. An account confirmation link has been sent to your email.";
+            BackGroundColor = "bg-success";
+            Message = "Your account was created. An account confirmation link has been sent to your email.";
         }
-        ErrorMessage = result.Message;
+        else 
+        {
+            BackGroundColor = "bg-danger";
+            Message = result.Message;
+        }
         DisplayToast = DisplayToast ?? "d-block";
         ShouldSpin = false;
     }

@@ -1,6 +1,7 @@
 ﻿.left-half {
     background-image: url(../images/snowylodge.jpg);
     background-size: cover;
+    background-repeat: no-repeat;
 }
 
 .full-height {
@@ -9,8 +10,8 @@
 
 .toast {
     position: fixed;
-    top: 10px;
-    right: 15px;
+    top: 65px;
+    right: 1px;
 }
 
 ::deep .form-control {

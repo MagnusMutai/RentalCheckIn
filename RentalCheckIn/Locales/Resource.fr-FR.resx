@@ -166,4 +166,7 @@ Enregistrement</value>
   <data name="Logout" xml:space="preserve">
     <value>Déconnexion</value>
   </data>
+  <data name="Login" xml:space="preserve">
+    <value>connexion</value>
+  </data>
 </root>

@@ -1,15 +1,19 @@
 ﻿@using Microsoft.AspNetCore.Components.Authorization
 @using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
 @using RentalCheckIn.Services.UI
+@using Microsoft.Extensions.Localization
+@using RentalCheckIn.Locales
+@inject IStringLocalizer<Resource> Localizer
+
 @inject NavigationManager NavigationManager
 @inject AuthenticationStateProvider AuthStateProvider
 
 <AuthorizeView>
     <Authorized>
-        <a href="logout" @onclick="Logout" class="btn btn-danger">Logout</a>
+        <a href="logout" onclick="Logout" class="btn btn-danger btn-sm rounded-3">@Localizer["Logout"]</a>
     </Authorized>
     <NotAuthorized>
-        <button @onclick="Login" class="btn btn-primary">Login</button>
+        <a href="" onclick="Login" class="btn btn-primary btn-sm rounded-3">@Localizer["Login"]</a>
     </NotAuthorized>
 </AuthorizeView>
 
