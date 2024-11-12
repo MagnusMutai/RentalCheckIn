@@ -5,31 +5,23 @@
 
     <div class="container-fluid text-white">
         <div class="row">
-            <div class="col-12 col-md-6 full-height text-center left-half">
+            <div class="col-12 col-md-6 py-5 full-height text-center left-half">
                 <h3 class="mt-5 pt-4">Unwind, Relax, and Stay Awhile</h3>
             </div>
             <div class="col-12 col-md-6 full-height">
-                <div class="mx-auto col-8 mt-1">
-                @if (!string.IsNullOrEmpty(ErrorMessage))
+                <div class="mx-auto col-10 col-sm-8 col-md-8 col-lg-8 mt-md-5 pt-md-2">
+                @if (!string.IsNullOrEmpty(Message))
                 {
-                    <div class="toast align-items-center bg-danger position-fixed top-0 end-0 @DisplayToast" role="alert" aria-live="assertive" aria-atomic="true">
-                        <div class="d-flex mx-auto">
-                            <div class="toast-body">
-                                <p>@ErrorMessage</p>
-                            </div>
-                            <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close" @onclick="HandleCloseToast"></button>
-                        </div>
-                    </div>
-                }
-                @if (!string.IsNullOrEmpty(SuccessMessage))
-                {
-                    <div class="toast align-items-center p-2 bg-success position-fixed top-0 start-50 @DisplayToast" role="alert" aria-live="assertive" aria-atomic="true">
+                    <div class="toast align-items-center p-2 @BackGroundColor bg-success position-fixed top-1 start-75 @DisplayToast" role="alert" aria-live="assertive" aria-atomic="true">
                         <div class="d-flex">
                             <div class="toast-body">
-                                <strong>Success!</strong>
-                                @SuccessMessage
+                                @if (BackGroundColor == "bg-success")
+                                {
+                                    <strong>Success! </strong>
+                                }
+                                @Message
                             </div>
-                            <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close" @onclick="HandleCloseToast"></button>
+                                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close" @onclick="HandleCloseToast"></button>
                         </div>
                     </div>
                 }

@@ -2,6 +2,10 @@
     font-size: 20px;
 }
 
+.form-select {
+    background-color: #F2F2F2;
+}
+
 .custom-table thead tr, .custom-table thead th {
     border-top: none;
     border-bottom: none !important;
@@ -36,7 +40,7 @@
     }
 /*Background color of rows*/
 .custom-table tbody tr th, .custom-table tbody tr td {
-    background: #fff;
+    background: #F2F2F2;
     border: none;
 }
     /*Border radii of rows*/
