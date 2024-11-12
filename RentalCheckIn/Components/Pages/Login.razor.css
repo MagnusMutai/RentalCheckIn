@@ -39,10 +39,6 @@
     color: white;
 }
 
-::deep .eye-icon {
-    color: white;
-}
-
 @media (max-width: 768px) {
     .full-height {
         height: auto;
