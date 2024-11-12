@@ -1,4 +1,8 @@
-﻿<nav class="navbar navbar-dark navbar-expand-md py-0 ">
+﻿@using Microsoft.Extensions.Localization
+@using RentalCheckIn.Locales
+@inject IStringLocalizer<Resource> Localizer
+
+<nav class="navbar navbar-dark navbar-expand-md py-0 ">
     <div class="container-fluid">
         <a class="navbar-brand ms-3" href="/">
             <img src="/images/snowylogo.svg" alt="Snowylodge logo" width="95" height="50">
@@ -11,10 +15,10 @@
             <ul class="navbar-nav ms-auto float-end d-flex gap-md-4 dropdown-menu-end">
 
                 <li class="nav-item my-auto">
-                    <a class="nav-link active text-white text-uppercase fw-bold" aria-current="page" href="">Reservation</a>
+                    <a class="nav-link active text-white text-uppercase fw-bold" aria-current="page" href="">@Localizer["Reservation"]</a>
                 </li>
                 <li class="nav-item me-md-3 my-auto">
-                    <a class="nav-link active text-white text-uppercase fw-bold" aria-current="page" href="#">Check-In</a>
+                    <a class="nav-link active text-white text-uppercase fw-bold" aria-current="page" href="#">@Localizer["CheckIn"]</a>
                 </li>
                 <li class="nav-item my-auto pt-2 pt-md-0">
                     <LoginLogoutButton />

@@ -169,4 +169,10 @@ Uitchecken</value>
   <data name="Login" xml:space="preserve">
     <value>Inloggen</value>
   </data>
+  <data name="Reservation" xml:space="preserve">
+    <value>Reservering</value>
+  </data>
+  <data name="WelcomeMessage" xml:space="preserve">
+    <value>Ontspan, kom tot rust en blijf even</value>
+  </data>
 </root>
