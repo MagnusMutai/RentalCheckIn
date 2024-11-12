@@ -169,4 +169,10 @@ Enregistrement</value>
   <data name="Login" xml:space="preserve">
     <value>connexion</value>
   </data>
+  <data name="Reservation" xml:space="preserve">
+    <value>Réservation</value>
+  </data>
+  <data name="WelcomeMessage" xml:space="preserve">
+    <value>Détendez-vous, relaxez, et restez un moment</value>
+  </data>
 </root>
