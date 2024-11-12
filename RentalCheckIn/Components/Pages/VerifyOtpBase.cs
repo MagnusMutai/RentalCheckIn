@@ -64,7 +64,7 @@ public class VerifyOtpBase : ComponentBase
         }
         catch (Exception ex)
         {
-            ErrorMessage = ex.Message;
+            ErrorMessage = "Invalid request";
         }
         ShouldSpin = false;
     }

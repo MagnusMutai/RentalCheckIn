@@ -181,4 +181,19 @@ Enregistrement</value>
   <data name="LoginSecMessage" xml:space="preserve">
     <value>Vous n'avez pas de compte</value>
   </data>
+  <data name="LoginSignUpLink" xml:space="preserve">
+    <value>Inscrivez-vous</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>Mot de passe</value>
+  </data>
+  <data name="ForgotPasswordLink" xml:space="preserve">
+    <value>Mot de passe oublié</value>
+  </data>
+  <data name="RegisterCreateAccount" xml:space="preserve">
+    <value>Créer un compte</value>
+  </data>
+  <data name="RegisterSecMessage" xml:space="preserve">
+    <value>Vous avez déjà un compte</value>
+  </data>
 </root>
