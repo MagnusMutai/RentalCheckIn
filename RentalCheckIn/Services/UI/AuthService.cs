@@ -10,7 +10,7 @@ public class AuthService : IAuthService
         this.httpClient = httpClient;
         this.localStorage = localStorage;
     }
-    public async Task<AuthenticationResponse> LoginAsync(HostLoginDto hostLoginDto)
+    public async Task<OperationResult<LHost>> LoginAsync(HostLoginDto hostLoginDto)
     {
         try
         {
@@ -20,9 +20,9 @@ public class AuthService : IAuthService
             {
                 if (response.StatusCode == HttpStatusCode.NoContent)
                 {
-                    return default(AuthenticationResponse);
+                    return default;
                 }
-                return await response.Content.ReadFromJsonAsync<AuthenticationResponse>();
+                return await response.Content.ReadFromJsonAsync<OperationResult<LHost>>();
             }
             else
             {
@@ -33,12 +33,12 @@ public class AuthService : IAuthService
         catch (Exception ex)
         {
             Console.WriteLine(ex.Message);
-            return new AuthenticationResponse();
+            return new OperationResult<LHost>();
         }
 
     }
 
-    public async Task<AuthenticationResponse> RegisterAsync(HostSignUpDto hostSignUpDto)
+    public async Task<OperationResult<LHost>> RegisterAsync(HostSignUpDto hostSignUpDto)
     {
         try
         {
@@ -47,9 +47,9 @@ public class AuthService : IAuthService
             {
                 if (response.StatusCode == HttpStatusCode.NoContent)
                 {
-                    return default(AuthenticationResponse);
+                    return default;
                 }
-                return await response.Content.ReadFromJsonAsync<AuthenticationResponse>();
+                return await response.Content.ReadFromJsonAsync<OperationResult<LHost>>();
             }
             else
             {
@@ -57,11 +57,11 @@ public class AuthService : IAuthService
                 throw new Exception(message);
             }
         }
-        // Log exception
         catch (Exception ex)
         {
+            // Log exception
             Console.WriteLine(ex.Message);
-            return new AuthenticationResponse();
+            return new OperationResult<LHost>();
         }
 
     }
@@ -121,7 +121,7 @@ public class AuthService : IAuthService
 
     }
 
-    public async Task<ResetPasswordResponse> ForgotPasswordAsync(ResetRequestDto resetRequestDto)
+    public async Task<OperationResult> ForgotPasswordAsync(ResetRequestDto resetRequestDto)
     {
         try
         {
@@ -135,7 +135,7 @@ public class AuthService : IAuthService
                 {
                     return default;
                 }
-                return await response.Content.ReadFromJsonAsync<ResetPasswordResponse>();
+                return await response.Content.ReadFromJsonAsync<OperationResult>();
             }
             else
             {
@@ -146,7 +146,7 @@ public class AuthService : IAuthService
         catch (Exception ex)
         {
             Console.WriteLine(ex.Message);
-            return new ResetPasswordResponse();
+            return new OperationResult();
         }
 
     }
@@ -178,7 +178,7 @@ public class AuthService : IAuthService
             return new EmailVerificationResponse();
         }
     }
-    public async Task<ResetPasswordResponse> ResetPasswordAsync(string token, PasswordResetDto passwordResetDto)
+    public async Task<OperationResult<string>> ResetPasswordAsync(string token, PasswordResetDto passwordResetDto)
     {
         try
         {
@@ -197,7 +197,7 @@ public class AuthService : IAuthService
                 {
                     return default;
                 }
-                return await response.Content.ReadFromJsonAsync<ResetPasswordResponse>();
+                return await response.Content.ReadFromJsonAsync<OperationResult<string>>();
             }
             else
             {
@@ -208,7 +208,7 @@ public class AuthService : IAuthService
         catch (Exception ex)
         {
             Console.WriteLine(ex.Message);
-            return new ResetPasswordResponse();
+            return new OperationResult<string>();
         }
     }
 }

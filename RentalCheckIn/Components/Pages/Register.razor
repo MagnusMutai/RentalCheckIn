@@ -15,7 +15,7 @@
                 <div class="mx-auto col-10 col-sm-8 col-md-8 col-lg-8 mt-md-5 pt-md-2">
                 @if (!string.IsNullOrEmpty(Message))
                 {
-                    <div class="toast align-items-center p-2 @BackGroundColor bg-success position-fixed top-1 start-75 @DisplayToast" role="alert" aria-live="assertive" aria-atomic="true">
+                    <div class="toast align-items-center p-2 @BackGroundColor position-fixed top-1 end-0 @DisplayToast" role="alert" aria-live="assertive" aria-atomic="true">
                         <div class="d-flex">
                             <div class="toast-body">
                                 @if (BackGroundColor == "bg-success")
@@ -38,11 +38,11 @@
                         <DataAnnotationsValidator />
                         <div class="row">
                             <div class="mb-4 col">
-                                <InputText class="bg-transparent text-white rounded-pill form-control" @bind-Value="registerModel.FirstName" placeholder="First name" />
+                                <InputText class="bg-transparent text-white rounded-pill form-control" @bind-Value="registerModel.FirstName" placeholder="@Localizer["FirstName"]" />
                                 <ValidationMessage For="@(() => registerModel.FirstName)" class="ms-2 text-danger" />
                             </div>
                             <div class="mb-4 col">
-                                <InputText class="bg-transparent text-white rounded-pill form-control" @bind-Value="registerModel.LastName" placeholder="Last name" />
+                                <InputText class="bg-transparent text-white rounded-pill form-control" @bind-Value="registerModel.LastName" placeholder="@Localizer["LastName"]" />
                                 <ValidationMessage For="@(() => registerModel.LastName)" class="ms-2 text-danger" />
                             </div>
                         </div>
@@ -51,11 +51,11 @@
                             <ValidationMessage For="@(() => registerModel.Email)" class="ms-2 text-danger" />
                         </div>
                         <div class="mb-4">
-                            <InputText class="bg-transparent text-white rounded-pill form-control" @bind-Value="registerModel.Password" placeholder="Password" type="password" />
+                            <InputText class="bg-transparent text-white rounded-pill form-control" @bind-Value="registerModel.Password" placeholder="@Localizer["Password"]" type="password" />
                             <ValidationMessage For="@(() => registerModel.Password)" class="ms-2 text-danger" />
                         </div>
                         <div class="mb-5 py-2">
-                            <InputText class="bg-transparent text-white rounded-pill form-control" @bind-Value="registerModel.ConfirmPassword" placeholder="Confirm password" type="password" />
+                            <InputText class="bg-transparent text-white rounded-pill form-control" @bind-Value="registerModel.ConfirmPassword" placeholder="@Localizer["ConfirmPassword"]" type="password" />
                             <ValidationMessage For="@(() => registerModel.ConfirmPassword)" class="ms-2 text-danger" />
                         </div>
                         <button type="submit" class="btn btn-primary myregister-btn">
@@ -63,7 +63,7 @@
                             {
                                 <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                             }
-                            Register
+                            @Localizer["Register"]
                         </button>
                     </EditForm>
                 }
@@ -71,10 +71,10 @@
                 {
                     <div class="text-center mt-5 pt-5">
                         <p class="mt-5 totp-msg">
-                            Please scan the following QR code with an authenticator <strong>app</strong> like <strong>Microsoft Authenticator</strong> on your phone, or enter the secret code manually. Then proceed to <a href="login">Login</a>.
+                            @((MarkupString)Localizer["RegisterSuccessPrimaryMessage"].Value)
                         </p>
                         <img class="w-50" src="@QrCodeImageData" alt="QR Code" />
-                        <p class="my-4 totp-code"><strong>@TotpSecret</strong></p>
+                        <p class="my-4 totp-code text-break text-wrap"><strong>@TotpSecret</strong></p>
                     </div>
 
                 }

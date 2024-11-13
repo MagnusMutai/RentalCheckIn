@@ -1,12 +1,15 @@
 ﻿@page "/verify-otp"
 @inherits VerifyOtpBase
+@using Microsoft.Extensions.Localization
+@using RentalCheckIn.Locales
+@inject IStringLocalizer<Resource> Localizer
 
 <PageTitle>Verify TOTP</PageTitle>
 
 <div class="container-fluid text-white">
     <div class="row">
         <div class="col-12 col-md-6 full-height text-center left-half">
-            <h3 class="mt-5 pt-4">Unwind, Relax, and Stay Awhile</h3>
+            <h3 class="mt-5 pt-4">@Localizer["WelcomeMessage"]</h3>
         </div>
         <div class="col-12 col-md-6 full-height">
         @if (!string.IsNullOrEmpty(ErrorMessage))
@@ -14,9 +17,9 @@
             <div class="alert alert-danger">@ErrorMessage</div>
         }
             <div class="mx-auto col-8 mt-5 pt-2">
-                <p class="fs-3 mt-5">Verify Your Identity</p>
+                <p class="fs-3 mt-5">@Localizer["VerifyTOTPPrimaryMessage"]</p>
                 <p class="mb-5">
-                    Enter the one time password that is displayed in your authenticator <strong>app</strong>
+                    @((MarkupString)Localizer["VerifyTOTPSecMessage"].Value).
                 </p>
                 <EditForm Model="otpModel" OnValidSubmit="HandleVerifyOtp">
                     <DataAnnotationsValidator />
@@ -27,7 +30,7 @@
                         {
                             <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                         }
-                        Verify
+                        @Localizer["VerifyTOTPVerifyText"]
                     </button>
                 </EditForm>
             </div>

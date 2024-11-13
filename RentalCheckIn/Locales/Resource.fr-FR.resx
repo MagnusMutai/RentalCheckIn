@@ -196,4 +196,59 @@ Enregistrement</value>
   <data name="RegisterSecMessage" xml:space="preserve">
     <value>Vous avez déjà un compte</value>
   </data>
+  <data name="FirstName" xml:space="preserve">
+    <value>Prénom</value>
+  </data>
+  <data name="LastName" xml:space="preserve">
+    <value>Nom de famille</value>
+  </data>
+  <data name="ConfirmPassword" xml:space="preserve">
+    <value>Confirmer le mot de passe</value>
+  </data>
+  <data name="Register" xml:space="preserve">
+    <value>S'inscrire</value>
+  </data>
+  <data name="VerifyTOTPPrimaryMessage" xml:space="preserve">
+    <value>Vérifiez votre identité</value>
+  </data>
+  <data name="VerifyTOTPSecMessage" xml:space="preserve">
+    <value>&lt;data name="BoldExample" xml:space="preserve"&gt;
+  &lt;value&gt;Entrez le mot de passe unique affiché dans votre &lt;strong&gt;application &lt;/strong&gt;d'authentification&lt;/value&gt;
+&lt;/data&gt;</value>
+  </data>
+  <data name="VerifyTOTPVerifyText" xml:space="preserve">
+    <value>Vérifier</value>
+  </data>
+  <data name="Password_R_RequestPrimaryMessage" xml:space="preserve">
+    <value>Récupération de mot de passe</value>
+  </data>
+  <data name="Password_R_RequestSecMessage" xml:space="preserve">
+    <value>Entrez l'adresse e-mail associée à votre compte</value>
+  </data>
+  <data name="Password_R_RequestButtonText" xml:space="preserve">
+    <value>Envoyer le lien</value>
+  </data>
+  <data name="ConfirmEmailPrimaryMessage" xml:space="preserve">
+    <value>Vérification de l'email</value>
+  </data>
+  <data name="ConfirmEmailButtonText" xml:space="preserve">
+    <value>Vérifier l'email</value>
+  </data>
+  <data name="PasswordResetPrimaryMessage" xml:space="preserve">
+    <value>Changer le mot de passe</value>
+  </data>
+  <data name="PasswordResetButtonText" xml:space="preserve">
+    <value>Enregistrer le mot de passe</value>
+  </data>
+  <data name="PasswordResetSuccessMessage" xml:space="preserve">
+    <value>Votre mot de passe a été réinitialisé avec succès</value>
+  </data>
+  <data name="PasswordResetErrorMessage" xml:space="preserve">
+    <value>Requête invalide</value>
+  </data>
+  <data name="RegisterSuccessPrimaryMessage" xml:space="preserve">
+    <value>&lt;data name="BoldExample" xml:space="preserve"&gt;
+  &lt;value&gt;Veuillez scanner le code QR suivant avec une &lt;strong&gt;application&lt;/strong&gt; d'authentification comme &lt;strong&gt;Microsoft Authenticator&lt;/strong&gt; sur votre téléphone, ou entrez le code secret manuellement. Puis, procédez à la &lt;a href="login"&gt; connexiontext&lt;/a&gt;&lt;/value&gt;
+&lt;/data&gt;</value>
+  </data>
 </root>

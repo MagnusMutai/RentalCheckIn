@@ -74,7 +74,7 @@ public class HomeBase : ComponentBase
         }
         catch (Exception ex)
         {
-            Message = "An error occurred.";
+            Message = "An unexpected error occurred.";
         }
     }
 

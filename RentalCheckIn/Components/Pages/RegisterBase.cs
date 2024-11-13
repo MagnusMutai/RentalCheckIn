@@ -35,9 +35,9 @@ public class RegisterBase : ComponentBase
         ShouldSpin = true;
         var result = await AuthService.RegisterAsync(registerModel);
 
-        if (result.Success)
+        if (result.IsSuccess)
         {
-            TotpSecret = result.Host.TotpSecret;
+            TotpSecret = result.Data.TotpSecret;
 
             // Generate the otpauth URI
             string issuer = "RentalCheckIn"; // Replace with your app's name

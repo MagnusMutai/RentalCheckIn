@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Localization;
+
 var builder = WebApplication.CreateBuilder(args);
 
 
@@ -83,12 +85,13 @@ if (!app.Environment.IsDevelopment())
 
 string[] supportedCultures = ["en-US", "nl-NL", "fr-FR"];
 var localizationOptions = new RequestLocalizationOptions()
-    .SetDefaultCulture(supportedCultures[0])
+    .SetDefaultCulture(supportedCultures[2])
     .AddSupportedCultures(supportedCultures)
     .AddSupportedUICultures(supportedCultures);
 
 app.UseRequestLocalization(localizationOptions);
 
+app.UseRouting();
 app.UseHttpsRedirection();
 
 app.MapControllers();
