@@ -35,9 +35,9 @@ public class LoginBase : ComponentBase
         try
         {
             var result = await AuthService.LoginAsync(loginModel);
-            if (result.Success)
+            if (result.IsSuccess)
             {
-                var lHost = result.Host;
+                var lHost = result.Data;
                 // Store email for OTP verification
                 await LocalStorage.SetAsync("emailForOtp", lHost.MailAddress);
                 NavigationManager.NavigateTo("/verify-otp");
@@ -50,7 +50,7 @@ public class LoginBase : ComponentBase
         }
         catch (Exception ex) 
         {
-            ErrorMessage = "An error occurred";
+            ErrorMessage = "An unexpected error occurred";
         }
         ShouldSpin = false;
     }

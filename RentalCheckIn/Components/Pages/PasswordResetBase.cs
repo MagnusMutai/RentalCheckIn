@@ -1,4 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Localization;
+using RentalCheckIn.Locales;
+
 namespace RentalCheckIn.Components.Pages;
 
 public class PasswordResetBase : ComponentBase
@@ -8,9 +11,9 @@ public class PasswordResetBase : ComponentBase
     protected PasswordResetDto resetPasswordModel = new PasswordResetDto();
     protected HostLoginDto autoHostLoginDto = new HostLoginDto();
     protected string Message { get; set; }
-    protected bool IsPasswordResetSuccessful { get; set; } = false;
+    protected bool IsPasswordResetSuccessful { get; set; }
     protected bool IsLoading { get; set; } = false;
-    protected ResetPasswordResponse ResetPasswordResponse { get; set; }
+    protected OperationResult<string> ResetPasswordResponse { get; set; }
 
     [Inject]
     protected IAuthService AuthService { get; set; }
@@ -18,6 +21,8 @@ public class PasswordResetBase : ComponentBase
     protected NavigationManager NavigationManager { get; set; }
     [Inject]
     protected ProtectedLocalStorage LocalStorage { get; set; }
+    [Inject]
+    protected IStringLocalizer<Resource> Localizer { get; set; }
     protected async Task HandleResetPassword()
     {
 
@@ -38,15 +43,16 @@ public class PasswordResetBase : ComponentBase
                     if (ResetPasswordResponse != null)
                     {
                         Message = ResetPasswordResponse.Message;
-                        if (ResetPasswordResponse.Success)
+                        if (ResetPasswordResponse.IsSuccess)
                         {
-                            autoHostLoginDto.Email = ResetPasswordResponse.Email;
+                            autoHostLoginDto.Email = ResetPasswordResponse.Data;
                             autoHostLoginDto.Password = resetPasswordModel.NewPassword;
 
                             var result = await AuthService.LoginAsync(autoHostLoginDto);
-                            if (result.Success)
+                            if (result.IsSuccess)
                             {
-                                var lHost = result.Host;
+                                IsPasswordResetSuccessful = true;
+                                var lHost = result.Data;
                                 // Store email for OTP verification
                                 await LocalStorage.SetAsync("emailForOtp", lHost.MailAddress);
                                 NavigationManager.NavigateTo("/verify-otp");
@@ -57,12 +63,12 @@ public class PasswordResetBase : ComponentBase
             }
             else
             {
-                Message = "Invalid request.";
+                Message = Localizer["PasswordResetErrorMessage"];
             }
         }
         catch (Exception ex) 
         {
-            Message = "Invalid request.";
+            Message = Localizer["PasswordResetErrorMessage"];
         }
 
         ShouldSpin = false;

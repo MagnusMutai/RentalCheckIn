@@ -14,15 +14,15 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("login")]
-    public async Task<ActionResult<AuthenticationResponse>> Login(HostLoginDto request)
+    public async Task<ActionResult<OperationResult<LHost>>> Login(HostLoginDto request)
     {
 
         var result = await accountService.LoginAsync(request);
         return Ok(result);
     }
-
+    
     [HttpPost("register")]
-    public async Task<ActionResult<AuthenticationResponse>> Register(HostSignUpDto request)
+    public async Task<ActionResult<OperationResult<LHost>>> Register(HostSignUpDto request)
     {
         var result = await accountService.RegisterAsync(request);
         return Ok(result);

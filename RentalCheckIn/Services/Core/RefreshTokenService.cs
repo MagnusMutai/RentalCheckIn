@@ -106,7 +106,7 @@ public class RefreshTokenService
                 };
             }
 
-            var returnedToken = refreshTokenEntity.RefreshToken;
+            var returnedToken = refreshTokenEntity.Data;
 
             if (returnedToken == null || !returnedToken.IsActive)
             {
@@ -119,8 +119,9 @@ public class RefreshTokenService
             }
             // AND We have an Active refreshToken in the 
             // Retrieve the host associated with this refresh token
-            var host = await accountService.GetLHostByIdAsync(returnedToken.HostId);
-            if (host == null)
+            var response = await accountService.GetLHostByIdAsync(returnedToken.HostId);
+            var lHost = response?.Data; 
+            if (lHost == null)
             {
                 Console.WriteLine("Associated host not found.");
                 return new TokenValidateResult
@@ -130,8 +131,8 @@ public class RefreshTokenService
                 };
             }
             // Generate new tokens
-            var newAccessToken = jwtService.GenerateToken(host);
-            var newRefreshToken = await GenerateRefreshToken(host.HostId);
+            var newAccessToken = jwtService.GenerateToken(lHost);
+            var newRefreshToken = await GenerateRefreshToken(lHost.HostId);
             Constants.JWTToken = newAccessToken;
             await authStateProvider.GetAuthenticationStateAsync();
             Console.WriteLine("Tokens refreshed successfully.");

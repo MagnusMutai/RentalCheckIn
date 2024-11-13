@@ -4,10 +4,10 @@ namespace RentalCheckIn.Services.UI;
 
 public interface IAuthService
 {
-    Task<AuthenticationResponse> RegisterAsync(HostSignUpDto hostSignUpDto);
-    Task<AuthenticationResponse> LoginAsync(HostLoginDto hostLoginDto);
+    Task<OperationResult<LHost>> RegisterAsync(HostSignUpDto hostSignUpDto);
+    Task<OperationResult<LHost>> LoginAsync(HostLoginDto hostLoginDto);
     Task<EmailVerificationResponse> VerifyEmailAsync(string eVerificationToken);
     Task<TokenValidateResult> RefreshTokenAsync();
-    Task<ResetPasswordResponse> ForgotPasswordAsync(ResetRequestDto resetRequestDto);
-    Task<ResetPasswordResponse> ResetPasswordAsync(string token, PasswordResetDto passwordResetDto);
+    Task<OperationResult> ForgotPasswordAsync(ResetRequestDto resetRequestDto);
+    Task<OperationResult<string>> ResetPasswordAsync(string token, PasswordResetDto passwordResetDto);
 }
