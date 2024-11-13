@@ -17,7 +17,7 @@ public class ReservationService : IReservationService
             var response = await httpClient.GetAsync("api/reservation/AllReservations");
             if (response.IsSuccessStatusCode)
             {
-                if (response.StatusCode == HttpStatusCode.NotFound)
+                if (response.StatusCode == HttpStatusCode.NoContent)
                 {
                     return new List<ReservationDto>();
                 }
@@ -43,7 +43,7 @@ public class ReservationService : IReservationService
             var response = await httpClient.GetAsync("api/reservation/settings");
             if (response.IsSuccessStatusCode)
             {
-                if (response.StatusCode == HttpStatusCode.NotFound)
+                if (response.StatusCode == HttpStatusCode.NoContent)
                 {
                     return new List<Setting>();
                 }

@@ -8,13 +8,15 @@ public class AccountService : IAccountService
     private readonly IConfiguration configuration;
     private readonly IEmailService emailService;
     private readonly IRefreshTokenRepository refreshTokenRepository;
+    private readonly ITotpService totpService;
 
-    public AccountService(IHostRepository hostRepository, IConfiguration configuration, IEmailService emailService, IRefreshTokenRepository refreshTokenRepository)
+    public AccountService(IHostRepository hostRepository, IConfiguration configuration, IEmailService emailService, IRefreshTokenRepository refreshTokenRepository, ITotpService totpService)
     {
         this.hostRepository = hostRepository;
         this.configuration = configuration;
         this.emailService = emailService;
         this.refreshTokenRepository = refreshTokenRepository;
+        this.totpService = totpService;
     }
     public async Task<OperationResult<LHost>> LoginAsync(HostLoginDto hostLoginDto)
     {
@@ -143,7 +145,6 @@ public class AccountService : IAccountService
                 };
             }
 
-            var totpService = new TotpService();
             var totpSecret = totpService.GenerateSecret();
 
             var lHost = new LHost

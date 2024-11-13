@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Localization;
+using System.Globalization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -66,8 +67,8 @@ builder.Services.AddScoped<IReservationService, ReservationService>();
 builder.Services.AddScoped<IAppartmentRepository, AppartmentRepository>();
 builder.Services.AddScoped<IAppartmentBusinessService, AppartmentBusinessService>();
 builder.Services.AddScoped<IAppartmentService, AppartmentService>();
-builder.Services.AddScoped<JwtService>();
-builder.Services.AddScoped<TotpService>();
+builder.Services.AddScoped<IJwtService, JwtService>();
+builder.Services.AddScoped<ITotpService, TotpService>();
 builder.Services.AddScoped<ProtectedLocalStorage>();
 builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
 builder.Services.AddScoped<IEmailService, EmailService>();
@@ -83,13 +84,48 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-string[] supportedCultures = ["en-US", "nl-NL", "fr-FR"];
-var localizationOptions = new RequestLocalizationOptions()
-    .SetDefaultCulture(supportedCultures[2])
-    .AddSupportedCultures(supportedCultures)
-    .AddSupportedUICultures(supportedCultures);
 
-app.UseRequestLocalization(localizationOptions);
+app.UseRequestLocalization(options =>
+{
+    var supportedCultures = new List<CultureInfo>
+    {
+        new CultureInfo("en-US"),
+        new CultureInfo("fr-FR"),
+        new CultureInfo("nl-NL"),
+    };
+
+    options.DefaultRequestCulture = new RequestCulture(new CultureInfo("en-US")); // Default to English as fallback language
+    options.SupportedCultures = supportedCultures;
+    options.SupportedUICultures = supportedCultures;
+
+    options.RequestCultureProviders.Clear();
+
+    // Add a provider to check for the culture in a cookie
+    options.RequestCultureProviders.Add(new CookieRequestCultureProvider());
+
+    // Add a custom provider to handle fallbacks and browser defaults
+    options.RequestCultureProviders.Insert(0, new CustomRequestCultureProvider(async context =>
+    {
+        // Check if a culture cookie is already set
+        var cultureCookie = context.Request.Cookies[CookieRequestCultureProvider.DefaultCookieName];
+        if (!string.IsNullOrEmpty(cultureCookie))
+        {
+            var cookieCulture = CookieRequestCultureProvider.ParseCookieValue(cultureCookie);
+            return await Task.FromResult(new ProviderCultureResult(cookieCulture?.Cultures.First().Value));
+        }
+
+        // If no culture cookie, fallback to the browser's settings
+        var userLanguages = context.Request.Headers["Accept-Language"].ToString();
+        var primaryLanguage = userLanguages.Split(',').FirstOrDefault();
+        if (primaryLanguage == "en") primaryLanguage = "en-US";
+        else if (primaryLanguage == "fr") primaryLanguage = "fr-FR";
+        else if (primaryLanguage == "nl") primaryLanguage = "nl-NL";
+
+        var userCulture = new CultureInfo(primaryLanguage);
+        return await Task.FromResult(new ProviderCultureResult(userCulture?.Name ?? supportedCultures[0].Name));
+    }));
+});
+
 
 app.UseRouting();
 app.UseHttpsRedirection();

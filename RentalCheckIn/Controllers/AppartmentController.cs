@@ -1,6 +1,4 @@
 ﻿
-using RentalCheckIn.Services.UI;
-
 namespace RentalCheckIn.Controllers;
 
 [Route("api/[controller]")]

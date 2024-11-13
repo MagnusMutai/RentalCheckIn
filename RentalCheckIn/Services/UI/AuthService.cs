@@ -94,7 +94,7 @@ public class AuthService : IAuthService
             var response = await httpClient.PostAsync("api/auth/refresh-token", content);
             if (response.IsSuccessStatusCode)
             {
-                if (response.StatusCode == HttpStatusCode.NotFound)
+                if (response.StatusCode == HttpStatusCode.NoContent)
                 {
                     return default(TokenValidateResult);
                 }
@@ -193,7 +193,7 @@ public class AuthService : IAuthService
 
             if (response.IsSuccessStatusCode)
             {
-                if (response.StatusCode == HttpStatusCode.NotFound)
+                if (response.StatusCode == HttpStatusCode.NoContent)
                 {
                     return default;
                 }

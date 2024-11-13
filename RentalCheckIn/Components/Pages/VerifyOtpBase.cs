@@ -10,9 +10,9 @@ public class VerifyOtpBase : ComponentBase
     [Inject]
     private RefreshTokenService RefreshTokenService { get; set; }
     [Inject]
-    protected JwtService JwtService { get; set; }
+    protected IJwtService JwtService { get; set; }
     [Inject]
-    protected TotpService TotpService { get; set; }
+    protected ITotpService TotpService { get; set; }
     [Inject]
     protected NavigationManager NavigationManager { get; set; }
 

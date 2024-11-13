@@ -19,7 +19,7 @@ public class LHostController : ControllerBase
             var lHost = await this.hostRepository.GetLHostByEmailAsync(email);
             if (lHost == null)
             {
-                return BadRequest();
+                return NotFound();
             }
             else
             {

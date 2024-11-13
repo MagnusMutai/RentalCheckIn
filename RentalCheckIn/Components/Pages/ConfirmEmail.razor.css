@@ -8,33 +8,6 @@
     height: 100vh;
 }
 
-.toast {
-    position: fixed;
-    top: 10px;
-    right: 15px;
-}
-
-::deep .form-control {
-    border: 2px solid #FFC857 !important;
-}
-
-    ::deep .form-control.invalid {
-        border: 1px solid #dc3545 !important;
-    }
-
-::deep .mylogin-btn {
-    display: block;
-    font-size: 1rem;
-    font-weight: 500;
-    width: 100%;
-    background-color: white;
-    border-radius: 15px;
-    color: black;
-    padding-top: .8rem;
-    padding-bottom: .8rem;
-    margin-top: 15px;
-}
-
 @media (max-width: 768px) {
     .full-height {
         height: auto;

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Localization;
+using System.Globalization;
 
 namespace BlazorLocalization.Controllers;
 
@@ -7,15 +8,39 @@ public class CultureController : Controller
 {
     public IActionResult Set(string culture, string redirectUri)
     {
-        if (culture != null)
+        // Validate the culture parameter
+        if (string.IsNullOrWhiteSpace(culture))
         {
+            return BadRequest("Culture is required.");
+        }
+
+        // Validate the redirect URI to prevent open redirects (security concern)
+        if (string.IsNullOrWhiteSpace(redirectUri) || !Url.IsLocalUrl(redirectUri))
+        {
+            return BadRequest("Invalid redirect URI.");
+        }
+
+        try
+        {
+            // Set the culture cookie if a valid culture is provided
             var requestCulture = new RequestCulture(culture, culture);
             var cookieName = CookieRequestCultureProvider.DefaultCookieName;
             var cookieValue = CookieRequestCultureProvider.MakeCookieValue(requestCulture);
 
             HttpContext.Response.Cookies.Append(cookieName, cookieValue);
         }
+        catch (CultureNotFoundException)
+        {
+            // Handle invalid culture format
+            return BadRequest("Invalid culture format.");
+        }
+        catch (Exception ex)
+        {
+            // Logging
+            return StatusCode(500, "An error occurred while setting the culture.");
+        }
 
+        // Redirect to the specified URI on success
         return LocalRedirect(redirectUri);
     }
 }
