@@ -1,6 +1,6 @@
 ﻿namespace RentalCheckIn.Services.Core;
 
-public class TotpService
+public class TotpService : ITotpService
 {
     public string GenerateSecret()
     {

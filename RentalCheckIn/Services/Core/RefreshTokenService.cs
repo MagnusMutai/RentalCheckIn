@@ -8,10 +8,10 @@ public class RefreshTokenService
     private readonly ProtectedLocalStorage localStorage;
     private readonly HttpClient httpClient;
     private readonly IAccountService accountService;
-    private readonly JwtService jwtService;
+    private readonly IJwtService jwtService;
     private readonly AuthenticationStateProvider authStateProvider;
 
-    public RefreshTokenService(IRefreshTokenRepository refreshTokenRepository, ProtectedLocalStorage localStorage, HttpClient httpClient, IAccountService accountService, JwtService jwtService, AuthenticationStateProvider authStateProvider)
+    public RefreshTokenService(IRefreshTokenRepository refreshTokenRepository, ProtectedLocalStorage localStorage, HttpClient httpClient, IAccountService accountService, IJwtService jwtService, AuthenticationStateProvider authStateProvider)
     {
         this.refreshTokenRepository = refreshTokenRepository;
         this.localStorage = localStorage;
