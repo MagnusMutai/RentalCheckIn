@@ -3,7 +3,6 @@ using System.Globalization;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
 builder.Services.AddLocalization();
 // Add services to the container.
 builder.Services.AddRazorComponents()
@@ -36,7 +35,8 @@ builder.Services.AddAuthentication(options =>
 })
 .AddJwtBearer(options =>
 {
-    options.RequireHttpsMetadata = true; // Set to false only during development
+    // Set to false only during development
+    options.RequireHttpsMetadata = true; 
     options.SaveToken = true;
     options.TokenValidationParameters = new TokenValidationParameters
     {
@@ -48,7 +48,8 @@ builder.Services.AddAuthentication(options =>
         ValidAudience = builder.Configuration["Jwt:Audience"],
         IssuerSigningKey = new SymmetricSecurityKey(key),
         ClockSkew = TimeSpan.Zero,
-        NameClaimType = ClaimTypes.Name // Explicitly set the NameClaimType
+        // Explicitly set the NameClaimType
+        NameClaimType = ClaimTypes.Name 
     };
 });
 
@@ -93,8 +94,8 @@ app.UseRequestLocalization(options =>
         new CultureInfo("fr-FR"),
         new CultureInfo("nl-NL"),
     };
-
-    options.DefaultRequestCulture = new RequestCulture(new CultureInfo("en-US")); // Default to English as fallback language
+    // Default to English as fallback language
+    options.DefaultRequestCulture = new RequestCulture(new CultureInfo("en-US")); 
     options.SupportedCultures = supportedCultures;
     options.SupportedUICultures = supportedCultures;
 

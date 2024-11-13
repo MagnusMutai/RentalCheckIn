@@ -1,7 +1,5 @@
-﻿namespace RentalCheckIn.Services.Core
+﻿namespace RentalCheckIn.Services.Core;
+public interface IJwtService 
 {
-    public interface IJwtService 
-    {
-        string GenerateToken(LHost lHost);
-    }
+    string GenerateToken(LHost lHost);
 }

@@ -1,7 +1,5 @@
-﻿namespace RentalCheckIn.Repositories
+﻿namespace RentalCheckIn.Repositories;
+public interface IAppartmentRepository
 {
-    public interface IAppartmentRepository
-    {
-        Task<IEnumerable<string>> GetDistinctAppartmentNames();
-    }
+    Task<IEnumerable<string>> GetDistinctAppartmentNames();
 }

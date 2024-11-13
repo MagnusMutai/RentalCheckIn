@@ -26,7 +26,7 @@ public class RequestPasswordResetBase : ComponentBase
         }
         catch (Exception ex) 
         {
-            Message = "An error occurred.";
+            Message = "An unexpected error has occurred. Please try again later";
         }
     }
 }

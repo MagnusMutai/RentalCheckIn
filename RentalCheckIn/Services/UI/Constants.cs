@@ -1,7 +1,5 @@
-﻿namespace RentalCheckIn.Services.UI
+﻿namespace RentalCheckIn.Services.UI;
+public static class Constants
 {
-    public static class Constants
-    {
-        public static string JWTToken { get; set; } = "";
-    }
+    public static string JWTToken { get; set; } = "";
 }

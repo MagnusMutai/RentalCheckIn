@@ -1,6 +1,4 @@
-﻿
-
-namespace RentalCheckIn.Services.UI;
+﻿namespace RentalCheckIn.Services.UI;
 public class ReservationService : IReservationService
 {
     private readonly HttpClient httpClient;

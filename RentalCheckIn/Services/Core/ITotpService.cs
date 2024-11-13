@@ -1,8 +1,6 @@
-﻿namespace RentalCheckIn.Services.Core
+﻿namespace RentalCheckIn.Services.Core;
+public interface ITotpService
 {
-    public interface ITotpService
-    {
-        string GenerateSecret();
-        bool VerifyCode(string secret, string code);
-    }
+    string GenerateSecret();
+    bool VerifyCode(string secret, string code);
 }

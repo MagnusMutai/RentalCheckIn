@@ -1,5 +1,4 @@
 ﻿namespace RentalCheckIn.Services.UI;
-
 public class AuthService : IAuthService
 {
     private readonly HttpClient httpClient;

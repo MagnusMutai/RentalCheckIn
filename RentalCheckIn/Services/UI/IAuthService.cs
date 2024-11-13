@@ -1,7 +1,4 @@
-﻿using static RentalCheckIn.Components.Pages.PasswordReset;
-
-namespace RentalCheckIn.Services.UI;
-
+﻿namespace RentalCheckIn.Services.UI;
 public interface IAuthService
 {
     Task<OperationResult<LHost>> RegisterAsync(HostSignUpDto hostSignUpDto);

@@ -1,7 +1,5 @@
-﻿namespace RentalCheckIn.Services.UI
+﻿namespace RentalCheckIn.Services.UI;
+public interface ILHostService
 {
-    public interface ILHostService
-    {
-        Task<LHost> GetLHostByEmail(string mailAddress);
-    }
+    Task<LHost> GetLHostByEmail(string mailAddress);
 }

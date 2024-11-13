@@ -1,27 +1,23 @@
-﻿
-using RentalCheckIn.Repositories;
+﻿namespace RentalCheckIn.Services.Core;
 
-namespace RentalCheckIn.Services.Core
+public class AppartmentBusinessService : IAppartmentBusinessService
 {
-    public class AppartmentBusinessService : IAppartmentBusinessService
-    {
-        private readonly IAppartmentRepository appartmentRepository;
+    private readonly IAppartmentRepository appartmentRepository;
 
-        public AppartmentBusinessService(IAppartmentRepository appartmentRepository)
+    public AppartmentBusinessService(IAppartmentRepository appartmentRepository)
+    {
+        this.appartmentRepository = appartmentRepository;
+    }
+    public async Task<IEnumerable<string>> GetDistinctAppartmentNames()
+    {
+        try
         {
-            this.appartmentRepository = appartmentRepository;
+            return await appartmentRepository.GetDistinctAppartmentNames();
         }
-        public async Task<IEnumerable<string>> GetDistinctAppartmentNames()
+        catch (Exception ex)
         {
-            try
-            {
-                return await appartmentRepository.GetDistinctAppartmentNames();
-            }
-            catch (Exception ex)
-            {
-                // Return an empty list on error
-                return Enumerable.Empty<string>();
-            }
+            // Return an empty list on error
+            return Enumerable.Empty<string>();
         }
     }
 }
