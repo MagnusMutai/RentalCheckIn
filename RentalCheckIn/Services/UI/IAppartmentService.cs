@@ -1,7 +1,5 @@
-﻿namespace RentalCheckIn.Services.UI
+﻿namespace RentalCheckIn.Services.UI;
+public interface IAppartmentService
 {
-    public interface IAppartmentService
-    {
-        Task<IEnumerable<string>> GetDistinctAppartmentNames();
-    }
+    Task<IEnumerable<string>> GetDistinctAppartmentNames();
 }

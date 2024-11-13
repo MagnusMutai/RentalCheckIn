@@ -1,7 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity.Data;
-using static RentalCheckIn.DTOs.CustomResponses;
-
-namespace RentalCheckIn.Services.Core;
+﻿namespace RentalCheckIn.Services.Core;
 
 public interface IAccountService
 {

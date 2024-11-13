@@ -64,7 +64,7 @@ public class VerifyOtpBase : ComponentBase
         }
         catch (Exception ex)
         {
-            ErrorMessage = "Invalid request";
+            ErrorMessage = "An unexpected error has occurred. Please try again later.";
         }
         ShouldSpin = false;
     }

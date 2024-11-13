@@ -1,7 +1,4 @@
-﻿using System.Linq;
-
-namespace RentalCheckIn.Services.Core;
-
+﻿namespace RentalCheckIn.Services.Core;
 public class RefreshTokenService
 {
     private readonly IRefreshTokenRepository refreshTokenRepository;

@@ -1,24 +1,21 @@
 ﻿
-using Microsoft.EntityFrameworkCore;
+namespace RentalCheckIn.Repositories;
 
-namespace RentalCheckIn.Repositories
+public class AppartmentRepository : IAppartmentRepository
 {
-    public class AppartmentRepository : IAppartmentRepository
+    private readonly AppDbContext context;
+
+    public AppartmentRepository(AppDbContext context)
     {
-        private readonly AppDbContext context;
+        this.context = context;
+    }
 
-        public AppartmentRepository(AppDbContext context)
-        {
-            this.context = context;
-        }
-
-        public async Task<IEnumerable<string>> GetDistinctAppartmentNames()
-        {
-            return await context.Apartments
-                .Select(r => r.ApartmentName)
-                .Distinct()
-                .OrderBy(name => name)
-                .ToListAsync();
-        }
+    public async Task<IEnumerable<string>> GetDistinctAppartmentNames()
+    {
+        return await context.Apartments
+            .Select(r => r.ApartmentName)
+            .Distinct()
+            .OrderBy(name => name)
+            .ToListAsync();
     }
 }

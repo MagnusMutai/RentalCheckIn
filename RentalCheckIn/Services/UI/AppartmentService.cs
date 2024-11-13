@@ -1,5 +1,4 @@
 ﻿namespace RentalCheckIn.Services.UI;
-
 public class AppartmentService : IAppartmentService
 {
     private readonly HttpClient httpClient;

@@ -1,5 +1,4 @@
 ﻿namespace RentalCheckIn.Utilities;
-
 public static class Extensions
 {
     public static bool IsTokenExpired(string token)

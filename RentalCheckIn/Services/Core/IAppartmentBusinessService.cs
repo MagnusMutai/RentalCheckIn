@@ -1,7 +1,6 @@
-﻿namespace RentalCheckIn.Services.Core
+﻿namespace RentalCheckIn.Services.Core;
+
+public interface IAppartmentBusinessService
 {
-    public interface IAppartmentBusinessService
-    {
-        Task<IEnumerable<string>> GetDistinctAppartmentNames();
-    }
+    Task<IEnumerable<string>> GetDistinctAppartmentNames();
 }
