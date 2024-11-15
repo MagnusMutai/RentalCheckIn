@@ -9,12 +9,12 @@ public class AuthService : IAuthService
         this.httpClient = httpClient;
         this.localStorage = localStorage;
     }
-    public async Task<OperationResult<LHost>> LoginAsync(HostLoginDto hostLoginDto)
+    public async Task<OperationResult<LHost>> LoginAsync(HostLoginDTO hostLoginDTO)
     {
         try
         {
 
-            var response = await httpClient.PostAsJsonAsync("api/auth/login", hostLoginDto);
+            var response = await httpClient.PostAsJsonAsync("api/auth/login", hostLoginDTO);
             if (response.IsSuccessStatusCode)
             {
                 if (response.StatusCode == HttpStatusCode.NoContent)
@@ -37,11 +37,11 @@ public class AuthService : IAuthService
 
     }
 
-    public async Task<OperationResult<LHost>> RegisterAsync(HostSignUpDto hostSignUpDto)
+    public async Task<OperationResult<LHost>> RegisterAsync(HostSignUpDTO hostSignUpDTO)
     {
         try
         {
-            var response = await httpClient.PostAsJsonAsync("api/auth/register", hostSignUpDto);
+            var response = await httpClient.PostAsJsonAsync("api/auth/register", hostSignUpDTO);
             if (response.IsSuccessStatusCode)
             {
                 if (response.StatusCode == HttpStatusCode.NoContent)
@@ -120,11 +120,11 @@ public class AuthService : IAuthService
 
     }
 
-    public async Task<OperationResult> ForgotPasswordAsync(ResetRequestDto resetRequestDto)
+    public async Task<OperationResult> ForgotPasswordAsync(ResetRequestDTO resetRequestDTO)
     {
         try
         {
-            var json = JsonSerializer.Serialize(resetRequestDto.Email);
+            var json = JsonSerializer.Serialize(resetRequestDTO.Email);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
             var response = await httpClient.PostAsync($"api/auth/forgot-password", content);
 
@@ -177,14 +177,14 @@ public class AuthService : IAuthService
             return new EmailVerificationResponse();
         }
     }
-    public async Task<OperationResult<string>> ResetPasswordAsync(string token, PasswordResetDto passwordResetDto)
+    public async Task<OperationResult<string>> ResetPasswordAsync(string token, PasswordResetDTO passwordResetDTO)
     {
         try
         {
             var payload = new PasswordResetRequest
             {
                 ResetToken = token,
-                NewPassword = passwordResetDto.NewPassword,
+                NewPassword = passwordResetDTO.NewPassword,
             };
 
             // Send the new password and token to the backend

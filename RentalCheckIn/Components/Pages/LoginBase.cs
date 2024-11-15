@@ -3,7 +3,7 @@ namespace RentalCheckIn.Components.Pages;
 
 public class LoginBase : ComponentBase
 {
-    protected HostLoginDto loginModel = new();
+    protected HostLoginDTO loginModel = new();
     protected string ErrorMessage;
     protected bool ShouldSpin;
     public string? DisplayToast { get; set; } = "d-block";

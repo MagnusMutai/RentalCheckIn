@@ -1,6 +1,6 @@
 ﻿namespace RentalCheckIn.DTOs;
 
-public class PasswordResetDto
+public class PasswordResetDTO
 {
     [Required(ErrorMessage = "Password is required")]
     [DataType(DataType.Password)]

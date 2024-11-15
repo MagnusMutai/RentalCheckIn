@@ -8,7 +8,7 @@ public class ReservationService : IReservationService
         this.httpClient = httpClient;
     }
 
-    public async Task<IEnumerable<ReservationDto>> GetAllReservationsAsync()
+    public async Task<IEnumerable<ReservationDTO>> GetAllReservationsAsync()
     {
         try
         {
@@ -17,9 +17,9 @@ public class ReservationService : IReservationService
             {
                 if (response.StatusCode == HttpStatusCode.NoContent)
                 {
-                    return new List<ReservationDto>();
+                    return new List<ReservationDTO>();
                 }
-                return await response.Content.ReadFromJsonAsync<IEnumerable<ReservationDto>>();
+                return await response.Content.ReadFromJsonAsync<IEnumerable<ReservationDTO>>();
             }
             else
             {

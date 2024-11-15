@@ -2,8 +2,8 @@
 
 public interface IAccountService
 {
-    Task<OperationResult<LHost>> RegisterAsync(HostSignUpDto hostSignUpDto);
-    Task<OperationResult<LHost>> LoginAsync(HostLoginDto hostLoginDto);
+    Task<OperationResult<LHost>> RegisterAsync(HostSignUpDTO hostSignUpDTO);
+    Task<OperationResult<LHost>> LoginAsync(HostLoginDTO hostLoginDTO);
     bool VerifyPassword(string password, string passwordHash);
     string HashPassword(string password);
     Task<EmailVerificationResponse> VerifyEmailTokenAsync(string token);

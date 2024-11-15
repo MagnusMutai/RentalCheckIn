@@ -1,5 +1,5 @@
 ﻿namespace RentalCheckIn.DTOs;
-public class HostSignUpDto
+public class HostSignUpDTO
 {
     [Required(ErrorMessage = "First name is required")]
     public string FirstName { get; set; } = string.Empty;
