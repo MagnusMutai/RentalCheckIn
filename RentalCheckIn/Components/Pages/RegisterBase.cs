@@ -4,7 +4,7 @@ using QRCoder;
 namespace RentalCheckIn.Components.Pages;
 public class RegisterBase : ComponentBase
 {
-    protected HostSignUpDto registerModel = new();
+    protected HostSignUpDTO registerModel = new();
     protected string Message;
     protected string TotpSecret;
     protected bool ShouldSpin;

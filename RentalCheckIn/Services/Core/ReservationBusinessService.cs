@@ -8,7 +8,7 @@ public class ReservationBusinessService : IReservationBusinessService
         this.reservationRepository = reservationRepository;
     }
 
-    public async Task<IEnumerable<ReservationDto>> GetAllReservationsAsync()
+    public async Task<IEnumerable<ReservationDTO>> GetAllReservationsAsync()
     {
         try
         {
@@ -17,7 +17,7 @@ public class ReservationBusinessService : IReservationBusinessService
         catch (Exception ex)
         {
             // Return an empty list on error
-            return Enumerable.Empty<ReservationDto>(); 
+            return Enumerable.Empty<ReservationDTO>(); 
         }
     }
 

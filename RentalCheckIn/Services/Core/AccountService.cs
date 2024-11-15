@@ -15,12 +15,12 @@ public class AccountService : IAccountService
         this.refreshTokenRepository = refreshTokenRepository;
         this.totpService = totpService;
     }
-    public async Task<OperationResult<LHost>> LoginAsync(HostLoginDto hostLoginDto)
+    public async Task<OperationResult<LHost>> LoginAsync(HostLoginDTO hostLoginDTO)
     {
         try
         {
 
-            var lHost = await hostRepository.GetLHostByEmailAsync(hostLoginDto.Email);
+            var lHost = await hostRepository.GetLHostByEmailAsync(hostLoginDTO.Email);
             if (lHost == null)
             {
                 return new OperationResult<LHost>
@@ -77,7 +77,7 @@ public class AccountService : IAccountService
                 };
             }
 
-            if (!VerifyPassword(hostLoginDto.Password, lHost.PasswordHash))
+            if (!VerifyPassword(hostLoginDTO.Password, lHost.PasswordHash))
             {
                 // Increase login attempts for unsuccessful logins
                 await hostRepository.UpdateLHostPartialAsync(lHost, host =>
@@ -128,11 +128,11 @@ public class AccountService : IAccountService
         return BCrypt.Net.BCrypt.HashPassword(password);
     }
 
-    public async Task<OperationResult<LHost>> RegisterAsync(HostSignUpDto hostSignUpDto)
+    public async Task<OperationResult<LHost>> RegisterAsync(HostSignUpDTO hostSignUpDTO)
     {
         try
         {
-            var existingHost = await hostRepository.GetLHostByEmailAsync(hostSignUpDto.Email);
+            var existingHost = await hostRepository.GetLHostByEmailAsync(hostSignUpDTO.Email);
             if (existingHost != null)
             {
                 return new OperationResult<LHost>
@@ -146,12 +146,12 @@ public class AccountService : IAccountService
 
             var lHost = new LHost
             {
-                FirstName = hostSignUpDto.FirstName,
-                LastName = hostSignUpDto.LastName,
-                PasswordHash = HashPassword(hostSignUpDto.Password),
+                FirstName = hostSignUpDTO.FirstName,
+                LastName = hostSignUpDTO.LastName,
+                PasswordHash = HashPassword(hostSignUpDTO.Password),
                 TotpSecret = totpSecret,
-                Username = hostSignUpDto.Email,
-                MailAddress = hostSignUpDto.Email,
+                Username = hostSignUpDTO.Email,
+                MailAddress = hostSignUpDTO.Email,
                 EmailVerificationToken = GenerateRandomToken(),
                 EmailVTokenExpiresAt = DateTime.UtcNow.AddHours(24)
             };
@@ -247,7 +247,7 @@ public class AccountService : IAccountService
     {
         try
         {
-            // Implement response Dto to handle edge cases
+            // Implement response DTO to handle edge cases
             var tokenEntity = await refreshTokenRepository.GetRefreshTokenAsync(refreshToken);
             // Check if the token was found
             if (tokenEntity == null)

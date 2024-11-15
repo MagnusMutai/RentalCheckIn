@@ -3,9 +3,10 @@ namespace RentalCheckIn.Components.Pages;
 
 public class VerifyOtpBase : ComponentBase
 {
-    protected OtpDto otpModel = new();
+    protected OtpDTO otpModel = new();
     protected string ErrorMessage;
     protected bool ShouldSpin;
+    public string? DisplayToast { get; set; } = "d-block";
 
     [Inject]
     private RefreshTokenService RefreshTokenService { get; set; }

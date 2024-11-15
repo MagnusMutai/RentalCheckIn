@@ -8,8 +8,8 @@ public class PasswordResetBase : ComponentBase
 {
     protected bool ShouldSpin;
 
-    protected PasswordResetDto resetPasswordModel = new PasswordResetDto();
-    protected HostLoginDto autoHostLoginDto = new HostLoginDto();
+    protected PasswordResetDTO resetPasswordModel = new PasswordResetDTO();
+    protected HostLoginDTO autoHostLoginDTO = new HostLoginDTO();
     protected string Message { get; set; }
     protected bool IsPasswordResetSuccessful { get; set; }
     protected bool IsLoading { get; set; } = false;
@@ -45,10 +45,10 @@ public class PasswordResetBase : ComponentBase
                         Message = ResetPasswordResponse.Message;
                         if (ResetPasswordResponse.IsSuccess)
                         {
-                            autoHostLoginDto.Email = ResetPasswordResponse.Data;
-                            autoHostLoginDto.Password = resetPasswordModel.NewPassword;
+                            autoHostLoginDTO.Email = ResetPasswordResponse.Data;
+                            autoHostLoginDTO.Password = resetPasswordModel.NewPassword;
 
-                            var result = await AuthService.LoginAsync(autoHostLoginDto);
+                            var result = await AuthService.LoginAsync(autoHostLoginDTO);
                             if (result.IsSuccess)
                             {
                                 IsPasswordResetSuccessful = true;

@@ -8,7 +8,7 @@ public class HomeBase : ComponentBase
     protected string Message;
     protected string SelectedApartment { get; set; } = "All";
     protected List<string> ApartmentNames = new List<string>();
-    protected List<ReservationDto> Reservation = new List<ReservationDto>();
+    protected List<ReservationDTO> Reservation = new List<ReservationDTO>();
     protected List<Setting> Settings = new List<Setting>();
 
     [Inject]
@@ -83,7 +83,7 @@ public class HomeBase : ComponentBase
     protected uint totalPages => (uint)Math.Ceiling((double)FilteredReservations.Count() / itemsPerPage);
 
     // Filters the reservations based on the selected apartment.
-    protected IEnumerable<ReservationDto> FilteredReservations
+    protected IEnumerable<ReservationDTO> FilteredReservations
     {
         get
         {
@@ -99,7 +99,7 @@ public class HomeBase : ComponentBase
     }
 
     // Retrieves the reservations for the current page after applying the filter.
-    protected IEnumerable<ReservationDto> PaginatedReservations => FilteredReservations
+    protected IEnumerable<ReservationDTO> PaginatedReservations => FilteredReservations
         .Skip((int)((currentPage - 1) * itemsPerPage))
         .Take((int)itemsPerPage);
 

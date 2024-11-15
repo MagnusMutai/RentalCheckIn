@@ -1,6 +1,6 @@
 ﻿namespace RentalCheckIn.DTOs;
 
-public class HostLoginDto
+public class HostLoginDTO
 {
     [Required(ErrorMessage ="Email is required"), EmailAddress]
     public string Email { get; set; } = string.Empty;

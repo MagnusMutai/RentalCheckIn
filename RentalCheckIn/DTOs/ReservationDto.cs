@@ -1,6 +1,6 @@
 ﻿namespace RentalCheckIn.DTOs
 {
-    public class ReservationDto
+    public class ReservationDTO
     {
         public DateOnly CheckInDate { get; set; }
         public DateOnly CheckOutDate { get; set; }

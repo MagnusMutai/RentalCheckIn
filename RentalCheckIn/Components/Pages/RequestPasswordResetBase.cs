@@ -3,7 +3,7 @@ namespace RentalCheckIn.Components.Pages;
 
 public class RequestPasswordResetBase : ComponentBase
 {
-    protected ResetRequestDto resetModel = new ResetRequestDto();
+    protected ResetRequestDTO resetModel = new ResetRequestDTO();
     protected bool isEmailSent = false;
     protected string Message;
     protected bool ShouldSpin;

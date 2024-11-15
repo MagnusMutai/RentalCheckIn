@@ -1,5 +1,5 @@
 ﻿namespace RentalCheckIn.DTOs;
-public class OtpDto
+public class OtpDTO
 {
     public string Email { get; set; }
     [Required(ErrorMessage = "OTP code required")]

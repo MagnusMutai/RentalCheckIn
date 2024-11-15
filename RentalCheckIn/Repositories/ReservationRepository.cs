@@ -8,7 +8,7 @@ public class ReservationRepository : IReservationRepository
     {
         this.context = context;
     }
-    public async Task<IEnumerable<ReservationDto>> GetAllReservationsAsync()
+    public async Task<IEnumerable<ReservationDTO>> GetAllReservationsAsync()
     {
         return await context.Reservations
             .Include(r => r.Apartment)
@@ -19,7 +19,7 @@ public class ReservationRepository : IReservationRepository
             .Include(r => r.Status)
             .Where(r => r.StatusId < 3)
             .OrderBy(r => r.CheckInDate)
-                .Select(r => new ReservationDto
+                .Select(r => new ReservationDTO
                 {
                     CheckInDate = r.CheckInDate,
                     CheckOutDate = r.CheckOutDate,
