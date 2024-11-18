@@ -1,0 +1,16 @@
+﻿@page "/loginfaceid"
+@using Fido2NetLib
+@inject HttpClient Http
+@inject IJSRuntime JSRuntime
+
+<h3>Login with Face ID</h3>
+<button @onclick="Authenticate">Login</button>
+
+@code {
+    private async Task Authenticate()
+    {
+        var options = await Http.GetFromJsonAsync<AssertionOptions>("api/fido2/authenticate/options?hostId=1");
+        var assertion = await JSRuntime.InvokeAsync<object>("fido2.authenticate", new object[] { options });
+        await Http.PostAsJsonAsync("api/fido2/authenticate/response", assertion);
+    }
+}

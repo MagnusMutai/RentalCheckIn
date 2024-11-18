@@ -6,7 +6,7 @@ namespace RentalCheckIn.Components.Pages;
 
 public class PasswordResetBase : ComponentBase
 {
-    protected bool ShouldSpin;
+    protected bool IsRegistering;
 
     protected PasswordResetDTO resetPasswordModel = new PasswordResetDTO();
     protected HostLoginDTO autoHostLoginDTO = new HostLoginDTO();
@@ -26,7 +26,7 @@ public class PasswordResetBase : ComponentBase
     protected async Task HandleResetPassword()
     {
 
-        ShouldSpin = true;
+        IsRegistering = true;
         try
         {
 
@@ -71,6 +71,6 @@ public class PasswordResetBase : ComponentBase
             Message = Localizer["PasswordResetErrorMessage"];
         }
 
-        ShouldSpin = false;
+        IsRegistering = false;
     }
 }

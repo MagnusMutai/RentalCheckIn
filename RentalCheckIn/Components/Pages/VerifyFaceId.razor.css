@@ -1,0 +1,25 @@
+﻿.left-half {
+    background-image: url(../images/snowylodge.jpg);
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+.full-height {
+    height: 100vh;
+}
+
+.toast {
+    position: fixed;
+    top: 65px;
+    right: 1px;
+}
+
+::deep .fw-bold {
+    font-weight: 500 !important;
+}
+
+@media (max-width: 768px) {
+    .full-height {
+        height: auto;
+    }
+}

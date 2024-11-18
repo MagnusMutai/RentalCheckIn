@@ -5,8 +5,8 @@ public class LoginBase : ComponentBase
 {
     protected HostLoginDTO loginModel = new();
     protected string ErrorMessage;
-    protected bool ShouldSpin;
-    public string? DisplayToast { get; set; } = "d-block";
+    protected bool IsRegistering;
+    protected string? DisplayToast { get; set; } = "d-block";
     [Inject]
     private ProtectedLocalStorage LocalStorage { get; set; }
     [Inject]
@@ -31,16 +31,34 @@ public class LoginBase : ComponentBase
 
     protected async Task HandleLogin()
     {
-        ShouldSpin = true;
+        IsRegistering = true;
         try
         {
             var result = await AuthService.LoginAsync(loginModel);
             if (result.IsSuccess)
             {
                 var lHost = result.Data;
-                // Store email for OTP verification
-                await LocalStorage.SetAsync("emailForOtp", lHost.MailAddress);
-                NavigationManager.NavigateTo("/verify-otp");
+
+                // Store necessary user information temporarily
+                await LocalStorage.SetAsync("UserIdFor2FA", lHost.HostId);
+
+                // Redirect based on the selected 2FA method
+                if (lHost.Selected2FA.Equals("TOTP", StringComparison.OrdinalIgnoreCase))
+                {
+                    // Store email for OTP verification
+                    await LocalStorage.SetAsync("emailForOtp", lHost.MailAddress);
+                    NavigationManager.NavigateTo("/verify-otp");
+                }
+                else if (lHost.Selected2FA.Equals("FaceID", StringComparison.OrdinalIgnoreCase))
+                {
+                    NavigationManager.NavigateTo("/verify-faceid");
+                }
+                else
+                {
+                    // Handle cases where no 2FA is selected or unsupported method
+                    ErrorMessage = "Unsupported 2FA method selected.";
+                    DisplayToast = "d-block";
+                }
             }
             else
             {
@@ -52,7 +70,7 @@ public class LoginBase : ComponentBase
         {
             ErrorMessage = "An unexpected error occurred";
         }
-        ShouldSpin = false;
+        IsRegistering = false;
     }
 
     protected void HandleCloseToast()

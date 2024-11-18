@@ -1,0 +1,93 @@
+﻿@page "/registerfaceid"
+@using Fido2NetLib
+@inject HttpClient Http
+@inject IJSRuntime JSRuntime
+
+<PageTitle>Register FaceID 2FA</PageTitle>
+
+<div clss="text-white w-100">
+    <h3 class="text-center mt-3">Register face Id, pin or fingerprints</h3>
+    <p class="text-center my-3">Register face Id, pin or fingerprints depending on your preference and device capabilities.</p>
+    @if (isRegistering)
+    {
+        <div class="text-center text-success d-flex gap-4 justify-content-center mt-4">
+            <div class="spinner-border" role="status">
+            </div>
+            <span>Register and wait as we process your details...</span>
+        </div>
+    }
+
+    <p class="text-center text-info">@message</p>
+    @if (shouldDisplayRegButton)
+    {
+        <div class="d-flex flex-column">
+            <button class="btn btn-primary d-block fw-bold w-100 bg-white rounded-pill text-black py-2 mt-4" @onclick="HandleRegisterFaceId">Try again</button>
+        </div>
+    }
+</div>
+
+@code {
+    private string message;
+    private bool isRegistering;
+    private bool isRegisteringOnce;
+    private bool shouldDisplayRegButton;
+
+
+    [Inject]
+    protected IAuthService AuthService { get; set; }
+
+    [Parameter]
+    public uint HostId { get; set; }
+
+    [Parameter]
+    public EventCallback<OperationResult> OnRegistrationComplete { get; set; }
+    public OperationResult RegistrationResult { get; set; }
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (!isRegisteringOnce)
+        {
+            isRegisteringOnce = true;
+            await HandleRegisterFaceId();
+        }
+    }
+
+    private async Task HandleRegisterFaceId()
+    {
+        isRegistering = true;
+        message = string.Empty;
+
+        try
+        {
+            var result = await AuthService.RegisterFaceIdAsync(HostId);
+            RegistrationResult = result;
+            message = result.Message;
+
+            await OnRegistrationComplete.InvokeAsync(result);
+            if (!RegistrationResult.IsSuccess)
+            {
+                shouldDisplayRegButton = true;
+            }
+            else
+            {
+                shouldDisplayRegButton = false;
+            }
+        }
+        catch
+        {
+            message = "An unexpected error occurred during Face ID registration.";
+            RegistrationResult = new OperationResult
+                {
+                    IsSuccess = false,
+                    Message = "An unexpected error occurred during Face ID registration."
+                };
+
+            await OnRegistrationComplete.InvokeAsync(RegistrationResult);
+        }
+        finally
+        {
+            isRegistering = false;
+        }
+    }
+}

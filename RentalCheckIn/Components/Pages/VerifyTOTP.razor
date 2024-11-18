@@ -1,5 +1,5 @@
 ﻿@page "/verify-otp"
-@inherits VerifyOtpBase
+@inherits VerifyTOTPBase
 @using Microsoft.Extensions.Localization
 @using RentalCheckIn.Locales
 @inject IStringLocalizer<Resource> Localizer
@@ -12,21 +12,28 @@
             <h3 class="mt-5 pt-4">@Localizer["WelcomeMessage"]</h3>
         </div>
         <div class="col-12 col-md-6 full-height">
-        @if (!string.IsNullOrEmpty(ErrorMessage))
-        {
-            <div class="alert alert-danger">@ErrorMessage</div>
-        }
+            @if (!string.IsNullOrEmpty(ErrorMessage))
+            {
+                <div class="toast @DisplayToast bg-danger z-3">
+                    <div class="d-flex">
+                        <div class="toast-body">
+                            <p>@ErrorMessage</p>
+                        </div>
+                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close" @onclick="HandleCloseToast"></button>
+                    </div>
+                </div>
+            }
             <div class="mx-auto col-8 mt-5 pt-2">
                 <p class="fs-3 mt-5">@Localizer["VerifyTOTPPrimaryMessage"]</p>
                 <p class="mb-5">
                     @((MarkupString)Localizer["VerifyTOTPSecMessage"].Value).
                 </p>
-                <EditForm Model="otpModel" OnValidSubmit="HandleVerifyOtp">
+                <EditForm Model="oTPModel" OnValidSubmit="HandleVerifyOtp">
                     <DataAnnotationsValidator />
-                    <InputText class="bg-transparent text-white rounded-pill form-control" @bind-Value="otpModel.Code" placeholder="TOTP Code" />
-                    <ValidationMessage For="@(() => otpModel.Code)" class="ms-2 text-danger" />
+                    <InputText class="bg-transparent text-white rounded-pill form-control" @bind-Value="oTPModel.Code" placeholder="TOTP Code" />
+                    <ValidationMessage For="@(() => oTPModel.Code)" class="ms-2 text-danger" />
                     <button type="submit" class="btn btn-primary d-block fw-bold w-100 bg-white rounded-pill text-black py-2 mt-4">
-                        @if (ShouldSpin)
+                        @if (IsRegistering)
                         {
                             <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
                         }
