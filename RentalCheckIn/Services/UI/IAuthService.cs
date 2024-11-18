@@ -7,4 +7,7 @@ public interface IAuthService
     Task<TokenValidateResult> RefreshTokenAsync();
     Task<OperationResult> ForgotPasswordAsync(ResetRequestDTO resetRequestDTO);
     Task<OperationResult<string>> ResetPasswordAsync(string token, PasswordResetDTO passwordResetDTO);
+    Task<OperationResult> VerifyTOTPAsync(TOTPDTO otpModel);
+    Task<OperationResult> RegisterFaceIdAsync(uint hostId);
+    Task<OperationResult> AuthenticateFaceIdAsync();
 }

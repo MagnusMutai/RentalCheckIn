@@ -2,4 +2,5 @@
 public interface ILHostService
 {
     Task<LHost> GetLHostByEmail(string mailAddress);
+    Task<LHost> GetLHostById(uint lHostId);
 }
