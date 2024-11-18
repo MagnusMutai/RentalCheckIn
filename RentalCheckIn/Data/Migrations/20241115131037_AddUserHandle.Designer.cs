@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RentalCheckIn.Data;
 
@@ -11,9 +12,11 @@ using RentalCheckIn.Data;
 namespace RentalCheckIn.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241115131037_AddUserHandle")]
+    partial class AddUserHandle
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -233,15 +236,12 @@ namespace RentalCheckIn.Data.Migrations
                     b.Property<DateTime?>("ResetTokenExpires")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<string>("Selected2FA")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
                     b.Property<string>("TotpSecret")
                         .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<byte[]>("UserHandle")
+                        .IsRequired()
                         .HasColumnType("longblob");
 
                     b.Property<string>("Username")
@@ -267,12 +267,11 @@ namespace RentalCheckIn.Data.Migrations
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("AuthenticatorType")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<DateTime>("CreatedAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("CredentialId")
                         .IsRequired()
@@ -287,6 +286,10 @@ namespace RentalCheckIn.Data.Migrations
 
                     b.Property<long>("SignCount")
                         .HasColumnType("bigint");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
                     b.HasKey("Id");
 

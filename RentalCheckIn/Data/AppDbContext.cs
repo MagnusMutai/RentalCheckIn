@@ -38,6 +38,8 @@ public partial class AppDbContext : DbContext
     public virtual DbSet<Status> Statuses { get; set; }
     public virtual DbSet<RefreshToken> RefreshTokens { get; set; }
 
+    public DbSet<LHostCredential> LHostCredentials { get; set; }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
         => optionsBuilder.UseMySql("server=localhost;database=RentalCheckIn;user id=root;password=Bikadius#03", Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.40-mysql"));
@@ -293,12 +295,24 @@ public partial class AppDbContext : DbContext
             entity.HasKey(rt => rt.Id);
 
             entity.HasOne(rt => rt.LHost)
-            .WithMany(u => u.RefreshTokens)
-            .HasForeignKey(rt => rt.HostId)
-            // Delete tokens if Host is deleted
-            .OnDelete(DeleteBehavior.Cascade); 
+                .WithMany(u => u.RefreshTokens)
+                .HasForeignKey(rt => rt.HostId)
+                // Delete tokens if Host is deleted
+                .OnDelete(DeleteBehavior.Cascade); 
         });
 
+        modelBuilder.Entity<LHostCredential>(entity =>
+        {
+            entity.ToTable("LHostCredential");
+            entity.HasOne(c => c.Host)
+                .WithMany(h => h.Credentials)
+                .HasForeignKey(c => c.HostId)
+                .OnDelete(DeleteBehavior.Cascade);
+            entity.Property(e => e.CreatedAt)
+                .HasDefaultValueSql("CURRENT_TIMESTAMP")
+                .HasColumnType("timestamp");
+
+        });
 
         OnModelCreatingPartial(modelBuilder);
     }
