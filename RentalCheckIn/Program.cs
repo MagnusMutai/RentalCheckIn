@@ -1,3 +1,4 @@
+using Fido2NetLib;
 using Microsoft.AspNetCore.Localization;
 using System.Globalization;
 
@@ -9,6 +10,16 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
 builder.Services.AddControllers();
+
+builder.Services.AddDistributedMemoryCache(); // Add in-memory distributed cache
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30); // Set session timeout
+    options.Cookie.HttpOnly = true; // Make the cookie HttpOnly
+    options.Cookie.IsEssential = true; // Ensure the cookie is essential
+});
+
+
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "My API", Version = "V1" });
@@ -17,7 +28,7 @@ builder.Services.AddSwaggerGen(c =>
 // Configure EF Core with MySQL
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseMySql(builder.Configuration.GetConnectionString("DefaultConnection"),
-    new MySqlServerVersion(new Version(8, 0, 40))));
+    new MySqlServerVersion(new System.Version(8, 0, 40))));
 
 //Register HttpClient with BaseAddress
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://localhost:7110") });
@@ -53,6 +64,18 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
+// Add Fido2 configuration
+builder.Services.AddSingleton<Fido2>(sp =>
+{
+    var config = new Fido2Configuration
+    {
+        ServerDomain = "localhost", // Your server domain
+        ServerName = "RentalCheckIn", // Your application name
+        Origins = new HashSet<string>() { "https://localhost:7110" }// Your origin (e.g., https://yourdomain.com)
+    };
+
+    return new Fido2(config);
+});
 
 
 // Register application services
@@ -68,8 +91,8 @@ builder.Services.AddScoped<IReservationService, ReservationService>();
 builder.Services.AddScoped<IAppartmentRepository, AppartmentRepository>();
 builder.Services.AddScoped<IAppartmentBusinessService, AppartmentBusinessService>();
 builder.Services.AddScoped<IAppartmentService, AppartmentService>();
-builder.Services.AddScoped<IJwtService, JwtService>();
-builder.Services.AddScoped<ITotpService, TotpService>();
+builder.Services.AddScoped<IJWTService, JWTService>();
+builder.Services.AddScoped<ITOTPService, TOTPService>();
 builder.Services.AddScoped<ProtectedLocalStorage>();
 builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
 builder.Services.AddScoped<IEmailService, EmailService>();
@@ -129,6 +152,8 @@ app.UseRequestLocalization(options =>
 
 
 app.UseRouting();
+
+app.UseSession(); // Enable session middleware
 app.UseHttpsRedirection();
 
 app.MapControllers();
