@@ -12,11 +12,35 @@ public class LHostController : ControllerBase
     }
 
     [HttpGet("email/{email}")]
-    public async Task<ActionResult<LHost>> GetLHost(string email)
+    public async Task<ActionResult<LHost>> GetLHostbyEmail(string email)
     {
         try
         {
             var lHost = await this.hostRepository.GetLHostByEmailAsync(email);
+            if (lHost == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                return Ok(lHost);
+            }
+
+        }
+        catch (Exception)
+        {
+
+            return StatusCode(StatusCodes.Status500InternalServerError,
+                              "Error retrieving Data from Database");
+        }
+    }
+    
+    [HttpGet("id/{id}")]
+    public async Task<ActionResult<LHost>> GetLHostbyId(uint id)
+    {
+        try
+        {
+            var lHost = await this.hostRepository.GetLHostByIdAsync(id);
             if (lHost == null)
             {
                 return NotFound();
