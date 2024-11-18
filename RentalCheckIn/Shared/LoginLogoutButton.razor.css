@@ -1,0 +1,13 @@
+﻿.btn-primary {
+    border: 1.25px solid #FFC857 !important;
+    background-color: transparent;
+    padding: 1.5px 7px 2.5px 7px;
+}
+
+.btn-primary:focus {
+    box-shadow: none;
+}
+
+    .btn-primary:hover {
+        background-color: rgba(167, 44, 193, 0.35);
+    }
