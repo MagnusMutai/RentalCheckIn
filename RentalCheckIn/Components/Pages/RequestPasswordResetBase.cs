@@ -6,7 +6,7 @@ public class RequestPasswordResetBase : ComponentBase
     protected ResetRequestDTO resetModel = new ResetRequestDTO();
     protected bool isEmailSent = false;
     protected string Message;
-    protected bool ShouldSpin;
+    protected bool IsRegistering;
 
     [Inject]
     protected IAuthService AuthService { get; set; }
@@ -15,14 +15,14 @@ public class RequestPasswordResetBase : ComponentBase
     {
         try
         {
-            ShouldSpin = true;
+            IsRegistering = true;
             var result = await AuthService.ForgotPasswordAsync(resetModel);
             // In other similar pages remember to go back and check null first.
             if (result != null)
             {
                 Message = result.Message;
             }
-            ShouldSpin = false;
+            IsRegistering = false;
         }
         catch (Exception ex) 
         {

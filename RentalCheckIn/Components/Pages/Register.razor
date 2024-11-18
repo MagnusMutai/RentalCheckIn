@@ -6,13 +6,13 @@
 
 <PageTitle>Register</PageTitle>
 
-    <div class="container-fluid text-white">
-        <div class="row">
+<div class="container-fluid text-white">
+    <div class="row">
         <div class="col-12 col-md-6 py-5 full-height text-center left-half">
-                <h3 class="mt-5 pt-4">@Localizer["WelcomeMessage"]</h3>
-            </div>
+            <h3 class="mt-5 pt-4">@Localizer["WelcomeMessage"]</h3>
+        </div>
         <div class="col-12 col-md-6 full-height">
-                <div class="mx-auto col-10 col-sm-8 col-md-8 col-lg-8 mt-md-5 pt-md-2">
+            <div class="mx-auto col-10 col-sm-8 col-md-8 col-lg-8 mt-md-5 pt-md-2">
                 @if (!string.IsNullOrEmpty(Message))
                 {
                     <div class="toast align-items-center p-2 @BackGroundColor position-fixed top-1 end-0 @DisplayToast" role="alert" aria-live="assertive" aria-atomic="true">
@@ -24,11 +24,11 @@
                                 }
                                 @Message
                             </div>
-                                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close" @onclick="HandleCloseToast"></button>
+                            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close" @onclick="HandleCloseToast"></button>
                         </div>
                     </div>
                 }
-                @if (string.IsNullOrEmpty(TotpSecret))
+                @if (!isRegistrationComplete)
                 {
                     <p class="fs-3 mt-4">@Localizer["RegisterCreateAccount"]</p>
                     <p class="mb-4">
@@ -58,8 +58,23 @@
                             <InputText class="bg-transparent text-white rounded-pill form-control" @bind-Value="registerModel.ConfirmPassword" placeholder="@Localizer["ConfirmPassword"]" type="password" />
                             <ValidationMessage For="@(() => registerModel.ConfirmPassword)" class="ms-2 text-danger" />
                         </div>
+                        <div class="mb-4">
+                            <label class="form-label">@Localizer["Select2FAMethod"]</label>
+                            <!-- Wrap InputRadio components inside InputRadioGroup -->
+                            <InputRadioGroup @bind-Value="registerModel.Selected2FA">
+                                <div class="form-check">
+                                    <InputRadio Value="TOTP" class="form-check-input" id="totpOption" />
+                                    <label class="form-check-label" for="totpOption">TOTP (Authenticator App)</label>
+                                </div>
+                                <div class="form-check">
+                                    <InputRadio Value="FaceID" class="form-check-input" id="faceidOption" />
+                                    <label class="form-check-label" for="faceidOption">Face ID</label>
+                                </div>
+                            </InputRadioGroup>
+                            <ValidationMessage For="@(() => registerModel.Selected2FA)" class="ms-2 text-danger" />
+                        </div>
                         <button type="submit" class="btn btn-primary d-block fw-bold w-100 bg-white rounded-pill text-black py-2 mt-4">
-                            @if (ShouldSpin)
+                            @if (IsRegistering)
                             {
                                 <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
                             }
@@ -69,17 +84,22 @@
                 }
                 else
                 {
-                    <div class="text-center mt-5 pt-5">
-                        <p class="mt-5 totp-msg">
-                            @((MarkupString)Localizer["RegisterSuccessPrimaryMessage"].Value)
-                        </p>
-                        <img class="w-50" src="@QrCodeImageData" alt="QR Code" />
-                        <p class="my-4 totp-code text-break text-wrap"><strong>@TotpSecret</strong></p>
-                    </div>
-
+                    @if (IsFaceIdSelected)
+                    {
+                        <RegisterFaceId HostId="@RegisteredUserId" OnRegistrationComplete="HandleFaceIdRegistrationComplete" />
+                    }
+                    else
+                    {
+                        <div class="text-center mt-5 pt-5">
+                            <p class="mt-5 totp-msg">
+                                @((MarkupString)Localizer["RegisterSuccessPrimaryMessage"].Value)
+                            </p>
+                            <img class="w-50" src="@QrCodeImageData" alt="QR Code" />
+                            <p class="my-4 totp-code text-break text-wrap"><strong>@TotpSecret</strong></p>
+                        </div>
+                    }
                 }
-                </div>
             </div>
         </div>
     </div>
-
+</div>
