@@ -1,8 +1,8 @@
 ﻿namespace RentalCheckIn.Services.Core;
-public class JwtService : IJwtService
+public class JWTService : IJWTService
 {
     private readonly IConfiguration configuration;
-    public JwtService(IConfiguration configuration)
+    public JWTService(IConfiguration configuration)
     {
         this.configuration = configuration;
     }

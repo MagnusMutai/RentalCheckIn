@@ -5,15 +5,15 @@ public class AccountService : IAccountService
     private readonly IConfiguration configuration;
     private readonly IEmailService emailService;
     private readonly IRefreshTokenRepository refreshTokenRepository;
-    private readonly ITotpService totpService;
+    private readonly ITOTPService tOTPService;
 
-    public AccountService(IHostRepository hostRepository, IConfiguration configuration, IEmailService emailService, IRefreshTokenRepository refreshTokenRepository, ITotpService totpService)
+    public AccountService(IHostRepository hostRepository, IConfiguration configuration, IEmailService emailService, IRefreshTokenRepository refreshTokenRepository, ITOTPService tOTPService)
     {
         this.hostRepository = hostRepository;
         this.configuration = configuration;
         this.emailService = emailService;
         this.refreshTokenRepository = refreshTokenRepository;
-        this.totpService = totpService;
+        this.tOTPService = tOTPService;
     }
     public async Task<OperationResult<LHost>> LoginAsync(HostLoginDTO hostLoginDTO)
     {
@@ -142,7 +142,7 @@ public class AccountService : IAccountService
                 };
             }
 
-            var totpSecret = totpService.GenerateSecret();
+            var totpSecret = tOTPService.GenerateSecret();
 
             var lHost = new LHost
             {
@@ -153,7 +153,8 @@ public class AccountService : IAccountService
                 Username = hostSignUpDTO.Email,
                 MailAddress = hostSignUpDTO.Email,
                 EmailVerificationToken = GenerateRandomToken(),
-                EmailVTokenExpiresAt = DateTime.UtcNow.AddHours(24)
+                EmailVTokenExpiresAt = DateTime.UtcNow.AddHours(24),
+                Selected2FA = hostSignUpDTO.Selected2FA
             };
 
             await hostRepository.AddLHostAsync(lHost);

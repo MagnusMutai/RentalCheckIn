@@ -5,16 +5,16 @@ public class RefreshTokenService
     private readonly ProtectedLocalStorage localStorage;
     private readonly HttpClient httpClient;
     private readonly IAccountService accountService;
-    private readonly IJwtService jwtService;
+    private readonly IJWTService jWTService;
     private readonly AuthenticationStateProvider authStateProvider;
 
-    public RefreshTokenService(IRefreshTokenRepository refreshTokenRepository, ProtectedLocalStorage localStorage, HttpClient httpClient, IAccountService accountService, IJwtService jwtService, AuthenticationStateProvider authStateProvider)
+    public RefreshTokenService(IRefreshTokenRepository refreshTokenRepository, ProtectedLocalStorage localStorage, HttpClient httpClient, IAccountService accountService, IJWTService jWTService, AuthenticationStateProvider authStateProvider)
     {
         this.refreshTokenRepository = refreshTokenRepository;
         this.localStorage = localStorage;
         this.httpClient = httpClient;
         this.accountService = accountService;
-        this.jwtService = jwtService;
+        this.jWTService = jWTService;
         this.authStateProvider = authStateProvider;
     }
 
@@ -128,7 +128,7 @@ public class RefreshTokenService
                 };
             }
             // Generate new tokens
-            var newAccessToken = jwtService.GenerateToken(lHost);
+            var newAccessToken = jWTService.GenerateToken(lHost);
             var newRefreshToken = await GenerateRefreshToken(lHost.HostId);
             Constants.JWTToken = newAccessToken;
             await authStateProvider.GetAuthenticationStateAsync();
