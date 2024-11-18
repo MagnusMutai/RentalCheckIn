@@ -32,24 +32,25 @@
                     <div class="table-responsive">
 
                         <table class="table table-responsive custom-table .table-sm">
-                            <thead class="text-nowrap text-white">
+                            <thead class="text-nowrap">
                                 <tr>
-                                    <th scope="col">@Localizer["CheckIn"]</th>
-                                    <th scope="col">@Localizer["CheckOut"]</th>
-                                    <th scope="col">@Localizer["Appartment"]</th>
-                                    <th scope="col">@Localizer["Name"]</th>
-                                    <th scope="col">@Localizer["Guests"]</th>
-                                    <th scope="col">@Localizer["Nights"]</th>
-                                    <th scope="col">@Localizer["Price"]</th>
-                                    <th scope="col">@Localizer["Channel"]</th>
-                                    <th scope="col">@Localizer["Status"]</th>
+                                    <th class="text-white bg-transparent" scope="col">@Localizer["CheckIn"]</th>
+                                    <th class="text-white bg-transparent" scope="col">@Localizer["CheckOut"]</th>
+                                    <th class="text-white bg-transparent" scope="col">@Localizer["Appartment"]</th>
+                                    <th class="text-white bg-transparent" scope="col">@Localizer["Name"]</th>
+                                    <th class="text-white bg-transparent" scope="col">@Localizer["Guests"]</th>
+                                    <th class="text-white bg-transparent" scope="col">@Localizer["Nights"]</th>
+                                    <th class="text-white bg-transparent" scope="col">@Localizer["Price"]</th>
+                                    <th class="text-white bg-transparent" scope="col">@Localizer["Channel"]</th>
+                                    <th class="text-white bg-transparent" scope="col">@Localizer["Status"]</th>
+                                    <th class="text-white bg-transparent" scope="col"></th>
                                 </tr>
                             </thead>
                             <tbody>
 
                                 @foreach (var reservation in PaginatedReservations)
                                 {
-                                    <tr scope="row">
+                                    <tr scope="row" class="text-nowrap">
                                         <td>@reservation.CheckInDate</td>
                                         <td>@reservation.CheckOutDate</td>
                                         <td>@reservation.ApartmentName</td>

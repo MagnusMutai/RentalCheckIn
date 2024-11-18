@@ -328,7 +328,7 @@ public class AuthService : IAuthService
                 return new OperationResult
                 {
                     IsSuccess = false,
-                    Message = $"Registration failed: {response.StatusCode} - {error}"
+                    Message = $"Registration failed. Please try again."
                 };
             }
         }

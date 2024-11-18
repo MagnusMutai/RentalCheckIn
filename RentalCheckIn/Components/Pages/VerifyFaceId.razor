@@ -37,7 +37,7 @@
                 @if (shouldDisplayAuthButton)
                 {
                     <div class="d-flex flex-column">
-                        <button class="btn btn-primary d-block fw-bold w-100 bg-white rounded-pill text-black py-2 mt-4" @onclick="Authenticate">Try again</button>
+                        <button class="btn btn-primary d-block fw-bold w-100 bg-white rounded-pill text-black py-2 mt-4" disabled="@(IsAuthenticating)" @onclick="Authenticate">Try again</button>
                     </div>
                 }
             </div>
