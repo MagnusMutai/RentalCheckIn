@@ -14,5 +14,9 @@ public class HostSignUpDTO
     public string Password { get; set; } = string.Empty;
     [DataType(DataType.Password), Compare("Password", ErrorMessage = "Passwords do not match.")]
     public string ConfirmPassword { get; set; } = string.Empty;
+    // Change back to bool
+    [Required(ErrorMessage = "Please select a two-factor authentication method.")]
+    [RegularExpression("^(TOTP|FaceID)$", ErrorMessage = "Invalid two-factor authentication method selected.")]
+    public string Selected2FA { get; set; }
 
 }
