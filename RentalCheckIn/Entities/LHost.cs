@@ -38,8 +38,20 @@ public partial class LHost
 
     public DateTime CreationDate { get; set; }
 
+    public string Selected2FA { get; set; }
+
+    // Add UserHandle for FIDO2
+    public byte[]? UserHandle { get; set; }
+
     public virtual ICollection<Reservation> Reservations { get; set; } = new List<Reservation>();
 
     // Navigation property for related refresh tokens
     public ICollection<RefreshToken> RefreshTokens { get; set; }
+
+     // Add WebAuthn-related fields
+
+    /// <summary>
+    /// Collection of WebAuthn credentials associated with the host for Face ID or other authenticators.
+    /// </summary>
+    public virtual ICollection<LHostCredential> Credentials { get; set; } = new List<LHostCredential>();
 }
