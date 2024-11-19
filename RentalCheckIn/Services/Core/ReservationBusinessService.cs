@@ -8,11 +8,11 @@ public class ReservationBusinessService : IReservationBusinessService
         this.reservationRepository = reservationRepository;
     }
 
-    public async Task<IEnumerable<ReservationDTO>> GetAllReservationsAsync()
+    public async Task<IEnumerable<ReservationDTO>> GetAllTableReservationsAsync()
     {
         try
         {
-            return await reservationRepository.GetAllReservationsAsync();
+            return await reservationRepository.GetAllTableReservationsAsync();
         }
         catch (Exception ex)
         {

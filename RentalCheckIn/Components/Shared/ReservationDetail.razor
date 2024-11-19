@@ -1,0 +1,26 @@
+﻿@using Microsoft.Extensions.Localization
+@using RentalCheckIn.Locales
+@inject IStringLocalizer<Resource> Localizer
+
+@inherits ReservationDetailBase
+
+@if (SelectedReservation != null)
+{
+    <div class="modal-body">
+        <!-- Or display the details directly -->
+        <p>@Localizer["Name"]: @SelectedReservation.QuestName</p>
+        <p>@Localizer["CheckIn"]: @SelectedReservation.CheckInDate</p>
+        <p>@Localizer["CheckOut"]: @SelectedReservation.CheckOutDate</p>
+        <p>@Localizer["Guests"]: @SelectedReservation.NumberOfQuests</p>
+        <p>@Localizer["Nights"]: @SelectedReservation.NumberOfNights</p>
+        <p>@Localizer["Price"]: @SelectedReservation.CurrencySymbol @SelectedReservation.TotalPrice</p>
+        <p>@Localizer["Channel"]: @SelectedReservation.ChannelName</p>
+        <p>@Localizer["Status"]: @SelectedReservation.StatusLabel</p>
+        <!-- Add more details as needed -->
+    </div>
+}
+else
+{
+    // Not implemented
+    <p>@Localizer["No reservation details available."]</p>
+}

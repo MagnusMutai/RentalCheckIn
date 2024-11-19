@@ -1,6 +1,7 @@
 ﻿@page "/"
 @inherits HomeBase
 @using Microsoft.Extensions.Localization
+@using RentalCheckIn.Components.Shared
 @using RentalCheckIn.Locales
 @inject IStringLocalizer<Resource> Localizer
 
@@ -61,7 +62,7 @@
                                         <td>@reservation.ChannelName</td>
                                         <td>@reservation.StatusLabel</td>
                                         <td>
-                                            <button class="btn btn-success btn-sm border-0 rounded-3">@Localizer["View"]</button>
+                                            <button class="btn btn-success btn-sm border-0 rounded-3" @onclick="() => OpenModal(reservation)">@Localizer["View"]</button>
                                         </td>
                                     </tr>
                                     <tr class="spacer"><td colspan="100"></td></tr>
@@ -101,6 +102,29 @@
 
 
         </div>
+
+
+        @if (showModal)
+        {
+            <div class="modal fade show" style="display:block;" tabindex="-1" role="dialog">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">@Localizer["Reservation Details"]</h5>
+                            <button type="button" class="btn-close" @onclick="CloseModal"></button>
+                        </div>
+                        <div class="modal-body">
+                            <ReservationDetail SelectedReservation="selectedReservation" />
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" @onclick="CloseModal">@Localizer["Close"]</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-backdrop fade show"></div>
+        }
+         
     </Authorized>
 </AuthorizeView>
 
