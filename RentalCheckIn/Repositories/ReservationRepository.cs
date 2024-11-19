@@ -26,6 +26,8 @@ public class ReservationRepository : IReservationRepository
                     QuestName = r.Quest.FirstName,
                     NumberOfQuests = r.NumberOfQuests,
                     NumberOfNights = r.NumberOfNights,
+                    Price = r.ApartmentFee,
+                    SecurityDeposit = r.SecurityDeposit,
                     TotalPrice = r.TotalPrice,
                     ApartmentName = r.Apartment.ApartmentName,
                     ChannelName = r.Channel.ChannelLabel,

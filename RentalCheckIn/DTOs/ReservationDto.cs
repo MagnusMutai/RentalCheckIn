@@ -7,6 +7,8 @@
         public string QuestName { get; set; }
         public int NumberOfQuests { get; set; }
         public int NumberOfNights { get; set; }
+        public decimal? Price { get; set; }
+        public decimal? SecurityDeposit { get; set; }
         public decimal? TotalPrice { get; set; }
         public string ApartmentName { get; set; }
         public string ChannelName { get; set; }
