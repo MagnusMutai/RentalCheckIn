@@ -8,7 +8,7 @@ public class ReservationRepository : IReservationRepository
     {
         this.context = context;
     }
-    public async Task<IEnumerable<ReservationDTO>> GetAllReservationsAsync()
+    public async Task<IEnumerable<ReservationDTO>> GetAllTableReservationsAsync()
     {
         return await context.Reservations
             .Include(r => r.Apartment)
@@ -31,10 +31,9 @@ public class ReservationRepository : IReservationRepository
                     ChannelName = r.Channel.ChannelLabel,
                     CurrencySymbol = r.Currency.CurrencySymbol,
                     StatusLabel = r.Status.StatusLabel
-                    // Map other fields as needed
                 }).ToListAsync();
     }
-
+    
     public async Task<IEnumerable<Setting>> GetSettingsAsync()
     {
         return await context.Settings.ToListAsync();

@@ -8,6 +8,10 @@
     box-shadow: none;
 }
 
-    .btn-primary:hover {
-        background-color: rgba(167, 44, 193, 0.35);
-    }
+.btn-primary:hover {
+    background-color: rgba(167, 44, 193, 0.35);
+}
+
+.hello:active {
+    background-color: rgba(167, 44, 193, 0.35) !important;
+}

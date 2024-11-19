@@ -1,11 +1,12 @@
 ﻿using Microsoft.AspNetCore.Components;
-
 namespace RentalCheckIn.Components.Pages;
 public class HomeBase : ComponentBase
 {
     protected uint currentPage = 1;
     protected uint itemsPerPage;
     protected string Message;
+    protected bool showModal = false;
+    protected ReservationDTO selectedReservation;
     protected string SelectedApartment { get; set; } = "All";
     protected List<string> ApartmentNames = new List<string>();
     protected List<ReservationDTO> Reservation = new List<ReservationDTO>();
@@ -39,7 +40,7 @@ public class HomeBase : ComponentBase
             else
             {
                 // Default value if settings are missing
-                itemsPerPage = 10; 
+                itemsPerPage = 10;
             }
 
             // Add 'All' option to allow viewing all apartments
@@ -78,7 +79,7 @@ public class HomeBase : ComponentBase
         }
     }
 
- 
+
     // Computes the total number of pages based on filtered reservations.
     protected uint totalPages => (uint)Math.Ceiling((double)FilteredReservations.Count() / itemsPerPage);
 
@@ -135,4 +136,15 @@ public class HomeBase : ComponentBase
         currentPage = 1;
     }
 
+    protected void OpenModal(ReservationDTO reservation)
+    {
+        selectedReservation = reservation;
+        showModal = true;
+    }
+
+    protected void CloseModal()
+    {
+        showModal = false;
+        selectedReservation = null;
+    }
 }

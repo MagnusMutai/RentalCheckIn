@@ -17,7 +17,7 @@ public class ReservationController : ControllerBase
     {
         try
         {
-            var reservations = await reservationService.GetAllReservationsAsync();
+            var reservations = await reservationService.GetAllTableReservationsAsync();
             if (reservations == null )
             {
                 return NotFound();
