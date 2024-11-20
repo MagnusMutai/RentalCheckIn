@@ -7,16 +7,19 @@
 @if (SelectedReservation != null)
 {
     <div class="modal-body">
-        <!-- Or display the details directly -->
         <p>@Localizer["Name"]: @SelectedReservation.QuestName</p>
         <p>@Localizer["CheckIn"]: @SelectedReservation.CheckInDate</p>
         <p>@Localizer["CheckOut"]: @SelectedReservation.CheckOutDate</p>
-        <p>@Localizer["Guests"]: @SelectedReservation.NumberOfQuests</p>
+        @* Time is not implemented *@
+        <p>@Localizer["CheckInTime"]: @SelectedReservation.CheckInTime</p>
+        <p>@Localizer["CheckOutTime"]: @SelectedReservation.CheckOutTime</p>
+        <p>@Localizer["Appartment"]: @SelectedReservation.ApartmentName</p>
+        <p>@Localizer["Guests"]: @SelectedReservation.NumberOfQuests adults</p>
         <p>@Localizer["Nights"]: @SelectedReservation.NumberOfNights</p>
         <p>@Localizer["Price"]: @SelectedReservation.CurrencySymbol @SelectedReservation.TotalPrice</p>
         <p>@Localizer["Channel"]: @SelectedReservation.ChannelName</p>
         <p>@Localizer["Status"]: @SelectedReservation.StatusLabel</p>
-        <!-- Add more details as needed -->
+        <button class="btn btn-success btn-sm border-0 rounded-3" @onclick="NavigateToCheckIn">Check-In</button>
     </div>
 }
 else

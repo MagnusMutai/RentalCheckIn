@@ -46,21 +46,15 @@ public class RegisterBase : ComponentBase
 
             if (result.IsSuccess)
             {
-                RegisteredUserId = result.Data.HostId; // Assuming UserId is returned
+                RegisteredUserId = result.Data.HostId;
                 BackGroundColor = "bg-success";
                 Message = "Your account was created successfully.";
 
                 // Mark registration as complete
                 isRegistrationComplete = true;
 
-                if (IsFaceIdSelected)
+                if (!IsFaceIdSelected)
                 {
-                    // Initiate Face ID registration
-                    // The component will be rendered in the UI below
-                }
-                else
-                {
-
                     TotpSecret = result.Data.TotpSecret;
 
                     // Generate the otpauth URI

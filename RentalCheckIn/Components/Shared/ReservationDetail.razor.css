@@ -1,6 +1,4 @@
-﻿namespace RentalCheckIn.Components.Pages
-{
-    public class ReservationDetail
-    {
-    }
+﻿.btn-success {
+    background-color: #1BE299;
+    color: #680979;
 }
