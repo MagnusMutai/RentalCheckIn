@@ -8,7 +8,7 @@ public class ReservationService : IReservationService
         this.httpClient = httpClient;
     }
 
-    public async Task<IEnumerable<ReservationDTO>> GetAllReservationsAsync()
+    public async Task<IEnumerable<ReservationDTO>> GetAllTableReservationsAsync()
     {
         try
         {
@@ -32,6 +32,11 @@ public class ReservationService : IReservationService
             throw;
         }
 
+    }
+
+    Task<IEnumerable<CheckInFormDTO>> GetCheckInFormReservationDataByIdAsync(uint reservationId)
+    {
+        throw new NotImplementedException();
     }
 
     public async Task<IEnumerable<Setting>> GetSettingsAsync()

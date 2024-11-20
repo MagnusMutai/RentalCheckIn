@@ -27,7 +27,7 @@ public class HomeBase : ComponentBase
     {
         try
         {
-            Reservation = (await ReservationService.GetAllReservationsAsync()).ToList();
+            Reservation = (await ReservationService.GetAllTableReservationsAsync()).ToList();
             Settings = (await ReservationService.GetSettingsAsync()).ToList();
             // Extract distinct apartment names for the dropdown
             ApartmentNames = (await AppartmentService.GetDistinctAppartmentNames()).ToList();
