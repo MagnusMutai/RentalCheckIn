@@ -9,7 +9,7 @@ public class CheckInBase : ComponentBase
     [Parameter]
     public int Id { get; set; }
 
-    protected CheckInFormDTO checkInModel = new CheckInFormDTO();
+    protected CheckInReservationDTO checkInModel = new CheckInReservationDTO();
 
     [Inject]
     private NavigationManager NavigationManager { get; set; }
@@ -35,7 +35,7 @@ public class CheckInBase : ComponentBase
 
     protected override async Task OnInitializedAsync()
     {
-        var reservationData = await ReservationService.GetCheckInFormReservationByIdAsync((uint)Id);
+        var reservationData = await ReservationService.GetCheckInReservationByIdAsync((uint)Id);
         if (reservationData != null) 
         {
             checkInModel =  reservationData;
@@ -46,12 +46,12 @@ public class CheckInBase : ComponentBase
     {
         displaySignaturePad = true;
     }
-    protected void HandleValidSubmit()
+    protected async Task HandleValidSubmit()
     {
         // Calculate TotalPrice
         CalculateTotalPrice();
 
-        SaveData();
+        await SaveData();
         SharePdf();
         NavigationManager.NavigateTo("/confirmation");
     }
@@ -79,9 +79,9 @@ public class CheckInBase : ComponentBase
         CalculateTotalPrice();
     }
 
-    private void SaveData()
+    private async Task SaveData()
     {
-        // Implement database save logic
+        await ReservationService.UpdateCheckInFormReservationAsync(checkInModel);
     }
 
     private void SharePdf()

@@ -33,7 +33,7 @@ public class ReservationService : IReservationService
         }
     }
    
-    public async Task<CheckInFormDTO> GetCheckInFormReservationByIdAsync(uint reservationId)
+    public async Task<CheckInReservationDTO> GetCheckInReservationByIdAsync(uint reservationId)
     {
         try
         {
@@ -42,9 +42,9 @@ public class ReservationService : IReservationService
             {
                 if (response.StatusCode == HttpStatusCode.NoContent)
                 {
-                    return new CheckInFormDTO();
+                    return new CheckInReservationDTO();
                 }
-                return await response.Content.ReadFromJsonAsync<CheckInFormDTO>();
+                return await response.Content.ReadFromJsonAsync<CheckInReservationDTO>();
             }
             else
             {
@@ -82,5 +82,32 @@ public class ReservationService : IReservationService
             throw;
         }
 
+    }
+
+    public async Task<bool> UpdateCheckInFormReservationAsync(CheckInReservationDTO checkInModel)
+    {
+        try
+        {
+            var updateModel = new CheckInReservationUpdateDTO
+            {
+                Id = checkInModel.Id,
+                PassportNr = checkInModel.PassportNr,
+                MailAddress = checkInModel.MailAddress,
+                Mobile = checkInModel.Mobile,
+                ApartmentFee = checkInModel.ApartmentFee,
+                SecurityDeposit = checkInModel.SecurityDeposit,
+                TotalPrice = checkInModel.TotalPrice,
+                KwhAtCheckIn = checkInModel.KwhAtCheckIn,
+                SignatureDataUrl = checkInModel.SignatureDataUrl
+            };
+
+            var response = await httpClient.PutAsJsonAsync($"api/Reservation/{updateModel.Id}", updateModel);
+            return response.IsSuccessStatusCode;
+        }
+        catch (Exception ex)
+        { 
+            // Implement logging
+            return false;
+        }
     }
 }

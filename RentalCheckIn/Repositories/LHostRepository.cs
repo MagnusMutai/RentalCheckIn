@@ -1,9 +1,9 @@
 ﻿namespace RentalCheckIn.Repositories;
 
-public class HostRepository : IHostRepository
+public class LHostRepository : ILHostRepository
 {
     private readonly AppDbContext context;
-    public HostRepository(AppDbContext context)
+    public LHostRepository(AppDbContext context)
     {
         this.context = context;
     }

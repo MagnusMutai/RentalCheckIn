@@ -3,6 +3,6 @@
 public interface IReservationBusinessService
 {
     Task<IEnumerable<ReservationDTO>> GetAllTableReservationsAsync();
-    Task<CheckInFormDTO> GetCheckInFormReservationByIdAsync(uint reservationId);
+    Task<CheckInReservationDTO> GetCheckInReservationByIdAsync(uint reservationId);
     Task<IEnumerable<Setting>> GetSettingsAsync();
 }

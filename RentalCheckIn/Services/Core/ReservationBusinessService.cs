@@ -21,16 +21,28 @@ public class ReservationBusinessService : IReservationBusinessService
         }
     }
 
-    public async Task<CheckInFormDTO> GetCheckInFormReservationByIdAsync(uint reservationId)
+    public async Task<CheckInReservationDTO> GetCheckInReservationByIdAsync(uint reservationId)
     {
         try
         {
-            return await reservationRepository.GetCheckInFormReservationByIdAsync(reservationId);
+            return await reservationRepository.GetCheckInReservationByIdAsync(reservationId);
         }
         catch (Exception ex) 
         {
-            return new CheckInFormDTO();
+            return new CheckInReservationDTO();
         }
+    }
+    public async Task UpdateCheckInReservationAsync(CheckInReservationUpdateDTO dto)
+    {
+        var reservation = await reservationRepository.GetCheckInReservationByIdAsync(dto.Id);
+        if (reservation == null)
+        {
+            throw new Exception("Reservation not found");
+        }
+        
+
+        // Save changes
+        await reservationRepository.UpdateCheckInReservationAsync(reservation);
     }
 
     public async Task<IEnumerable<Setting>> GetSettingsAsync()

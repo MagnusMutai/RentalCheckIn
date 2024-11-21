@@ -62,7 +62,7 @@ public class ReservationController : ControllerBase
     {
         try
         {
-            var reservations = await reservationService.GetCheckInFormReservationByIdAsync(reservationId);
+            var reservations = await reservationService.GetCheckInReservationByIdAsync(reservationId);
             if (reservations == null)
             {
                 return NotFound();
@@ -77,5 +77,19 @@ public class ReservationController : ControllerBase
             return StatusCode(StatusCodes.Status500InternalServerError,
                   "Error retrieving Data from Database");
         }
+    }
+
+    [HttpPut("{id}")]
+    public async Task<IActionResult> UpdateReservation(uint id, [FromBody] CheckInReservationUpdateDTO checkInModel)
+    {
+        if (id != checkInModel.Id)
+            return BadRequest("Reservation ID mismatch");
+
+        var result = await reservationService.UpdateCheckInReservationAsync(checkInModel);
+
+        if (!result)
+            return StatusCode(500, "Failed to update reservation");
+
+        return NoContent();
     }
 }
