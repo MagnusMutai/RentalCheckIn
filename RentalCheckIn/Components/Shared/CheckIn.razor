@@ -24,13 +24,8 @@ else
 
         <div class="container bg-white p-5 rounded-3 my-4">
             <!-- Guest Information -->
-            <h3 class="mt-4">Guest Information</h3>
+            <h4>@checkInModel.GuestFirstName</h4>
             <div class="row mb-3">
-                <div class="col-md-6">
-                    <label>Guest Name</label>
-                    <InputText class="form-control" @bind-Value="checkInModel.GuestName" />
-                    <ValidationMessage For="@(() => checkInModel.GuestName)" />
-                </div>
                 <div class="col-md-6">
                     <label>Passport Number</label>
                     <InputText class="form-control" @bind-Value="checkInModel.PassportNr" maxlength="50" />
@@ -51,72 +46,72 @@ else
             </div>
 
             <!-- Reservation Information -->
-            <h3 class="mt-4">Reservation Information</h3>
-            <div class="row mb-3">
+            <div class="row mt-5 mb-3">
                 <div class="col-md-6">
-                    <label>Check-In</label>
+                    <p class="fw-bold">Check-In</p>
                     <div>
-                        <InputDate class="form-control" @bind-Value="checkInModel.CheckInDate" @onchange="OnDateChanged" />
-                        <ValidationMessage For="@(() => checkInModel.CheckInDate)" />
-                    </div>
-                    <div class="pt-3">
-                        <InputText class="form-control" @bind-Value="checkInModel.CheckInTime" />
-                        <ValidationMessage For="@(() => checkInModel.CheckInTime)" />
+                        <div>
+                            @checkInModel.CheckInDate
+                        </div>
+                        <div>
+                            @checkInModel.CheckInTime
+                        </div>
                     </div>
                 </div>
                 <div class="col-md-6">
-                    <label>Check-Out</label>
+                    <p class="fw-bold">Check-Out</p>
                     <div>
-                        <InputDate class="form-control" @bind-Value="checkInModel.CheckOutDate" @onchange="OnDateChanged" />
-                        <ValidationMessage For="@(() => checkInModel.CheckOutDate)" />
-                    </div>
-                    <div class="pt-3">
-                        <InputText class="form-control" @bind-Value="checkInModel.CheckOutTime" />
-                        <ValidationMessage For="@(() => checkInModel.CheckOutTime)" />
+                        <div>
+                            @checkInModel.CheckOutDate
+                        </div>
+                        <di>
+                            @checkInModel.CheckOutTime
+                        </di>
                     </div>
                 </div>
             </div>
             <div class="row mb-3">
-                <div class="col-md-4">
+                <div class="col-md-6">
                     <div>
-                        <label>Number of Nights</label>
-                        <InputNumber class="form-control" @bind-Value="checkInModel.NumberOfNights" readonly />
+                        @checkInModel.NumberOfNights nights
                     </div>
                     <div>
-                        <label>Number of Guests</label>
-                        <InputNumber class="form-control" @bind-Value="checkInModel.NumberOfGuests" readonly />
+                        @checkInModel.NumberOfGuests adults
                     </div>
                 </div>
-                <div class="col-md-8">
-                    <label>Apartment</label>
-                    <InputText class="form-control" @bind-Value="checkInModel.ApartmentName" />
-                    <ValidationMessage For="@(() => checkInModel.ApartmentName)" />
+                <div class="col-md-6">
+                    <p class="fw-bold">Apartment</p>
+                    @checkInModel.ApartmentName
                 </div>
             </div>
 
             <!-- Price Summary -->
-            <h3 class="mt-4">Price Summary</h3>
-            <div class="row mb-3">
-                <div class="col-md-4">
-                    <label>Apartment Fee</label>
-                    <InputNumber class="form-control" @bind-Value="checkInModel.ApartmentFee" @onchange="OnFeeChanged" />
-                    <ValidationMessage For="@(() => checkInModel.ApartmentFee)" />
+            <div class="mt-5 mb-3">
+                <div class="row">
+                    <p class="fw-bold col-md-6">Apartment Fee</p>
+                    <div class="col-md-6">
+                        <InputNumber class="form-control" @bind-Value="checkInModel.ApartmentFee" @onchange="OnFeeChanged" />
+                        <ValidationMessage For="@(() => checkInModel.ApartmentFee)" />
+                    </div>
                 </div>
-                <div class="col-md-4">
-                    <label>Security Deposit</label>
-                    <InputNumber class="form-control" @bind-Value="checkInModel.SecurityDeposit" @onchange="OnFeeChanged" />
-                    <ValidationMessage For="@(() => checkInModel.SecurityDeposit)" />
+                <div class="row">
+                    <p class="fw-bold col-md-6">Security Deposit</p>
+                    <div class="col-md-6">
+                        <InputNumber class="form-control" @bind-Value="checkInModel.SecurityDeposit" @onchange="OnFeeChanged" />
+                        <ValidationMessage For="@(() => checkInModel.SecurityDeposit)" />
+                    </div>
                 </div>
-                <div class="col-md-4">
-                    <label>Total Price</label>
-                    <div class="form-control">@checkInModel.CurrencySymbol @checkInModel.TotalPrice</div>
+                <div class="row">
+                    <p class="fw-bold col-md-6">Total Price</p>
+                    <div class="col-md-6">
+                        <div class="form-control">@checkInModel.CurrencySymbol @checkInModel.TotalPrice</div>
+                    </div>
                 </div>
             </div>
 
 
             <!-- Agreements -->
-            <h3 class="mt-4">Agreements</h3>
-            <div class="form-check mb-2">
+            <div class="form-check mt-4 mb-2">
                 <InputCheckbox class="form-check-input" @bind-Value="checkInModel.AgreeEnergyConsumption" />
                 <label class="form-check-label">
                     Energy consumption up to 30 kWh per day is included in the rental price! For additional use, $0.20 per kWh will be charged at check-out <br />  <div class="d-flex gap-2 align-items-center">
@@ -138,27 +133,42 @@ else
                 </label>
             </div>
 
-            <!-- Signature -->
-            <h3 class="mt-4">Signature</h3>
-            <div class="mb-3">
-                <SignaturePad Options="_options" @bind-Value="SignatureBytes" Width="200" Height="200" />
-                <ValidationMessage For="@(() => checkInModel.SignatureDataUrl)" />
+            <div class="row mt-5 mb-3">
+                <div class="col-md-6">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <p class="fw-bold">Check-In Date</p>
+                        </div>
+                        <div class="col-md-6">
+                            <InputDate class="form-control" @bind-Value="checkInModel.CheckInDate" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 d-flex align-items-center">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <p class="fw-bold">Place</p>
+                        </div>
+                        <div class="col-md-8">
+                            <InputText class="form-control" @bind-Value="checkInModel.Place" />
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <!-- Additional Information -->
-            <h3 class="mt-4">Additional Information</h3>
-            <div class="row mb-3">
-                <div class="col-md-4">
-                    <label>Check-In Date</label>
-                    <InputDate class="form-control" @bind-Value="checkInModel.CheckInDateTime" />
+            @if (displaySignaturePad)
+            {
+                <!-- Signature -->
+                <h3 class="mt-4">Signature</h3>
+                <div class="mb-3">
+                    <SignaturePad Options="_options" @bind-Value="SignatureBytes" Width="200" Height="200" />
+                    <ValidationMessage For="@(() => checkInModel.SignatureDataUrl)" />
                 </div>
-                <div class="col-md-4">
-                    <label>Place</label>
-                    <InputText class="form-control" @bind-Value="checkInModel.Place" />
-                </div>
+            }
+            <div class="row mt-5 mb-3">
                 <div class="col-md-4">
                     <label>User Full Name</label>
-                    <InputText class="form-control" @bind-Value="checkInModel.UserFullName" />
+                    <InputText class="form-control" @bind-Value="checkInModel.GuestFullName" />
                 </div>
             </div>
 

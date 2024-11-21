@@ -40,7 +40,7 @@ public class ReservationRepository : IReservationRepository
                 }).ToListAsync();
     }
 
-    public async Task<CheckInFormDTO?> GetCheckInFormReservationDataByIdAsync(uint reservationId)
+    public async Task<CheckInFormDTO?> GetCheckInFormReservationByIdAsync(uint reservationId)
     {
         return await context.Reservations
             .Include(r => r.Apartment)
@@ -49,7 +49,8 @@ public class ReservationRepository : IReservationRepository
             .Where(r => r.ReservationId == reservationId)
                 .Select(r => new CheckInFormDTO
                 {
-                    GuestName = r.Quest.FirstName,
+                    GuestFullName = $"{ r.Quest.FirstName} {r.Quest.LastName}",
+                    GuestFirstName = r.Quest.FirstName,
                     PassportNr = r.Quest.PassportNr,
                     MailAddress = r.Quest.MailAddress,
                     Mobile = r.Quest.Mobile,

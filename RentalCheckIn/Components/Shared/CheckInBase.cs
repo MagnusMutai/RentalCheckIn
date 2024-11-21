@@ -4,6 +4,8 @@ using SignaturePad;
 namespace RentalCheckIn.Components.Shared;
 public class CheckInBase : ComponentBase
 {
+    protected bool displaySignaturePad;
+
     [Parameter]
     public int Id { get; set; }
 
@@ -11,6 +13,9 @@ public class CheckInBase : ComponentBase
 
     [Inject]
     private NavigationManager NavigationManager { get; set; }
+
+    [Inject]
+    private IReservationService ReservationService { get; set; }
 
     protected byte[]? SignatureBytes
     {
@@ -28,13 +33,19 @@ public class CheckInBase : ComponentBase
         }
     }
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        checkInModel.CheckInDateTime = DateTime.Now;
-        checkInModel.Place = "Your Place Name"; // Set the place as needed
-        checkInModel.CurrencySymbol = "$"; // Set currency symbol from database as needed
+        var reservationData = await ReservationService.GetCheckInFormReservationByIdAsync((uint)Id);
+        if (reservationData != null) 
+        {
+            checkInModel =  reservationData;
+        }        
     }
 
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        displaySignaturePad = true;
+    }
     protected void HandleValidSubmit()
     {
         // Calculate TotalPrice
@@ -70,12 +81,12 @@ public class CheckInBase : ComponentBase
 
     private void SaveData()
     {
-        // Implement database save logic here
+        // Implement database save logic
     }
 
     private void SharePdf()
     {
-        // Implement PDF generation and email sending here
+        // Implement PDF generation and sharing
     }
 
     protected SignaturePadOptions _options = new SignaturePadOptions

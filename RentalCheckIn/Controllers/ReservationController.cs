@@ -12,8 +12,8 @@ public class ReservationController : ControllerBase
         this.reservationService = reservationService;
     }
 
-    [HttpGet("AllReservations")]
-    public async Task<IActionResult> GetAllReservations()
+    [HttpGet("AllTableReservations")]
+    public async Task<IActionResult> GetAllTableReservations()
     {
         try
         {
@@ -57,4 +57,25 @@ public class ReservationController : ControllerBase
         }
     }
 
+    [HttpGet("CheckInFormReservation/{reservationId}")]
+    public async Task<IActionResult> GetCheckInFormReservationById(uint reservationId)
+    {
+        try
+        {
+            var reservations = await reservationService.GetCheckInFormReservationByIdAsync(reservationId);
+            if (reservations == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                return Ok(reservations);
+            }
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError,
+                  "Error retrieving Data from Database");
+        }
+    }
 }

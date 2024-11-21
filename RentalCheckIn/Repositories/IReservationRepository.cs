@@ -3,6 +3,6 @@
 public interface IReservationRepository
 {
     Task<IEnumerable<ReservationDTO>> GetAllTableReservationsAsync();
-    Task<CheckInFormDTO> GetCheckInFormReservationDataByIdAsync(uint reservationId);
+    Task<CheckInFormDTO> GetCheckInFormReservationByIdAsync(uint reservationId);
     Task<IEnumerable<Setting>> GetSettingsAsync();
 }
