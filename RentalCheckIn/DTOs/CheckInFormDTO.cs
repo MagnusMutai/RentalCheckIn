@@ -4,8 +4,8 @@ public class CheckInFormDTO : IValidatableObject
 {
 
     // Guest Information
-    [Required]
-    public string GuestName { get; set; }
+    public string GuestFullName { get; set; }
+    public string GuestFirstName { get; set; }
 
     [Required]
     [MaxLength(50)]

@@ -12,7 +12,7 @@ public class ReservationService : IReservationService
     {
         try
         {
-            var response = await httpClient.GetAsync("api/reservation/AllReservations");
+            var response = await httpClient.GetAsync("api/reservation/AllTableReservations");
             if (response.IsSuccessStatusCode)
             {
                 if (response.StatusCode == HttpStatusCode.NoContent)
@@ -31,12 +31,31 @@ public class ReservationService : IReservationService
         {
             throw;
         }
-
     }
-
-    Task<IEnumerable<CheckInFormDTO>> GetCheckInFormReservationDataByIdAsync(uint reservationId)
+   
+    public async Task<CheckInFormDTO> GetCheckInFormReservationByIdAsync(uint reservationId)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var response = await httpClient.GetAsync($"api/reservation/CheckInFormReservation/{reservationId}");
+            if (response.IsSuccessStatusCode)
+            {
+                if (response.StatusCode == HttpStatusCode.NoContent)
+                {
+                    return new CheckInFormDTO();
+                }
+                return await response.Content.ReadFromJsonAsync<CheckInFormDTO>();
+            }
+            else
+            {
+                var message = await response.Content.ReadAsStringAsync();
+                throw new Exception($"{message}");
+            }
+        }
+        catch (Exception ex)
+        {
+            throw;
+        }
     }
 
     public async Task<IEnumerable<Setting>> GetSettingsAsync()

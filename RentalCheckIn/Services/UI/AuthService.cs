@@ -142,7 +142,7 @@ public class AuthService : IAuthService
         {
             var json = JsonSerializer.Serialize(resetRequestDTO.Email);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
-            var response = await httpClient.PostAsync($"api/auth/forgot-password", content);
+            var response = await httpClient.PostAsync("api/auth/forgot-password", content);
 
             if (response.IsSuccessStatusCode)
             {

@@ -21,6 +21,18 @@ public class ReservationBusinessService : IReservationBusinessService
         }
     }
 
+    public async Task<CheckInFormDTO> GetCheckInFormReservationByIdAsync(uint reservationId)
+    {
+        try
+        {
+            return await reservationRepository.GetCheckInFormReservationByIdAsync(reservationId);
+        }
+        catch (Exception ex) 
+        {
+            return new CheckInFormDTO();
+        }
+    }
+
     public async Task<IEnumerable<Setting>> GetSettingsAsync()
     {
         try
