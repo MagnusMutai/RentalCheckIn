@@ -13,7 +13,7 @@ public class ReservationDetailBase : ComponentBase
     {
         if (SelectedReservation != null)
         {
-            NavigationManager.NavigateTo($"/checkin/{SelectedReservation.Id}");
+            NavigationManager.NavigateTo($"/checkin/{SelectedReservation.Id}", forceLoad: true);
         }
     }
 }

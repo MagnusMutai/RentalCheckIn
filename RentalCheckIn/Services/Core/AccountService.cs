@@ -1,15 +1,15 @@
 ﻿namespace RentalCheckIn.Services.Core;
 public class AccountService : IAccountService
 {
-    private readonly IHostRepository hostRepository;
+    private readonly ILHostRepository lHostRepository;
     private readonly IConfiguration configuration;
     private readonly IEmailService emailService;
     private readonly IRefreshTokenRepository refreshTokenRepository;
     private readonly ITOTPService tOTPService;
 
-    public AccountService(IHostRepository hostRepository, IConfiguration configuration, IEmailService emailService, IRefreshTokenRepository refreshTokenRepository, ITOTPService tOTPService)
+    public AccountService(ILHostRepository lHostRepository, IConfiguration configuration, IEmailService emailService, IRefreshTokenRepository refreshTokenRepository, ITOTPService tOTPService)
     {
-        this.hostRepository = hostRepository;
+        this.lHostRepository = lHostRepository;
         this.configuration = configuration;
         this.emailService = emailService;
         this.refreshTokenRepository = refreshTokenRepository;
@@ -20,7 +20,7 @@ public class AccountService : IAccountService
         try
         {
 
-            var lHost = await hostRepository.GetLHostByEmailAsync(hostLoginDTO.Email);
+            var lHost = await lHostRepository.GetLHostByEmailAsync(hostLoginDTO.Email);
             if (lHost == null)
             {
                 return new OperationResult<LHost>
@@ -61,7 +61,7 @@ public class AccountService : IAccountService
             if (!lHost.EmailConfirmed)
             {
                 // Increase login attempts for unsuccessful logins
-                await hostRepository.UpdateLHostPartialAsync(lHost, host =>
+                await lHostRepository.UpdateLHostPartialAsync(lHost, host =>
                 {
                     host.LoginAttempts += 1;
                     // Block user if login attempts exceed limit
@@ -80,7 +80,7 @@ public class AccountService : IAccountService
             if (!VerifyPassword(hostLoginDTO.Password, lHost.PasswordHash))
             {
                 // Increase login attempts for unsuccessful logins
-                await hostRepository.UpdateLHostPartialAsync(lHost, host =>
+                await lHostRepository.UpdateLHostPartialAsync(lHost, host =>
                 {
                     host.LoginAttempts += 1;
                     // Block user if login attempts exceed limit
@@ -98,7 +98,7 @@ public class AccountService : IAccountService
 
             }
 
-            await hostRepository.UpdateLHostPartialAsync(lHost, host =>
+            await lHostRepository.UpdateLHostPartialAsync(lHost, host =>
             {
                 host.LastLogin = DateTime.UtcNow;
                 // Reset login attempt to zero for a successful login
@@ -132,7 +132,7 @@ public class AccountService : IAccountService
     {
         try
         {
-            var existingHost = await hostRepository.GetLHostByEmailAsync(hostSignUpDTO.Email);
+            var existingHost = await lHostRepository.GetLHostByEmailAsync(hostSignUpDTO.Email);
             if (existingHost != null)
             {
                 return new OperationResult<LHost>
@@ -157,7 +157,7 @@ public class AccountService : IAccountService
                 Selected2FA = hostSignUpDTO.Selected2FA
             };
 
-            await hostRepository.AddLHostAsync(lHost);
+            await lHostRepository.AddLHostAsync(lHost);
 
             // Return the TOTP secret to the caller to display to the user
             lHost.TotpSecret = totpSecret;
@@ -190,7 +190,7 @@ public class AccountService : IAccountService
         try
         {
             // Retrieve user by token from the repository
-            var lHost = await hostRepository.GetLHostByEmailVerificationTokenAsync(token);
+            var lHost = await lHostRepository.GetLHostByEmailVerificationTokenAsync(token);
 
             // Check if user or token is invalid
             // Counter-check the purpose of the logic
@@ -216,7 +216,7 @@ public class AccountService : IAccountService
             }
 
             // Determine what to do with the bool return type
-            await hostRepository.UpdateLHostPartialAsync(lHost, host =>
+            await lHostRepository.UpdateLHostPartialAsync(lHost, host =>
             {
                 // Confirm the email and clear the token
                 host.EmailConfirmed = true;
@@ -299,7 +299,7 @@ public class AccountService : IAccountService
     {
         try
         {
-            var lHost = await hostRepository.GetLHostByIdAsync(id);
+            var lHost = await lHostRepository.GetLHostByIdAsync(id);
             if (lHost == null)
             {
                 return new OperationResult<LHost>
@@ -329,7 +329,7 @@ public class AccountService : IAccountService
     {
         try
         {
-            return await hostRepository.GetLHostByEmailAsync(email);
+            return await lHostRepository.GetLHostByEmailAsync(email);
         }
         catch (Exception ex) 
         {
@@ -344,7 +344,7 @@ public class AccountService : IAccountService
         {
             string passResetToken = GenerateRandomToken();
 
-            bool result = await hostRepository.UpdateLHostPartialAsync(lHost, host =>
+            bool result = await lHostRepository.UpdateLHostPartialAsync(lHost, host =>
             {
                 host.PasswordResetToken = passResetToken;
                 host.ResetTokenExpires = DateTime.UtcNow.AddDays(2);
@@ -384,7 +384,7 @@ public class AccountService : IAccountService
     {
         try
         {
-            var lHost = await hostRepository.GetLHostByPasswordResetTokenAsync(request.ResetToken);
+            var lHost = await lHostRepository.GetLHostByPasswordResetTokenAsync(request.ResetToken);
             if (lHost == null)
             {
                 return new OperationResult<string>
@@ -396,7 +396,7 @@ public class AccountService : IAccountService
 
 
             // Determine what to do with the bool return type
-            bool result = await hostRepository.UpdateLHostPartialAsync(lHost, host =>
+            bool result = await lHostRepository.UpdateLHostPartialAsync(lHost, host =>
              {
                  host.PasswordHash = HashPassword(request.NewPassword);
                  host.PasswordResetToken = null;

@@ -1,5 +1,5 @@
 ﻿namespace RentalCheckIn.Repositories;
-public interface IHostRepository
+public interface ILHostRepository
 {
     Task<LHost> GetLHostByEmailAsync(string mailAddress);
     Task<LHost> GetLHostByIdAsync(uint id);

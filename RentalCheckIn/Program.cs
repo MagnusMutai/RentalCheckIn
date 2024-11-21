@@ -79,9 +79,9 @@ builder.Services.AddSingleton<Fido2>(sp =>
 
 
 // Register application services
-//builder.Services.AddScoped<IHostRepository, HostRepository>();
+//builder.Services.AddScoped<ILHostRepository, HostRepository>();
 builder.Services.AddScoped<IAuthService, AuthService>();
-builder.Services.AddScoped<IHostRepository, HostRepository>();
+builder.Services.AddScoped<ILHostRepository, LHostRepository>();
 builder.Services.AddScoped<ILHostService, LHostService>();
 builder.Services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
 builder.Services.AddScoped<IAccountService, AccountService>();

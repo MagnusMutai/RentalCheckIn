@@ -40,15 +40,16 @@ public class ReservationRepository : IReservationRepository
                 }).ToListAsync();
     }
 
-    public async Task<CheckInFormDTO?> GetCheckInFormReservationByIdAsync(uint reservationId)
+    public async Task<CheckInReservationDTO?> GetCheckInReservationByIdAsync(uint reservationId)
     {
         return await context.Reservations
             .Include(r => r.Apartment)
             .Include(r => r.Currency)
             .Include(r => r.Quest)
             .Where(r => r.ReservationId == reservationId)
-                .Select(r => new CheckInFormDTO
+                .Select(r => new CheckInReservationDTO
                 {
+                    Id = r.ReservationId,
                     GuestFullName = $"{ r.Quest.FirstName} {r.Quest.LastName}",
                     GuestFirstName = r.Quest.FirstName,
                     PassportNr = r.Quest.PassportNr,
@@ -68,6 +69,12 @@ public class ReservationRepository : IReservationRepository
                     SignatureDataUrl = r.SignatureQuest,
                     CurrencySymbol = r.Currency.CurrencySymbol
                 }).FirstOrDefaultAsync();
+    }
+
+    public async Task UpdateCheckInReservationAsync(Reservation reservation)
+    {
+        context.Entry(reservation).State = EntityState.Modified;
+        await context.SaveChangesAsync();
     }
 
     public async Task<IEnumerable<Setting>> GetSettingsAsync()

@@ -4,11 +4,11 @@
 [ApiController]
 public class LHostController : ControllerBase
 {
-    private readonly IHostRepository hostRepository;
+    private readonly ILHostRepository lHostRepository;
 
-    public LHostController(IHostRepository hostRepository) 
+    public LHostController(ILHostRepository lHostRepository) 
     {
-        this.hostRepository = hostRepository;
+        this.lHostRepository = lHostRepository;
     }
 
     [HttpGet("email/{email}")]
@@ -16,7 +16,7 @@ public class LHostController : ControllerBase
     {
         try
         {
-            var lHost = await this.hostRepository.GetLHostByEmailAsync(email);
+            var lHost = await this.lHostRepository.GetLHostByEmailAsync(email);
             if (lHost == null)
             {
                 return NotFound();
@@ -40,7 +40,7 @@ public class LHostController : ControllerBase
     {
         try
         {
-            var lHost = await this.hostRepository.GetLHostByIdAsync(id);
+            var lHost = await this.lHostRepository.GetLHostByIdAsync(id);
             if (lHost == null)
             {
                 return NotFound();

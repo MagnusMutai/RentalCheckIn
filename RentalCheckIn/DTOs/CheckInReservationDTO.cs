@@ -1,9 +1,10 @@
 ﻿namespace RentalCheckIn.DTOs;
 
-public class CheckInFormDTO : IValidatableObject
+public class CheckInReservationDTO
 {
 
     // Guest Information
+    public uint Id { get; set; }
     public string GuestFullName { get; set; }
     public string GuestFirstName { get; set; }
 
