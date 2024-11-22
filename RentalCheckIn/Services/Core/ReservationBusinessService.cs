@@ -105,11 +105,6 @@ public class ReservationBusinessService : IReservationBusinessService
                 {
                     reservation.SignatureQuest = checkInReservation.SignatureDataUrl;
                 }
-                
-                if (checkInReservation.Place != null && checkInReservation.Place != reservation.Place)
-                {
-                    reservation.Place = checkInReservation.Place;
-                }
             });
 
             return new OperationResult

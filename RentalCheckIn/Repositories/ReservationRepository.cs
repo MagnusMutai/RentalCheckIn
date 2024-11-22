@@ -70,7 +70,6 @@ public class ReservationRepository : IReservationRepository
                     ReceivedKeys = r.ReceivedKeys,
                     AgreeTerms = r.AgreeTerms,
                     SignatureDataUrl = r.SignatureQuest,
-                    Place = r.Place,
                     CurrencySymbol = r.Currency.CurrencySymbol
                 }).FirstOrDefaultAsync();
     }
