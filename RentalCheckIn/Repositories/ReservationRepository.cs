@@ -66,7 +66,11 @@ public class ReservationRepository : IReservationRepository
                     SecurityDeposit = r.SecurityDeposit,
                     TotalPrice = r.TotalPrice,
                     KwhAtCheckIn = r.KwhAtCheckIn,
+                    AgreeEnergyConsumption = r.AgreeEnergyConsumption,
+                    ReceivedKeys = r.ReceivedKeys,
+                    AgreeTerms = r.AgreeTerms,
                     SignatureDataUrl = r.SignatureQuest,
+                    Place = r.Place,
                     CurrencySymbol = r.Currency.CurrencySymbol
                 }).FirstOrDefaultAsync();
     }

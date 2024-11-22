@@ -17,6 +17,38 @@ public class CheckInBase : ComponentBase
     [Inject]
     private IReservationService ReservationService { get; set; }
 
+    // Nullable Agreement properties
+    protected bool AgreeEnergyConsumption
+    {
+        get => checkInModel?.AgreeEnergyConsumption ?? false;
+        set
+        {
+            if (checkInModel != null)
+                checkInModel.AgreeEnergyConsumption = value;
+        }
+    }
+
+    protected bool ReceivedKeys
+    {
+        get => checkInModel?.ReceivedKeys ?? false;
+        set
+        {
+            if (checkInModel != null)
+                checkInModel.ReceivedKeys = value;
+        }
+    }
+
+    protected bool AgreeTerms
+    {
+        get => checkInModel?.AgreeTerms ?? false;
+        set
+        {
+            if (checkInModel != null)
+                checkInModel.AgreeTerms = value;
+        }
+    }
+
+    // Signature property model
     protected byte[]? SignatureBytes
     {
         get
@@ -32,6 +64,7 @@ public class CheckInBase : ComponentBase
                 : "data:image/png;base64," + Convert.ToBase64String(value);
         }
     }
+
 
     protected override async Task OnInitializedAsync()
     {

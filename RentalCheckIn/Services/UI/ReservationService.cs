@@ -57,6 +57,36 @@ public class ReservationService : IReservationService
             throw;
         }
     }
+    public async Task<bool> UpdateCheckInFormReservationAsync(CheckInReservationDTO checkInModel)
+    {
+        try
+        {
+            var updateModel = new CheckInReservationUpdateDTO
+            {
+                Id = checkInModel.Id,
+                PassportNr = checkInModel.PassportNr,
+                MailAddress = checkInModel.MailAddress,
+                Mobile = checkInModel.Mobile,
+                ApartmentFee = checkInModel.ApartmentFee,
+                SecurityDeposit = checkInModel.SecurityDeposit,
+                TotalPrice = checkInModel.TotalPrice,
+                KwhAtCheckIn = checkInModel.KwhAtCheckIn,
+                AgreeEnergyConsumption = checkInModel.AgreeEnergyConsumption,
+                ReceivedKeys = checkInModel.ReceivedKeys,
+                AgreeTerms = checkInModel.AgreeTerms,
+                SignatureDataUrl = checkInModel.SignatureDataUrl,
+                Place = checkInModel.Place
+            };
+
+            var response = await httpClient.PutAsJsonAsync($"api/Reservation/{updateModel.Id}", updateModel);
+            return response.IsSuccessStatusCode;
+        }
+        catch (Exception ex)
+        { 
+            // Implement logging
+            return false;
+        }
+    }
 
     public async Task<IEnumerable<Setting>> GetSettingsAsync()
     {
@@ -84,30 +114,4 @@ public class ReservationService : IReservationService
 
     }
 
-    public async Task<bool> UpdateCheckInFormReservationAsync(CheckInReservationDTO checkInModel)
-    {
-        try
-        {
-            var updateModel = new CheckInReservationUpdateDTO
-            {
-                Id = checkInModel.Id,
-                PassportNr = checkInModel.PassportNr,
-                MailAddress = checkInModel.MailAddress,
-                Mobile = checkInModel.Mobile,
-                ApartmentFee = checkInModel.ApartmentFee,
-                SecurityDeposit = checkInModel.SecurityDeposit,
-                TotalPrice = checkInModel.TotalPrice,
-                KwhAtCheckIn = checkInModel.KwhAtCheckIn,
-                SignatureDataUrl = checkInModel.SignatureDataUrl
-            };
-
-            var response = await httpClient.PutAsJsonAsync($"api/Reservation/{updateModel.Id}", updateModel);
-            return response.IsSuccessStatusCode;
-        }
-        catch (Exception ex)
-        { 
-            // Implement logging
-            return false;
-        }
-    }
 }

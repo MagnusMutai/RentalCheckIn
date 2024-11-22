@@ -48,7 +48,6 @@ public class ReservationBusinessService : IReservationBusinessService
                 };
             }
 
-            bool isModified = false;
             await reservationRepository.UpdateCheckInReservationPartialAsync(reservation, res =>
             {
                 // Update only the modified properties
@@ -87,9 +86,29 @@ public class ReservationBusinessService : IReservationBusinessService
                     reservation.KwhAtCheckIn = checkInReservation.KwhAtCheckIn;
                 }
 
+                if (checkInReservation.AgreeEnergyConsumption != null && checkInReservation.AgreeEnergyConsumption != reservation.AgreeEnergyConsumption)
+                {
+                    reservation.AgreeEnergyConsumption = checkInReservation.AgreeEnergyConsumption;
+                }
+                
+                if (checkInReservation.ReceivedKeys != null && checkInReservation.ReceivedKeys != reservation.ReceivedKeys)
+                {
+                    reservation.ReceivedKeys = checkInReservation.ReceivedKeys;
+                }
+                
+                if (checkInReservation.AgreeTerms != null && checkInReservation.AgreeTerms != reservation.AgreeTerms)
+                {
+                    reservation.AgreeTerms = checkInReservation.AgreeTerms;
+                }
+
                 if (checkInReservation.SignatureDataUrl != null && checkInReservation.SignatureDataUrl != reservation.SignatureQuest)
                 {
                     reservation.SignatureQuest = checkInReservation.SignatureDataUrl;
+                }
+                
+                if (checkInReservation.Place != null && checkInReservation.Place != reservation.Place)
+                {
+                    reservation.Place = checkInReservation.Place;
                 }
             });
 
