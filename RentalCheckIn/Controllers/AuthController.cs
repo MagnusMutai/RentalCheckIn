@@ -157,7 +157,7 @@ public class AuthController : ControllerBase
 
     // Fido2 Face Recognition 
 
-
+    // Implement error handling
     /// <summary>
     /// Validate and save registration response (Step 2: Register)
     /// </summary>
@@ -214,7 +214,7 @@ public class AuthController : ControllerBase
         return Ok();
     }
 
-
+    // Implement error handling
     /// <summary>
     /// Generate options for registration (Step 1: Register)
     /// </summary>
@@ -252,7 +252,7 @@ public class AuthController : ControllerBase
         return Ok(options);
     }
 
-
+    // Implement error handling
     /// <summary>
     /// Generate options for login (Step 1: Login)
     /// </summary>
@@ -278,7 +278,7 @@ public class AuthController : ControllerBase
         HttpContext.Session.SetString("fido2.authOptions", JsonSerializer.Serialize(options));
         return Ok(options);
     }
-
+    // Implement error handling
     /// <summary>
     /// Validate and process login response (Step 2: Login)
     /// </summary>

@@ -1,4 +1,5 @@
-﻿namespace RentalCheckIn.Services.Core;
+﻿
+namespace RentalCheckIn.Services.Core;
 public class ReservationBusinessService : IReservationBusinessService
 {
     private readonly IReservationRepository reservationRepository;
@@ -32,17 +33,82 @@ public class ReservationBusinessService : IReservationBusinessService
             return new CheckInReservationDTO();
         }
     }
-    public async Task UpdateCheckInReservationAsync(CheckInReservationUpdateDTO dto)
-    {
-        var reservation = await reservationRepository.GetCheckInReservationByIdAsync(dto.Id);
-        if (reservation == null)
-        {
-            throw new Exception("Reservation not found");
-        }
-        
 
-        // Save changes
-        await reservationRepository.UpdateCheckInReservationAsync(reservation);
+    public async Task<OperationResult> UpdateCheckInReservationPartialAsync(CheckInReservationUpdateDTO checkInReservation)
+    {
+        try
+        {
+            var reservation = await reservationRepository.GetReservationByIdAsync(checkInReservation.Id);
+            if (reservation == null)
+            {
+                return new OperationResult
+                {
+                    IsSuccess = false,
+                    Message = "Could not find the reservation."
+                };
+            }
+
+            bool isModified = false;
+            await reservationRepository.UpdateCheckInReservationPartialAsync(reservation, res =>
+            {
+                // Update only the modified properties
+                if (checkInReservation.PassportNr != null && checkInReservation.PassportNr != reservation.Quest.PassportNr)
+                {
+                    reservation.Quest.PassportNr= checkInReservation.PassportNr;
+                }
+
+                if (checkInReservation.MailAddress != null && checkInReservation.MailAddress != reservation.Quest.MailAddress)
+                {
+                    reservation.Quest.MailAddress = checkInReservation.MailAddress;
+                }
+
+                if (checkInReservation.Mobile != null && checkInReservation.Mobile != reservation.Quest.Mobile)
+                {
+                    reservation.Quest.Mobile = checkInReservation.Mobile;
+                }
+
+                if (checkInReservation.ApartmentFee != reservation.ApartmentFee)
+                {
+                    reservation.ApartmentFee = checkInReservation.ApartmentFee;
+                }
+
+                if (checkInReservation.SecurityDeposit != reservation.SecurityDeposit)
+                {
+                    reservation.SecurityDeposit = checkInReservation.SecurityDeposit;
+                }
+                
+                if (checkInReservation.TotalPrice != reservation.TotalPrice)
+                {
+                    reservation.TotalPrice = checkInReservation.TotalPrice;
+                }
+
+                if (checkInReservation.KwhAtCheckIn != reservation.KwhAtCheckIn)
+                {
+                    reservation.KwhAtCheckIn = checkInReservation.KwhAtCheckIn;
+                }
+
+                if (checkInReservation.SignatureDataUrl != null && checkInReservation.SignatureDataUrl != reservation.SignatureQuest)
+                {
+                    reservation.SignatureQuest = checkInReservation.SignatureDataUrl;
+                }
+            });
+
+            return new OperationResult
+            {
+                IsSuccess = true,
+                Message = "Successfully checked-in."
+            };
+
+        }
+        catch (Exception ex)
+        {
+            return new OperationResult
+            {
+                IsSuccess = false,
+                Message = "An unexpected error has occurred. Please try again later."
+            };
+        }
+
     }
 
     public async Task<IEnumerable<Setting>> GetSettingsAsync()
@@ -56,4 +122,5 @@ public class ReservationBusinessService : IReservationBusinessService
             return Enumerable.Empty<Setting>();
         }
     }
+
 }

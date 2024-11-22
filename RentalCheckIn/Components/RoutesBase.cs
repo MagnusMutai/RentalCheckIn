@@ -146,7 +146,7 @@ public class RoutesBase : ComponentBase, IAsyncDisposable
 
         if (cts != null)
         {
-            cts.Cancel();
+         await cts.CancelAsync();
             cts.Dispose();
             cts = null;
         }
