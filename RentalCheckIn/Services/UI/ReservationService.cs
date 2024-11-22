@@ -75,7 +75,6 @@ public class ReservationService : IReservationService
                 ReceivedKeys = checkInModel.ReceivedKeys,
                 AgreeTerms = checkInModel.AgreeTerms,
                 SignatureDataUrl = checkInModel.SignatureDataUrl,
-                Place = checkInModel.Place
             };
 
             var response = await httpClient.PutAsJsonAsync($"api/Reservation/{updateModel.Id}", updateModel);

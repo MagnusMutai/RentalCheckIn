@@ -44,8 +44,6 @@ public partial class Reservation
 
     public string? SignatureQuest { get; set; }
 
-    public string? Place { get; set; }
-
     public uint? HostId { get; set; }
 
     public uint? StatusId { get; set; }

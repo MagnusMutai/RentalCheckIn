@@ -62,7 +62,6 @@ public class CheckInReservationDTO
     public string SignatureDataUrl { get; set; }
 
     // Additional Information
-    public string Place { get; set; }
 
     public string CurrencySymbol { get; set; }
 

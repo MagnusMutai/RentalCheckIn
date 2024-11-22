@@ -16,5 +16,4 @@ public class CheckInReservationUpdateDTO
     public bool? AgreeTerms { get; set; }
     // Editable (guest's signature)
     public string? SignatureDataUrl { get; set; }
-    public string? Place { get; set; }
 }
