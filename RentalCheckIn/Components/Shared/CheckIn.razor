@@ -112,7 +112,7 @@ else
 
             <!-- Agreements -->
             <div class="form-check mt-4 mb-2">
-                <InputCheckbox class="form-check-input" @bind-Value="checkInModel.AgreeEnergyConsumption" />
+                <InputCheckbox class="form-check-input" @bind-Value="AgreeEnergyConsumption" />
                 <label class="form-check-label">
                     Energy consumption up to 30 kWh per day is included in the rental price! For additional use, $0.20 per kWh will be charged at check-out <br />  <div class="d-flex gap-2 align-items-center">
                         Meter <InputNumber class="form-control w-25" @bind-Value="checkInModel.KwhAtCheckIn" />
@@ -121,13 +121,13 @@ else
                 </label>
             </div>
             <div class="form-check mb-2">
-                <InputCheckbox class="form-check-input" @bind-Value="checkInModel.ReceivedKeys" />
+                <InputCheckbox class="form-check-input" @bind-Value="ReceivedKeys" />
                 <label class="form-check-label">
                     Received alarm remote control, remote control sliding gate, house key, gate key, and room keys.
                 </label>
             </div>
             <div class="form-check mb-4">
-                <InputCheckbox class="form-check-input" @bind-Value="checkInModel.AgreeTerms" />
+                <InputCheckbox class="form-check-input" @bind-Value="AgreeTerms" />
                 <label class="form-check-label">
                     By signing this form, the tenant declares to agree with the (house) rules from the "IMPORTANT" handbook and the general terms and conditions of Snowy Lodge.
                 </label>

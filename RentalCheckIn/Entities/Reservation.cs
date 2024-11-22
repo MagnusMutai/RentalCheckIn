@@ -35,10 +35,16 @@ public partial class Reservation
     public int KwhPerNightIncluded { get; set; }
 
     public decimal? CostsPerXtraKwh { get; set; }
+    // Checkboxes
+    public bool? AgreeEnergyConsumption { get; set; }
+    public bool? ReceivedKeys { get; set; }
+    public bool? AgreeTerms { get; set; }
 
     public uint CurrencyId { get; set; }
 
     public string? SignatureQuest { get; set; }
+
+    public string? Place { get; set; }
 
     public uint? HostId { get; set; }
 

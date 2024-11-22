@@ -53,9 +53,9 @@ public class CheckInReservationDTO
     public int KwhAtCheckIn { get; set; }
 
     // Checkboxes
-    public bool AgreeEnergyConsumption { get; set; }
-    public bool ReceivedKeys { get; set; }
-    public bool AgreeTerms { get; set; }
+    public bool? AgreeEnergyConsumption { get; set; }
+    public bool? ReceivedKeys { get; set; }
+    public bool? AgreeTerms { get; set; }
 
     // Signature
     [Required(ErrorMessage = "Signature is required")]
