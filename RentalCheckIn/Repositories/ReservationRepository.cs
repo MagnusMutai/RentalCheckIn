@@ -71,14 +71,36 @@ public class ReservationRepository : IReservationRepository
                 }).FirstOrDefaultAsync();
     }
 
-    public async Task UpdateCheckInReservationAsync(Reservation reservation)
+    public async Task<bool> UpdateCheckInReservationPartialAsync(Reservation reservation, Action<Reservation> patchData)
     {
-        context.Entry(reservation).State = EntityState.Modified;
-        await context.SaveChangesAsync();
+        // Attach user if not already tracked
+        context.Reservations.Attach(reservation);
+
+        patchData(reservation);
+
+        // Mark only specified properties as modified
+        foreach (var property in context.Entry(reservation).Properties)
+        {
+            if (property.IsModified)
+            {
+                context.Entry(reservation).Property(property.Metadata.Name).IsModified = true;
+            }
+        }
+        // Save changes
+        return await context.SaveChangesAsync() > 0;
     }
 
     public async Task<IEnumerable<Setting>> GetSettingsAsync()
     {
         return await context.Settings.ToListAsync();
+    }
+
+    public async Task<Reservation?> GetReservationByIdAsync(uint reservationId)
+    {
+        return await context.Reservations
+            .Include(r => r.Currency)
+            .Include(r => r.Quest)
+            .Where(r => r.ReservationId == reservationId)
+                .FirstOrDefaultAsync();
     }
 }

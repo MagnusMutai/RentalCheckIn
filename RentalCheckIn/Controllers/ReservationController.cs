@@ -34,7 +34,6 @@ public class ReservationController : ControllerBase
         }
     }
     
-    
     [HttpGet("Settings")]
     public async Task<IActionResult> GetSettingsAsync()
     {
@@ -82,14 +81,23 @@ public class ReservationController : ControllerBase
     [HttpPut("{id}")]
     public async Task<IActionResult> UpdateReservation(uint id, [FromBody] CheckInReservationUpdateDTO checkInModel)
     {
-        if (id != checkInModel.Id)
-            return BadRequest("Reservation ID mismatch");
+        try
+        {
+            if (id != checkInModel.Id)
+                return BadRequest("Reservation ID mismatch");
 
-        var result = await reservationService.UpdateCheckInReservationAsync(checkInModel);
+            var result = await reservationService.UpdateCheckInReservationPartialAsync(checkInModel);
 
-        if (!result)
-            return StatusCode(500, "Failed to update reservation");
-
-        return NoContent();
+            if (result == null)
+            {
+                return NotFound();
+            }
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError,
+                  "Error retrieving Data from Database");
+        }
     }
 }

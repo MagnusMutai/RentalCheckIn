@@ -8,6 +8,6 @@ public class CheckInReservationUpdateDTO
     public decimal ApartmentFee { get; set; } // Editable
     public decimal SecurityDeposit { get; set; } // Editable
     public decimal? TotalPrice { get; set; } // Calculated
-    public decimal? KwhAtCheckIn { get; set; } // Editable
+    public int KwhAtCheckIn { get; set; } // Editable
     public string? SignatureDataUrl { get; set; } // Editable (guest's signature)
 }
