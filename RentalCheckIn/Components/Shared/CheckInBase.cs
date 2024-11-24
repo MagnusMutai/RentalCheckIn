@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 using SignaturePad;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace RentalCheckIn.Components.Shared;
 public class CheckInBase : ComponentBase
@@ -10,12 +11,12 @@ public class CheckInBase : ComponentBase
     public int Id { get; set; }
 
     protected CheckInReservationDTO checkInModel = new CheckInReservationDTO();
-
     [Inject]
     private NavigationManager NavigationManager { get; set; }
-
     [Inject]
     private IReservationService ReservationService { get; set; }
+    [Inject]
+    private IPDFService PDFService { get; set; }
 
     // Nullable Agreement properties
     protected bool AgreeEnergyConsumption
@@ -120,6 +121,7 @@ public class CheckInBase : ComponentBase
     private void SharePdf()
     {
         // Implement PDF generation and sharing
+        PDFService.FillCheckInFormAsync(checkInModel, SignatureBytes);
     }
 
     protected SignaturePadOptions _options = new SignaturePadOptions
