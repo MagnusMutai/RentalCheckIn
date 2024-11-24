@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 using SignaturePad;
+using System.Drawing;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace RentalCheckIn.Components.Shared;
@@ -10,6 +11,8 @@ public class CheckInBase : ComponentBase
     [Parameter]
     public int Id { get; set; }
 
+    private static Color strokeColor = Color.FromArgb(0, 77, 230);
+
     protected CheckInReservationDTO checkInModel = new CheckInReservationDTO();
     [Inject]
     private NavigationManager NavigationManager { get; set; }
@@ -17,7 +20,6 @@ public class CheckInBase : ComponentBase
     private IReservationService ReservationService { get; set; }
     [Inject]
     private IPDFService PDFService { get; set; }
-
     // Nullable Agreement properties
     protected bool AgreeEnergyConsumption
     {
@@ -124,11 +126,13 @@ public class CheckInBase : ComponentBase
         PDFService.FillCheckInFormAsync(checkInModel, SignatureBytes);
     }
 
+    
     protected SignaturePadOptions _options = new SignaturePadOptions
     {
         LineCap = LineCap.Round,
         LineJoin = LineJoin.Round,
         LineWidth = 2,
+        StrokeStyle = strokeColor
         // Blue ink
     };
 }

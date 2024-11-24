@@ -57,6 +57,8 @@ public class CheckInReservationDTO
     public bool? ReceivedKeys { get; set; }
     public bool? AgreeTerms { get; set; }
 
+    public string CountryISO2 { get; set; }
+    public string LanguageName { get; set; }
     // Signature
     [Required(ErrorMessage = "Signature is required")]
     public string SignatureDataUrl { get; set; }

@@ -46,6 +46,10 @@ public class ReservationRepository : IReservationRepository
             .Include(r => r.Apartment)
             .Include(r => r.Currency)
             .Include(r => r.Quest)
+                // Include Country through Quest
+                .ThenInclude(q => q.Country) 
+            .Include(r => r.Quest)
+                .ThenInclude(r => r.Language)
             .Where(r => r.ReservationId == reservationId)
                 .Select(r => new CheckInReservationDTO
                 {
@@ -69,6 +73,8 @@ public class ReservationRepository : IReservationRepository
                     AgreeEnergyConsumption = r.AgreeEnergyConsumption,
                     ReceivedKeys = r.ReceivedKeys,
                     AgreeTerms = r.AgreeTerms,
+                    CountryISO2 = r.Quest.Country.CountryIso2,
+                    LanguageName = r.Quest.Language.LanguageName,
                     SignatureDataUrl = r.SignatureQuest,
                     CurrencySymbol = r.Currency.CurrencySymbol
                 }).FirstOrDefaultAsync();

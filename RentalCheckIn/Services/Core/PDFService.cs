@@ -1,10 +1,6 @@
 ﻿using Spire.Doc;
 using Spire.Doc.Documents;
-using Spire.Doc.Fields;
-using Spire.Doc.Reporting;
 using System.Drawing;
-
-
 
 namespace RentalCheckIn.Services.Core;
 
@@ -30,10 +26,11 @@ public class PDFService : IPDFService
         // Data for Mail Merge
         Dictionary<string, string> mergeData = new Dictionary<string, string>
         {
+            { "Country", model.CountryISO2 },
+            { "Language", model.LanguageName },
             { "GuestFirstName", model.GuestFirstName },
             { "CheckInDate", model.CheckInDate.ToString("MM/dd/yyyy") },
             { "CheckOutDate", model.CheckOutDate.ToString("MM/dd/yyyy") },
-            { "SelectedHotel", "Massi" }, // Assuming SelectedHotel is a property in the model
             { "PassportNr", model.PassportNr },
             { "MailAddress", model.MailAddress },
             { "Mobile", model.Mobile },
@@ -45,9 +42,9 @@ public class PDFService : IPDFService
             { "TotalPrice", model.TotalPrice.ToString() },
             { "KwhAtCheckIn", model.KwhAtCheckIn.ToString() },
             { "GuestFullName", model.GuestFullName },
-            { "SignatureDataUrl", "C:\\Users\\Magnu\\source\\repos\\RentalCheckIn\\RentalCheckIn\\wwwroot\\images\\snowylodge.jpg" }
+            { "SignatureDataUrl", "placeholderpath" }
         };
-
+        
         // Specify the field names and values from the dictionary
         string[] fieldNames = new string[mergeData.Count];
         string[] fieldValues = new string[mergeData.Count];
@@ -60,6 +57,7 @@ public class PDFService : IPDFService
             index++;
         }
         Image signatureImage = null;
+        Image resizedImage = null;
 
         // Insert the signature image if available
         if (!string.IsNullOrEmpty(model.SignatureDataUrl))
@@ -101,6 +99,30 @@ public class PDFService : IPDFService
                         {
                             signatureImage = Image.FromStream(ms);
 
+                            // Resize the image
+                            int targetWidth = 120; // Specify the desired width
+                            int targetHeight = 120; // Specify the desired height
+                            resizedImage = ResizeImage(signatureImage, targetWidth, targetHeight);
+                        }
+
+                        // Register event for handling the image field
+                        doc.MailMerge.MergeImageField += (sender, field) =>
+                        {
+                            field.Image = resizedImage;
+                        };
+
+                        // Mapping of hotel names to aliases
+                        Dictionary<string, string> hotelAliasMapping = new Dictionary<string, string>
+                        {
+                            { "Snowy (street view)", "Snowy" },
+                            { "Massi (garden view)", "Massi" }
+                        };
+
+                        // Get the alias for the selected view of the lodge
+                        if (hotelAliasMapping.TryGetValue(model.ApartmentName, out string? targetAlias))
+                        {
+                            // Check the checkbox corresponding to the alias
+                            ChooseViewOfLodge(doc, targetAlias);
                         }
 
                     }
@@ -110,14 +132,6 @@ public class PDFService : IPDFService
                         throw;
                     }
                 }
-
-
-
-                // Register an event which occurs when merging the image filed
-                doc.MailMerge.MergeImageField += new MergeImageFieldEventHandler(MailMerge_MergeImageField);
-
-
-
 
                 // Perform the mail merge
                 doc.MailMerge.Execute(fieldNames, fieldValues);
@@ -134,39 +148,85 @@ public class PDFService : IPDFService
         Console.WriteLine($"Generated document saved at: {outputPath}");
     }
 
-    // Fill an image field with a picture
-    private static void MailMerge_MergeImageField(object sender, MergeImageFieldEventArgs field)
-    {
-        string filePath = field.FieldValue as string;
 
-        if (!string.IsNullOrEmpty(filePath))
+    // Method to resize an image
+    private static Image ResizeImage(Image originalImage, int width, int height)
+    {
+        Bitmap resizedImage = new Bitmap(width, height);
+        using (Graphics graphics = Graphics.FromImage(resizedImage))
         {
-            field.Image = Image.FromFile(filePath);
+            graphics.CompositingQuality = System.Drawing.Drawing2D.CompositingQuality.HighQuality;
+            graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+            graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+            graphics.DrawImage(originalImage, 0, 0, width, height);
         }
+        return resizedImage;
     }
 
-    public class SignatureHelper
+    static void ChooseViewOfLodge(Document document, string targetAlias)
     {
-        public Image ConvertBase64ToImage(string base64String)
+        try
         {
-            try
+            // Traverse sections, tables, and cells to find and update checkboxes
+            foreach (Section section in document.Sections)
             {
-                // Remove the data:image/png;base64, prefix if present
-                string base64Data = base64String.Contains(",") ? base64String.Split(',')[1] : base64String;
-
-                // Convert Base64 string to an image
-                byte[] imageBytes = Convert.FromBase64String(base64Data);
-                using (MemoryStream ms = new MemoryStream(imageBytes))
+                foreach (DocumentObject obj in section.Body.ChildObjects)
                 {
-                    return Image.FromStream(ms);
+                    if (obj is Table table)
+                    {
+                        foreach (TableRow row in table.Rows)
+                        {
+                            foreach (TableCell cell in row.Cells)
+                            {
+                                foreach (Paragraph paragraph in cell.Paragraphs)
+                                {
+                                    foreach (DocumentObject pobj in paragraph.ChildObjects)
+                                    {
+                                        if (pobj is StructureDocumentTagInline sdt &&
+                                            sdt.SDTProperties.SDTType == SdtType.CheckBox)
+                                        {
+                                            // Check the alias
+                                            if (sdt.SDTProperties.Alias == targetAlias)
+                                            {
+                                                // Update checkbox state
+                                                SdtCheckBox checkBox = sdt.SDTProperties.ControlProperties as SdtCheckBox;
+                                                if (checkBox != null)
+                                                {
+                                                    checkBox.Checked = true; // Set checkbox to checked
+                                                    Console.WriteLine($"Checkbox '{sdt.SDTProperties.Alias}' is now checked.");
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
+
             }
-            catch (Exception ex)
+        }
+        catch(Exception ex) 
+        {
+            Console.WriteLine(ex.Message);
+            throw;
+        }
+    }
+    public class StructureTags
+    {
+        List<StructureDocumentTagInline> m_tagInlines;
+        public List<StructureDocumentTagInline> tagInlines
+        {
+            get
             {
-                Console.WriteLine($"Error converting Base64 string to image: {ex.Message}");
-                return null;
+                if (m_tagInlines == null)
+                    m_tagInlines = new List<StructureDocumentTagInline>();
+                return m_tagInlines;
+            }
+            set
+            {
+                m_tagInlines = value;
             }
         }
     }
-
 }
