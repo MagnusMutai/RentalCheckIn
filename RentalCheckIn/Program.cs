@@ -93,10 +93,11 @@ builder.Services.AddScoped<IAppartmentBusinessService, AppartmentBusinessService
 builder.Services.AddScoped<IAppartmentService, AppartmentService>();
 builder.Services.AddScoped<IJWTService, JWTService>();
 builder.Services.AddScoped<ITOTPService, TOTPService>();
+builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddScoped<IPDFService, PDFService>();
+builder.Services.AddScoped<RefreshTokenService>();
 builder.Services.AddScoped<ProtectedLocalStorage>();
 builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
-builder.Services.AddScoped<IEmailService, EmailService>();
-builder.Services.AddScoped<RefreshTokenService>();
 
 var app = builder.Build();
 
