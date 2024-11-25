@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
+using RentalCheckIn.Services.UI;
 using SignaturePad;
 using System.Drawing;
 using static System.Runtime.InteropServices.JavaScript.JSType;
@@ -7,6 +8,8 @@ namespace RentalCheckIn.Components.Shared;
 public class CheckInBase : ComponentBase
 {
     protected bool displaySignaturePad;
+
+    private string StatusMessage;
 
     [Parameter]
     public int Id { get; set; }
@@ -19,7 +22,7 @@ public class CheckInBase : ComponentBase
     [Inject]
     private IReservationService ReservationService { get; set; }
     [Inject]
-    private IPDFService PDFService { get; set; }
+    private IDocumentService DocumentService{ get; set; }
     // Nullable Agreement properties
     protected bool AgreeEnergyConsumption
     {
@@ -88,8 +91,8 @@ public class CheckInBase : ComponentBase
         CalculateTotalPrice();
 
         await SaveData();
-        SharePdf();
-        NavigationManager.NavigateTo("/confirmation");
+        await SharePdf();
+        //NavigationManager.NavigateTo("/confirmation");
     }
 
     protected void CalculateTotalPrice()
@@ -120,10 +123,17 @@ public class CheckInBase : ComponentBase
         await ReservationService.UpdateCheckInFormReservationAsync(checkInModel);
     }
 
-    private void SharePdf()
+    private async Task SharePdf()
     {
         // Implement PDF generation and sharing
-        PDFService.FillCheckInFormAsync(checkInModel, SignatureBytes);
+        try
+        {
+            StatusMessage = await DocumentService.GenerateAndSendCheckInFormAsync(checkInModel);
+        }
+        catch (Exception ex)
+        {
+            StatusMessage = $"Error: {ex.Message}";
+        }
     }
 
     

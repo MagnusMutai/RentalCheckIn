@@ -1,5 +1,6 @@
 using Fido2NetLib;
 using Microsoft.AspNetCore.Localization;
+using RentalCheckIn.Configuration.WhatsApp;
 using System.Globalization;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -32,6 +33,8 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 //Register HttpClient with BaseAddress
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://localhost:7110") });
+builder.Services.AddHttpClient();
+
 
 // Configure JWT Authentication
 var secretKey = builder.Configuration["Jwt:SecretKey"];
@@ -95,9 +98,15 @@ builder.Services.AddScoped<IJWTService, JWTService>();
 builder.Services.AddScoped<ITOTPService, TOTPService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IPDFService, PDFService>();
+builder.Services.AddScoped<IWhatsAppService, WhatsAppService>();
+builder.Services.AddScoped<IDocumentService, DocumentService>();
 builder.Services.AddScoped<RefreshTokenService>();
 builder.Services.AddScoped<ProtectedLocalStorage>();
 builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
+
+builder.Services.Configure<WhatsAppSettings>(builder.Configuration.GetSection("WhatsAppSettings"));
+
+
 
 var app = builder.Build();
 
