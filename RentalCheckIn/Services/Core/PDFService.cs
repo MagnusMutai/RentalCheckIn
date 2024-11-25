@@ -219,21 +219,5 @@ public class PDFService : IPDFService
             throw;
         }
     }
-    public class StructureTags
-    {
-        List<StructureDocumentTagInline> m_tagInlines;
-        public List<StructureDocumentTagInline> tagInlines
-        {
-            get
-            {
-                if (m_tagInlines == null)
-                    m_tagInlines = new List<StructureDocumentTagInline>();
-                return m_tagInlines;
-            }
-            set
-            {
-                m_tagInlines = value;
-            }
-        }
-    }
+
 }

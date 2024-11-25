@@ -7,10 +7,9 @@ public class RefreshToken
     public DateTime Expires { get; set; }
     public bool IsRevoked { get; set; }
     // Foreign key to Host table
-    public uint HostId { get; set; }  
+    public uint HostId { get; set; }
     public bool IsExpired => DateTime.UtcNow >= Expires;
     public bool IsActive => !IsRevoked && !IsExpired;
 
-    // Navigation property to the host
-    public LHost LHost{ get; set; }
+    public LHost LHost { get; set; }
 }

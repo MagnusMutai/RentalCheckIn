@@ -34,18 +34,18 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Locales\Resource.en-US.Designer.cs">
+    <Compile Update="Locales\Resource.en-EN.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
-      <DependentUpon>Resource.en-US.resx</DependentUpon>
+      <DependentUpon>Resource.en-EN.resx</DependentUpon>
     </Compile>
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Update="Locales\Resource.en-US.resx">
+    <EmbeddedResource Update="Locales\Resource.en-EN.resx">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resource.en-US.Designer.cs</LastGenOutput>
+      <LastGenOutput>Resource.en-EN.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Update="Locales\Resource.fr-FR.resx">
       <Generator></Generator>

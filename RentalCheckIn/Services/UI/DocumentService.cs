@@ -1,6 +1,4 @@
-﻿using System.Net.Http;
-
-namespace RentalCheckIn.Services.UI;
+﻿namespace RentalCheckIn.Services.UI;
 public class DocumentService : IDocumentService
 {
     private readonly HttpClient httpClient;
@@ -29,6 +27,5 @@ public class DocumentService : IDocumentService
             throw;
         }
     }
-
 
 }

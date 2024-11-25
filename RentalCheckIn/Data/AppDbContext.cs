@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
-using Pomelo.EntityFrameworkCore.MySql.Scaffolding.Internal;
-using RentalCheckIn.Entities;
-
-namespace RentalCheckIn.Data;
+﻿namespace RentalCheckIn.Data;
 
 public partial class AppDbContext : DbContext
 {
@@ -18,7 +12,7 @@ public partial class AppDbContext : DbContext
     }
 
     public virtual DbSet<Apartment> Apartments { get; set; }
-
+    public virtual DbSet<ApartmentTranslation> ApartmentTranslations { get; set; }
     public virtual DbSet<Channel> Channels { get; set; }
 
     public virtual DbSet<Country> Countries { get; set; }
@@ -32,16 +26,17 @@ public partial class AppDbContext : DbContext
     public virtual DbSet<Quest> Quests { get; set; }
 
     public virtual DbSet<Reservation> Reservations { get; set; }
-
+    public DbSet<ReservationTranslation> ReservationTranslations { get; set; }
     public virtual DbSet<Setting> Settings { get; set; }
 
     public virtual DbSet<Status> Statuses { get; set; }
+    public DbSet<StatusTranslation> StatusTranslations { get; set; }
     public virtual DbSet<RefreshToken> RefreshTokens { get; set; }
 
     public DbSet<LHostCredential> LHostCredentials { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
+    // #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
         => optionsBuilder.UseMySql("server=localhost;database=RentalCheckIn;user id=root;password=Bikadius#03", Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.40-mysql"));
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -283,10 +278,6 @@ public partial class AppDbContext : DbContext
             entity.Property(e => e.StatusLabel).HasMaxLength(20);
         });
 
-        modelBuilder.Entity<RefreshToken>()
-    .ToTable("YourNewTableName"); // Use the singular form
-
-            
         // Define the relationship between Host and RefreshToken
         modelBuilder.Entity<RefreshToken>(entity =>
         {
@@ -313,6 +304,84 @@ public partial class AppDbContext : DbContext
                 .HasColumnType("timestamp");
 
         });
+
+        // ApartmentTranslation configuration
+        modelBuilder.Entity<ApartmentTranslation>(entity =>
+        {
+            entity.ToTable("ApartmentTranslation");
+
+            entity.HasKey(e => e.ApartmentTranslationId);
+
+            entity.Property(e => e.ApartmentName)
+                  .IsRequired()
+                  .HasMaxLength(255);
+
+            entity.HasIndex(e => new { e.ApartmentId, e.LanguageId })
+                  .IsUnique();
+
+            entity.HasOne(e => e.Apartment)
+                  .WithMany(a => a.ApartmentTranslations)
+                  .HasForeignKey(e => e.ApartmentId)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(e => e.Language)
+                  .WithMany(l => l.ApartmentTranslations)
+                  .HasForeignKey(e => e.LanguageId)
+                  .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        // StatusTranslation configuration
+        modelBuilder.Entity<StatusTranslation>(entity =>
+        {
+            entity.ToTable("StatusTranslation");
+
+            entity.HasKey(e => e.StatusTranslationId);
+
+            entity.Property(e => e.StatusLabel)
+                  .IsRequired()
+                  .HasMaxLength(255);
+
+            entity.HasIndex(e => new { e.StatusId, e.LanguageId })
+                  .IsUnique();
+
+            entity.HasOne(e => e.Status)
+                  .WithMany(s => s.StatusTranslations)
+                  .HasForeignKey(e => e.StatusId)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(e => e.Language)
+                  .WithMany(l => l.StatusTranslations)
+                  .HasForeignKey(e => e.LanguageId)
+                  .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        // ReservationTranslation configuration
+        modelBuilder.Entity<ReservationTranslation>(entity =>
+        {
+            entity.ToTable("ReservationTranslation");
+
+            entity.HasKey(e => e.ReservationTranslationId);
+
+            entity.Property(e => e.CheckInTime)
+                  .HasMaxLength(50);
+
+            entity.Property(e => e.CheckOutTime)
+                  .HasMaxLength(50);
+
+            entity.HasIndex(e => new { e.ReservationId, e.LanguageId })
+                  .IsUnique();
+
+            entity.HasOne(e => e.Reservation)
+                  .WithMany(r => r.ReservationTranslations)
+                  .HasForeignKey(e => e.ReservationId)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(e => e.Language)
+                  .WithMany(l => l.ReservationTranslations)
+                  .HasForeignKey(e => e.LanguageId)
+                  .OnDelete(DeleteBehavior.Restrict);
+        });
+
 
         OnModelCreatingPartial(modelBuilder);
     }
