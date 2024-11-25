@@ -13,11 +13,19 @@ public class PDFService : IPDFService
         this.environment = environment;
     }
 
-    public void FillCheckInFormAsync(CheckInReservationDTO model, byte[] sigImage)
+    public string FillCheckInFormAsync(CheckInReservationDTO model)
     {
         string templatePath = Path.Combine(environment.WebRootPath, "templates", "CheckInForm-English.docx");
-        string outputPath = Path.Combine(environment.WebRootPath, "output", "GeneratedCheckInForm.docx");
+        string outputDir = Path.Combine(environment.WebRootPath, "output");
 
+        if (!Directory.Exists(outputDir))
+        {
+            Directory.CreateDirectory(outputDir);
+        }
+
+        // Generate a unique filename using a GUID
+        string uniqueFileName = $"GeneratedCheckInForm_{Guid.NewGuid()}.docx";
+        string outputPath = Path.Combine(outputDir, uniqueFileName);
 
         // Load the template document
         Document doc = new Document();
@@ -111,7 +119,7 @@ public class PDFService : IPDFService
                             field.Image = resizedImage;
                         };
 
-                        // Mapping of hotel names to aliases
+                        // Mapping of hotel view names to aliases
                         Dictionary<string, string> hotelAliasMapping = new Dictionary<string, string>
                         {
                             { "Snowy (street view)", "Snowy" },
@@ -144,8 +152,7 @@ public class PDFService : IPDFService
         }
         // Save the generated document
         doc.SaveToFile(outputPath, FileFormat.Docx);
-
-        Console.WriteLine($"Generated document saved at: {outputPath}");
+        return uniqueFileName;
     }
 
 
@@ -192,8 +199,8 @@ public class PDFService : IPDFService
                                                 SdtCheckBox checkBox = sdt.SDTProperties.ControlProperties as SdtCheckBox;
                                                 if (checkBox != null)
                                                 {
-                                                    checkBox.Checked = true; // Set checkbox to checked
-                                                    Console.WriteLine($"Checkbox '{sdt.SDTProperties.Alias}' is now checked.");
+                                                    // Set checkbox to checked
+                                                    checkBox.Checked = true; 
                                                 }
                                             }
                                         }

@@ -28,3 +28,5 @@ global using Microsoft.AspNetCore.Mvc;
 global using static RentalCheckIn.DTOs.CustomRequests;
 global using System.Text.Json;
 global using Microsoft.AspNetCore.WebUtilities;
+
+
