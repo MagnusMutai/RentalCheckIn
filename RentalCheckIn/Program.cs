@@ -123,12 +123,12 @@ app.UseRequestLocalization(options =>
 {
     var supportedCultures = new List<CultureInfo>
     {
-        new CultureInfo("en-US"),
+        new CultureInfo("en-EN"),
         new CultureInfo("fr-FR"),
         new CultureInfo("nl-NL"),
     };
     // Default to English as fallback language
-    options.DefaultRequestCulture = new RequestCulture(new CultureInfo("en-US")); 
+    options.DefaultRequestCulture = new RequestCulture(new CultureInfo("en-EN")); 
     options.SupportedCultures = supportedCultures;
     options.SupportedUICultures = supportedCultures;
 
@@ -151,7 +151,7 @@ app.UseRequestLocalization(options =>
         // If no culture cookie, fallback to the browser's settings
         var userLanguages = context.Request.Headers["Accept-Language"].ToString();
         var primaryLanguage = userLanguages.Split(',').FirstOrDefault();
-        if (primaryLanguage == "en") primaryLanguage = "en-US";
+        if (primaryLanguage == "en") primaryLanguage = "en-EN";
         else if (primaryLanguage == "fr") primaryLanguage = "fr-FR";
         else if (primaryLanguage == "nl") primaryLanguage = "nl-NL";
 
