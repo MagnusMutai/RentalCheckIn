@@ -1,19 +1,37 @@
 ﻿
+using System.Globalization;
+
 namespace RentalCheckIn.Services.Core;
 public class ReservationBusinessService : IReservationBusinessService
 {
     private readonly IReservationRepository reservationRepository;
+    private readonly ILanguageRepository languageRepository;
 
-    public ReservationBusinessService(IReservationRepository reservationRepository)
+    public ReservationBusinessService(IReservationRepository reservationRepository, ILanguageRepository languageRepository)
     {
         this.reservationRepository = reservationRepository;
+        this.languageRepository = languageRepository;
     }
 
     public async Task<IEnumerable<ReservationDTO>> GetAllTableReservationsAsync()
     {
         try
         {
-            return await reservationRepository.GetAllTableReservationsAsync();
+            var culture = CultureInfo.CurrentCulture.Name;
+            var currentLanguage = await languageRepository.GetLanguageByCultureAsync(culture)
+                                  ?? await languageRepository.GetDefaultLanguageAsync();
+
+            var defaultLanguage = await languageRepository.GetDefaultLanguageAsync();
+
+            if (defaultLanguage == null)
+            {
+                throw new Exception("Default language not found in the database.");
+            }
+
+            uint languageId = currentLanguage.LanguageId;
+            uint defaultLanguageId = defaultLanguage.LanguageId;
+
+            return await reservationRepository.GetAllTableReservationsAsync(languageId, defaultLanguageId);
         }
         catch (Exception ex)
         {
