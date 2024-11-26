@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
+using System.Globalization;
 namespace RentalCheckIn.Components.Pages;
 public class HomeBase : ComponentBase
 {
@@ -22,15 +23,20 @@ public class HomeBase : ComponentBase
     private IReservationService ReservationService { get; set; }
     [Inject]
     private IAppartmentService AppartmentService { get; set; }
+    [Inject]
+    private ILocalizationUIService LocalizationUIService { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
         try
         {
+
+
+            // Fetch reservations
             Reservation = (await ReservationService.GetAllTableReservationsAsync()).ToList();
+
+            // Fetch settings
             Settings = (await ReservationService.GetSettingsAsync()).ToList();
-            // Extract distinct apartment names for the dropdown
-            ApartmentNames = (await AppartmentService.GetDistinctAppartmentNames()).ToList();
 
             // Determine items per page from settings
             if (Settings != null && Settings.Any())
@@ -42,6 +48,29 @@ public class HomeBase : ComponentBase
                 // Default value if settings are missing
                 itemsPerPage = 10;
             }
+
+            // Fetch localized apartment names and status labels
+            var apartmentIds = Reservation.Select(r => r.ApartmentId).Distinct();
+            var statusIds = Reservation.Select(r => r.StatusId).Distinct();
+
+            var culture = CultureInfo.CurrentCulture.Name;
+            var apartmentNamesDict = await LocalizationUIService.GetApartmentNamesAsync(apartmentIds, culture);
+            var statusLabelsDict = await LocalizationUIService.GetStatusLabelsAsync(statusIds, culture);
+
+            // Assign localized names to reservations
+            foreach (var reservation in Reservation)
+            {
+                reservation.ApartmentName = apartmentNamesDict.ContainsKey(reservation.ApartmentId)
+                    ? apartmentNamesDict[reservation.ApartmentId]
+                    : "[Apartment Name]";
+
+                reservation.StatusLabel = statusLabelsDict.ContainsKey(reservation.StatusId)
+                    ? statusLabelsDict[reservation.StatusId]
+                    : "[Status Label]";
+            }
+
+            // Extract distinct apartment names for the dropdown
+            ApartmentNames = Reservation.Select(r => r.ApartmentName).Distinct().ToList();
 
             // Add 'All' option to allow viewing all apartments
             ApartmentNames.Insert(0, "All");
@@ -56,7 +85,6 @@ public class HomeBase : ComponentBase
     {
         try
         {
-
             // Get the accessToken if it exists
             var response = await LocalStorage.GetAsync<string>("token");
             Constants.JWTToken = response.Success ? response.Value : "";
