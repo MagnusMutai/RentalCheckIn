@@ -12,4 +12,17 @@ public class CustomRequests
         public string ResetToken { get; set; }
         public string NewPassword { get; set; }
     }
+
+    public class ApartmentNamesRequest
+    {
+        public List<uint> ApartmentIds { get; set; }
+        public string Culture { get; set; }
+    }
+
+    public class StatusLabelsRequest
+    {
+        public List<uint> StatusIds { get; set; }
+        public string Culture { get; set; }
+    }
+
 }

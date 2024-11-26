@@ -11,8 +11,12 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
 builder.Services.AddControllers();
+// Add in-memory distributed cache **Check later
+builder.Services.AddDistributedMemoryCache(); 
+builder.Services.AddMemoryCache();
+builder.Services.AddHttpContextAccessor();
 
-builder.Services.AddDistributedMemoryCache(); // Add in-memory distributed cache
+
 builder.Services.AddSession(options =>
 {
     options.IdleTimeout = TimeSpan.FromMinutes(30); // Set session timeout
@@ -100,6 +104,13 @@ builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IPDFService, PDFService>();
 builder.Services.AddScoped<IWhatsAppService, WhatsAppService>();
 builder.Services.AddScoped<IDocumentService, DocumentService>();
+builder.Services.AddScoped<ILanguageRepository, LanguageRepository>();
+builder.Services.AddScoped<IApartmentTranslationRepository, ApartmentTranslationRepository>();
+builder.Services.AddScoped<IStatusTranslationRepository, StatusTranslationRepository>();
+builder.Services.AddScoped<IReservationTranslationRepository, ReservationTranslationRepository>();
+builder.Services.AddScoped<ILocalizationService, LocalizationService>();
+builder.Services.AddScoped<ILocalizationUIService, LocalizationUIService>();
+
 builder.Services.AddScoped<RefreshTokenService>();
 builder.Services.AddScoped<ProtectedLocalStorage>();
 builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));

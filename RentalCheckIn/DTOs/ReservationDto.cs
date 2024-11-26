@@ -13,6 +13,8 @@ public class ReservationDTO
     public decimal? Price { get; set; }
     public decimal? SecurityDeposit { get; set; }
     public decimal? TotalPrice { get; set; }
+    public uint ApartmentId { get; set; }
+    public uint StatusId { get; set; }    
     public string ApartmentName { get; set; }
     public string? ChannelName { get; set; }
     public string StatusLabel { get; set; }
