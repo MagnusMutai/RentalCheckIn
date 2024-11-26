@@ -126,8 +126,8 @@
   <data name="CheckOut" xml:space="preserve">
     <value>Check-Out</value>
   </data>
-  <data name="Appartment" xml:space="preserve">
-    <value>Appartment</value>
+  <data name="Apartment" xml:space="preserve">
+    <value>Apartment</value>
   </data>
   <data name="Name" xml:space="preserve">
     <value>Name</value>
@@ -249,5 +249,8 @@
     <value>&lt;data name="BoldExample" xml:space="preserve"&gt;
   &lt;value&gt;Please scan the following QR code with an authenticator &lt;strong&gt;app&lt;/strong&gt; like &lt;strong&gt;Microsoft Authenticator&lt;/strong&gt; on your phone, or enter the secret code manually. Then proceed to &lt;a href="login"&gt; Login&lt;/a&gt;&lt;/value&gt;
 &lt;/data&gt;</value>
+  </data>
+  <data name="FirstNameRequired" xml:space="preserve">
+    <value> First name is required</value>
   </data>
 </root>

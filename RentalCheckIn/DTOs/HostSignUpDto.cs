@@ -1,22 +1,31 @@
 ﻿namespace RentalCheckIn.DTOs;
+using RentalCheckIn.Locales;
+
+[MetadataType(typeof(Resource))]
 public class HostSignUpDTO
 {
-    [Required(ErrorMessage = "First name is required")]
+    [Required(ErrorMessageResourceName = "FirstNameRequired", ErrorMessageResourceType = typeof(Resource))]
     public string FirstName { get; set; } = string.Empty;
-    [Required(ErrorMessage = "Last name is required")]
+
+    [Required(ErrorMessageResourceName = "LastNameRequired", ErrorMessageResourceType = typeof(Resource))]
     public string LastName { get; set; } = string.Empty;
-    [Required(ErrorMessage = "Email is required"), EmailAddress]
+
+    [Required(ErrorMessageResourceName = "EmailRequired", ErrorMessageResourceType = typeof(Resource))]
+    [EmailAddress]
     public string Email { get; set; } = string.Empty;
-    [Required(ErrorMessage = "Password is required")]
+
+    [Required(ErrorMessageResourceName = "PasswordRequired", ErrorMessageResourceType = typeof(Resource))]
     [DataType(DataType.Password)]
     [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$",
-    ErrorMessage = "Password must be at least 8 characters long, have an upper letter, a lowercase letter, a number, and a special character.")]
+        ErrorMessageResourceName = "PasswordRegexError", ErrorMessageResourceType = typeof(Resource))]
     public string Password { get; set; } = string.Empty;
-    [DataType(DataType.Password), Compare("Password", ErrorMessage = "Passwords do not match.")]
+
+    [DataType(DataType.Password)]
+    [Compare("Password", ErrorMessageResourceName = "ConfirmPasswordCompareError", ErrorMessageResourceType = typeof(Resource))]
     public string ConfirmPassword { get; set; } = string.Empty;
-    // Change back to bool
-    [Required(ErrorMessage = "Please select a two-factor authentication method.")]
-    [RegularExpression("^(TOTP|FaceID)$", ErrorMessage = "Invalid two-factor authentication method selected.")]
-    public string Selected2FA { get; set; }
+
+    [Required(ErrorMessageResourceName = "Selected2FARequired", ErrorMessageResourceType = typeof(Resource))]
+    [RegularExpression("^(TOTP|FaceID)$", ErrorMessageResourceName = "Selected2FARegexError", ErrorMessageResourceType = typeof(Resource))]
+    public string Selected2FA { get; set; } = string.Empty;
 
 }
