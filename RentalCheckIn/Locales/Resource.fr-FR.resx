@@ -127,7 +127,7 @@ Enregistrement</value>
   <data name="CheckOut" xml:space="preserve">
     <value>Départ</value>
   </data>
-  <data name="Appartment" xml:space="preserve">
+  <data name="Apartment" xml:space="preserve">
     <value>Appartement</value>
   </data>
   <data name="Name" xml:space="preserve">
@@ -250,5 +250,8 @@ Enregistrement</value>
     <value>&lt;data name="BoldExample" xml:space="preserve"&gt;
   &lt;value&gt;Veuillez scanner le code QR suivant avec une &lt;strong&gt;application&lt;/strong&gt; d'authentification comme &lt;strong&gt;Microsoft Authenticator&lt;/strong&gt; sur votre téléphone, ou entrez le code secret manuellement. Puis, procédez à la &lt;a href="login"&gt; connexiontext&lt;/a&gt;&lt;/value&gt;
 &lt;/data&gt;</value>
+  </data>
+  <data name="FirstNameRequired" xml:space="preserve">
+    <value>Le prénom est requis</value>
   </data>
 </root>
