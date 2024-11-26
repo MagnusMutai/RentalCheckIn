@@ -1,4 +1,6 @@
-﻿namespace RentalCheckIn.Repositories;
+﻿using RentalCheckIn.Entities;
+
+namespace RentalCheckIn.Repositories;
 
 public class ReservationRepository : IReservationRepository
 {
@@ -8,15 +10,17 @@ public class ReservationRepository : IReservationRepository
     {
         this.context = context;
     }
-    public async Task<IEnumerable<ReservationDTO>> GetAllTableReservationsAsync()
+    public async Task<IEnumerable<ReservationDTO>> GetAllTableReservationsAsync(uint languageId, uint defaultLanguageId)
     {
         return await context.Reservations
             .Include(r => r.Apartment)
+              .ThenInclude(a => a.ApartmentTranslations.Where(at => at.LanguageId == languageId))
             .Include(r => r.Channel)
             .Include(r => r.Currency)
             .Include(r => r.Host)
             .Include(r => r.Quest)
             .Include(r => r.Status)
+             .ThenInclude(s => s.StatusTranslations.Where(st => st.LanguageId == languageId))
             .Where(r => r.StatusId < 3)
             .OrderBy(r => r.CheckInDate)
                 .Select(r => new ReservationDTO
@@ -33,10 +37,20 @@ public class ReservationRepository : IReservationRepository
                     Price = r.ApartmentFee,
                     SecurityDeposit = r.SecurityDeposit,
                     TotalPrice = r.TotalPrice,
-                    ApartmentName = r.Apartment.ApartmentName,
+                    ApartmentId = r.ApartmentId,
+                    StatusId = r.StatusId,
+                    ApartmentName = r.Apartment.ApartmentTranslations
+                                .FirstOrDefault(at => at.LanguageId == languageId).ApartmentName
+                            ?? r.Apartment.ApartmentTranslations
+                                .FirstOrDefault(at => at.LanguageId == defaultLanguageId).ApartmentName
+                            ?? "[Apartment Name]",
                     ChannelName = r.Channel.ChannelLabel,
                     CurrencySymbol = r.Currency.CurrencySymbol,
-                    StatusLabel = r.Status.StatusLabel
+                    StatusLabel = r.Status.StatusTranslations
+                                .FirstOrDefault(st => st.LanguageId == languageId).StatusLabel
+                            ?? r.Status.StatusTranslations
+                                .FirstOrDefault(st => st.LanguageId == defaultLanguageId).StatusLabel
+                            ?? "[Status Label]"
                 }).ToListAsync();
     }
 
