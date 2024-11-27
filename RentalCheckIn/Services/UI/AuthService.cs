@@ -351,11 +351,7 @@ public class AuthService : IAuthService
             var userIdResult = await localStorage.GetAsync<uint>("UserIdFor2FA");
             if (!userIdResult.Success)
             {
-                return new OperationResult
-                {
-                    IsSuccess = false,
-                    Message = "Session expired. Please log in again."
-                };
+                navigationManager.NavigateTo("/login");
             }
 
             uint lHostId = userIdResult.Value;
