@@ -106,17 +106,12 @@ public class PDFService : IPDFService
                         using (var ms = new MemoryStream(imageBytes))
                         {
                             signatureImage = Image.FromStream(ms);
-
-                            // Resize the image
-                            int targetWidth = 120; // Specify the desired width
-                            int targetHeight = 120; // Specify the desired height
-                            resizedImage = ResizeImage(signatureImage, targetWidth, targetHeight);
                         }
 
                         // Register event for handling the image field
                         doc.MailMerge.MergeImageField += (sender, field) =>
                         {
-                            field.Image = resizedImage;
+                            field.Image = signatureImage;
                         };
 
                         // Mapping of hotel view names to aliases
@@ -153,21 +148,6 @@ public class PDFService : IPDFService
         // Save the generated document
         doc.SaveToFile(outputPath, FileFormat.Docx);
         return uniqueFileName;
-    }
-
-
-    // Method to resize an image
-    private static Image ResizeImage(Image originalImage, int width, int height)
-    {
-        Bitmap resizedImage = new Bitmap(width, height);
-        using (Graphics graphics = Graphics.FromImage(resizedImage))
-        {
-            graphics.CompositingQuality = System.Drawing.Drawing2D.CompositingQuality.HighQuality;
-            graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
-            graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
-            graphics.DrawImage(originalImage, 0, 0, width, height);
-        }
-        return resizedImage;
     }
 
     static void ChooseViewOfLodge(Document document, string targetAlias)
