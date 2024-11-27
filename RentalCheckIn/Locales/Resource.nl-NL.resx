@@ -255,4 +255,31 @@ Uitchecken</value>
   <data name="FirstNameRequired" xml:space="preserve">
     <value>Voornaam is vereist</value>
   </data>
+  <data name="LastNameRequired" xml:space="preserve">
+    <value>Achternaam is vereist</value>
+  </data>
+  <data name="EmailRequired" xml:space="preserve">
+    <value>E-mailadres is vereist</value>
+  </data>
+  <data name="PasswordRequired" xml:space="preserve">
+    <value> Wachtwoord is vereist</value>
+  </data>
+  <data name="PasswordRegexError" xml:space="preserve">
+    <value> Het wachtwoord moet minimaal 8 tekens lang zijn, een hoofdletter, een kleine letter, een cijfer en een speciaal teken bevatten.</value>
+  </data>
+  <data name="ConfirmPasswordCompareError" xml:space="preserve">
+    <value> Wachtwoorden komen niet overeen.</value>
+  </data>
+  <data name="Selected2FARequired" xml:space="preserve">
+    <value>Selecteer een tweefactorauthenticatiemethode.</value>
+  </data>
+  <data name="Selected2FARegexError" xml:space="preserve">
+    <value> Ongeldige tweefactorauthenticatiemethode geselecteerd.</value>
+  </data>
+  <data name="OTPCodeRequired" xml:space="preserve">
+    <value>TOTP-code vereist</value>
+  </data>
+  <data name="ConfirmPasswordRequired" xml:space="preserve">
+    <value>Het veld bevestig wachtwoord is vereist</value>
+  </data>
 </root>

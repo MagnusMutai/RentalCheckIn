@@ -253,4 +253,31 @@
   <data name="FirstNameRequired" xml:space="preserve">
     <value> First name is required</value>
   </data>
+  <data name="LastNameRequired" xml:space="preserve">
+    <value>Last name is required</value>
+  </data>
+  <data name="EmailRequired" xml:space="preserve">
+    <value>Email is required</value>
+  </data>
+  <data name="PasswordRequired" xml:space="preserve">
+    <value>Password is required</value>
+  </data>
+  <data name="PasswordRegexError" xml:space="preserve">
+    <value>Password must be at least 8 characters long, have an upper letter, a lowercase letter, a number, and a special character.</value>
+  </data>
+  <data name="ConfirmPasswordCompareError" xml:space="preserve">
+    <value>Passwords do not match.</value>
+  </data>
+  <data name="Selected2FARequired" xml:space="preserve">
+    <value>Please select a two-factor authentication method.</value>
+  </data>
+  <data name="Selected2FARegexError" xml:space="preserve">
+    <value>Selected2FARegexError</value>
+  </data>
+  <data name="OTPCodeRequired" xml:space="preserve">
+    <value>TOTP code required</value>
+  </data>
+  <data name="ConfirmPasswordRequired" xml:space="preserve">
+    <value>Confirm Password field is required</value>
+  </data>
 </root>
