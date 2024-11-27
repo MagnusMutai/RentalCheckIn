@@ -1,14 +1,17 @@
-﻿namespace RentalCheckIn.DTOs;
+﻿using RentalCheckIn.Locales;
+
+namespace RentalCheckIn.DTOs;
 
 public class PasswordResetDTO
 {
-    [Required(ErrorMessage = "Password is required")]
+    [Required(ErrorMessageResourceName = "PasswordRequired", ErrorMessageResourceType = typeof(Resource))]
     [DataType(DataType.Password)]
     [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$",
-     ErrorMessage = "Password must be at least 8 characters long, have an upper letter, a lowercase letter, a number, and a special character.")]
+        ErrorMessageResourceName = "PasswordRegexError", ErrorMessageResourceType = typeof(Resource))]
     public string NewPassword { get; set; }
 
-    [Required(ErrorMessage = "Confirm Password is required")]
-    [Compare("NewPassword", ErrorMessage = "Passwords do not match")]
+    [Required(ErrorMessageResourceName = "ConfirmPasswordRequired", ErrorMessageResourceType = typeof(Resource))]
+    [DataType(DataType.Password)]
+    [Compare("NewPassword", ErrorMessageResourceName = "ConfirmPasswordCompareError", ErrorMessageResourceType = typeof(Resource))]
     public string ConfirmPassword { get; set; }
 }
