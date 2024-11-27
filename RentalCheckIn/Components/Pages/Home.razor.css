@@ -53,7 +53,7 @@
         border-top-right-radius: 7px;
         border-bottom-right-radius: 7px;
     }
-/*Space between rows*/
+/* Space between rows */
 .custom-table tbody tr.spacer td {
     padding: 0 !important;
     height: 10px;
@@ -64,4 +64,27 @@
 .btn-success {
     background-color: #1BE299;
     color: #680979;
+}
+
+.header {
+    background-image: url(../images/snowylodge.jpg);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    min-height: 150px;
+    max-width: 200px;
+    margin-left: auto;
+    box-shadow: 0 0 8px 8px white inset;
+}
+
+/* Reservation details css */
+@media (min-width: 576px) {
+
+    .right-align-modal .modal-dialog {
+        margin: 1rem 0;
+        position: absolute;
+        top: 10%;
+        right: 32px;
+        min-width: 500px;
+    }
 }

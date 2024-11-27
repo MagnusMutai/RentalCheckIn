@@ -1,0 +1,29 @@
+﻿.container {
+    background-color: #F2F2F2;
+}
+
+.welcome {
+    color: #48182C;
+}
+
+.header {
+    background-image: url(../images/snowylodge.jpg);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    min-height: 400px;
+    mask-image: linear-gradient(black 90%, transparent);
+    -webkit-mask-image: linear-gradient(black 90%, transparent);
+}
+
+.disable-checkbox-only + .form-check-label {
+    
+    opacity: 1;
+    cursor: default;
+}
+
+
+.btn-success {
+    background-color: #1BE299;
+    color: #680979;
+}

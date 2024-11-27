@@ -8,8 +8,8 @@
 
 <PageTitle>Check-In</PageTitle>
 
-<div class="ms-4 mt-4">
-    <h5 class="text-white ms-5 ps-5">Check-In</h5>
+<div class="my-5 w-100">
+    <h5 class="text-white text-center">CHECK-IN</h5>
 </div>
 @if (checkInModel == null)
 {
@@ -22,157 +22,174 @@ else
         <DataAnnotationsValidator />
         <ValidationSummary />
 
-        <div class="container bg-white p-5 rounded-3 my-4">
-            <!-- Guest Information -->
-            <h4>@checkInModel.GuestFirstName</h4>
-            <div class="row mb-3">
-                <div class="col-md-6">
-                    <label>Passport Number</label>
-                    <InputText class="form-control" @bind-Value="checkInModel.PassportNr" maxlength="50" />
-                    <ValidationMessage For="@(() => checkInModel.PassportNr)" />
+        <div class="container rounded-3 my-4">
+            <div class="row p-5">
+                <div class="col-10 d-none d-md-block mt-3">
+                    <h5 class="welcome fw-bolder">UNWIND, RELAX, STAY AWHILE</h5>
                 </div>
-            </div>
-            <div class="row mb-3">
-                <div class="col-md-6">
-                    <label>Mail Address</label>
-                    <InputText class="form-control" @bind-Value="checkInModel.MailAddress" />
-                    <ValidationMessage For="@(() => checkInModel.MailAddress)" />
-                </div>
-                <div class="col-md-6">
-                    <label>Mobile</label>
-                    <InputText class="form-control" @bind-Value="checkInModel.Mobile" />
-                    <ValidationMessage For="@(() => checkInModel.Mobile)" />
+                <div class="col-2">
+                    <img src="/images/snowylogo.svg" alt="Snowylodge logo" width="95" height="50">
                 </div>
             </div>
 
-            <!-- Reservation Information -->
-            <div class="row mt-5 mb-3">
-                <div class="col-md-6">
-                    <p class="fw-bold">Check-In</p>
-                    <div>
+            <div class="header row"></div>
+
+            <div class="p-5">
+                <h5 class="text-center my-4">CHECK-IN FORM</h5>
+
+                <!-- Guest Information -->
+                <h4>@checkInModel.GuestFirstName</h4>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label>Mail Address</label>
+                        <InputText class="form-control" @bind-Value="checkInModel.MailAddress" />
+                        <ValidationMessage For="@(() => checkInModel.MailAddress)" />
+                    </div>
+                    <div class="col-md-6 mt-3 mt-md-0">
+                        <label>Mobile</label>
+                        <InputText class="form-control" @bind-Value="checkInModel.Mobile" />
+                        <ValidationMessage For="@(() => checkInModel.Mobile)" />
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label>Passport Number</label>
+                        <InputText class="form-control" @bind-Value="checkInModel.PassportNr" maxlength="50" />
+                        <ValidationMessage For="@(() => checkInModel.PassportNr)" />
+                    </div>
+                </div>
+                <!-- Reservation Information -->
+                <div class="row mt-5 mb-3">
+                    <div class="col-md-6 d-flex flex-column">
+                        <p class="fw-bold m-0">Check-In</p>
+                        <div class="mt-1">
+                            <div>
+                                @checkInModel.CheckInDate
+                            </div>
+                            <div>
+                                @checkInModel.CheckInTime
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <p class="fw-bold m-0 mt-3 mt-md-0">Check-Out</p>
+                        <div class="mt-1">
+                            <div>
+                                @checkInModel.CheckOutDate
+                            </div>
+                            <di>
+                                @checkInModel.CheckOutTime
+                            </di>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <p class="fw-bold m-0">Details</p>
                         <div>
-                            @checkInModel.CheckInDate
+                            @checkInModel.NumberOfNights nights
                         </div>
                         <div>
-                            @checkInModel.CheckInTime
+                            @checkInModel.NumberOfGuests adults
                         </div>
                     </div>
-                </div>
-                <div class="col-md-6">
-                    <p class="fw-bold">Check-Out</p>
-                    <div>
-                        <div>
-                            @checkInModel.CheckOutDate
-                        </div>
-                        <di>
-                            @checkInModel.CheckOutTime
-                        </di>
-                    </div>
-                </div>
-            </div>
-            <div class="row mb-3">
-                <div class="col-md-6">
-                    <div>
-                        @checkInModel.NumberOfNights nights
-                    </div>
-                    <div>
-                        @checkInModel.NumberOfGuests adults
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <p class="fw-bold">Apartment</p>
-                    @checkInModel.ApartmentName
-                </div>
-            </div>
-
-            <!-- Price Summary -->
-            <div class="mt-5 mb-3">
-                <div class="row">
-                    <p class="fw-bold col-md-6">Apartment Fee</p>
                     <div class="col-md-6">
-                        <InputNumber class="form-control" @bind-Value="checkInModel.ApartmentFee" @onchange="OnFeeChanged" />
-                        <ValidationMessage For="@(() => checkInModel.ApartmentFee)" />
+                        <p class="fw-bold m-0 mt-3 mt-md-0">Apartment</p>
+                        @checkInModel.ApartmentName
                     </div>
                 </div>
-                <div class="row">
-                    <p class="fw-bold col-md-6">Security Deposit</p>
-                    <div class="col-md-6">
-                        <InputNumber class="form-control" @bind-Value="checkInModel.SecurityDeposit" @onchange="OnFeeChanged" />
-                        <ValidationMessage For="@(() => checkInModel.SecurityDeposit)" />
-                    </div>
-                </div>
-                <div class="row">
-                    <p class="fw-bold col-md-6">Total Price</p>
-                    <div class="col-md-6">
-                        <div class="form-control">@checkInModel.CurrencySymbol @checkInModel.TotalPrice</div>
-                    </div>
-                </div>
-            </div>
 
-
-            <!-- Agreements -->
-            <div class="form-check mt-4 mb-2">
-                <InputCheckbox class="form-check-input" @bind-Value="AgreeEnergyConsumption" />
-                <label class="form-check-label">
-                    Energy consumption up to 30 kWh per day is included in the rental price! For additional use, $0.20 per kWh will be charged at check-out <br />  <div class="d-flex gap-2 align-items-center">
-                        Meter <InputNumber class="form-control w-25" @bind-Value="checkInModel.KwhAtCheckIn" />
-                        <ValidationMessage For="@(() => checkInModel.KwhAtCheckIn)" /> kWh.
-                    </div>
-                </label>
-            </div>
-            <div class="form-check mb-2">
-                <InputCheckbox class="form-check-input" @bind-Value="ReceivedKeys" />
-                <label class="form-check-label">
-                    Received alarm remote control, remote control sliding gate, house key, gate key, and room keys.
-                </label>
-            </div>
-            <div class="form-check mb-4">
-                <InputCheckbox class="form-check-input" @bind-Value="AgreeTerms" />
-                <label class="form-check-label">
-                    By signing this form, the tenant declares to agree with the (house) rules from the "IMPORTANT" handbook and the general terms and conditions of Snowy Lodge.
-                </label>
-            </div>
-
-            <div class="row mt-5 mb-3">
-                <div class="col-md-6">
+                <!-- Price Summary -->
+                <div class="mt-5 mb-3">
                     <div class="row">
-                        <div class="col-md-4">
-                            <p class="fw-bold">Date</p>
-                        </div>
+                        <p class="fw-bold col-md-6 m-0 mt-3 mt-md-0">Apartment Fee</p>
                         <div class="col-md-6">
-                            <InputDate class="form-control" @bind-Value="checkInModel.CheckInDate" />
+                            <InputNumber class="form-control" @bind-Value="checkInModel.ApartmentFee" @onchange="OnFeeChanged" />
+                            <ValidationMessage For="@(() => checkInModel.ApartmentFee)" />
                         </div>
                     </div>
-                </div>
-                <div class="col-md-6 d-flex align-items-center">
                     <div class="row">
-                        <div class="col-md-3">
-                            <p class="fw-bold mt-4 mt-md-0">Place</p>
+                        <p class="fw-bold col-md-6 m-0 mt-3 mt-md-0">Security Deposit</p>
+                        <div class="col-md-6">
+                            <InputNumber class="form-control" @bind-Value="checkInModel.SecurityDeposit" @onchange="OnFeeChanged" />
+                            <ValidationMessage For="@(() => checkInModel.SecurityDeposit)" />
                         </div>
-                        <div class="col-md-9">
-                            <p class="ms-md-3">Paramaribo</p>
+                    </div>
+                    <div class="row">
+                        <p class="fw-bold col-md-6 m-0 mt-3 mt-md-0">Total Price</p>
+                        <div class="col-md-6">
+                            <div class="form-control">@checkInModel.CurrencySymbol @checkInModel.TotalPrice</div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            @if (displaySignaturePad)
-            {
-                <!-- Signature -->
-                <h3 class="mt-4">Signature</h3>
-                <div class="mb-3">
-                    <SignaturePad Options="_options" @bind-Value="SignatureBytes" Width="200" Height="200" />
-                    <ValidationMessage For="@(() => checkInModel.SignatureDataUrl)" />
-                </div>
-            }
-            <div class="row mt-5 mb-3">
-                <div class="col-md-4">
-                    <label>User Full Name</label>
-                    <InputText class="form-control" @bind-Value="checkInModel.GuestFullName" />
-                </div>
-            </div>
 
-            <button type="submit" class="btn btn-primary">Save and Share</button>
+                <!-- Agreements -->
+                <div class="form-check mt-4 mb-2">
+                    <InputCheckbox class="form-check-input disable-checkbox-only" @bind-Value="AgreeEnergyConsumption" disabled />
+                    <label class="form-check-label">
+                        Energy consumption up to 30 kWh per day is included in the rental price! For additional use, $0.20 per kWh will be charged at check-out <br />  <div class="d-flex gap-2 align-items-center">
+                            Meter <InputNumber class="form-control w-25" @bind-Value="checkInModel.KwhAtCheckIn" />
+                            <ValidationMessage For="@(() => checkInModel.KwhAtCheckIn)" /> kWh.
+                        </div>
+                    </label>
+                </div>
+                <div class="form-check mb-2">
+                    <InputCheckbox class="form-check-input disable-checkbox-only" @bind-Value="ReceivedKeys" disabled />
+                    <label class="form-check-label">
+                        Received alarm remote control, remote control sliding gate, house key, gate key, and room keys.
+                    </label>
+                </div>
+                <div class="form-check mb-4">
+                    <InputCheckbox class="form-check-input disable-checkbox-only" @bind-Value="AgreeTerms" disabled />
+                    <label class="form-check-label">
+                        By signing this form, the tenant declares to agree with the (house) rules from the "IMPORTANT" handbook and the general terms and conditions of Snowy Lodge.
+                    </label>
+                </div>
+
+                <div class="row mt-5 mb-3">
+                    <div class="col-md-6">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <p class="fw-bold m-0 mt-3 mt-md-0">Date</p>
+                            </div>
+                            <div class="col-md-6">
+                                <InputDate class="form-control" @bind-Value="checkInModel.CheckInDate" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 d-flex align-items-center">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <p class="fw-bold m-0 mt-3 mt-md-0">Place</p>
+                            </div>
+                            <div class="col-md-9">
+                                <p class="ms-md-3">Paramaribo</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                @if (displaySignaturePad)
+                {
+                    <!-- Signature -->
+                    <h5 class="mt-4">Guest's signature</h5>
+                    <div class="mb-3">
+                        <SignaturePad Options="_options" @bind-Value="SignatureBytes" Width="160" Height="60" />
+                        @if (!string.IsNullOrEmpty(signatureValidationError))
+                        {
+                            <div class="text-danger">@signatureValidationError</div>
+                        }
+                    </div>
+                }
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        @checkInModel.GuestFullName
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-success border-0 rounded-3">Save and Share</button>
+            </div>
         </div>
     </EditForm>
 

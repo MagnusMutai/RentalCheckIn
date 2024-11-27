@@ -27,7 +27,7 @@
                         </select>
                     </div>
                 </div>
-                @if (PaginatedReservations != null || !PaginatedReservations.Any())
+                @if (PaginatedReservations != null)
                 {
                     <div class="table-responsive">
 
@@ -105,30 +105,32 @@
 
         @if (showModal)
         {
-            <div class="modal fade show" style="display:block;" tabindex="-1" role="dialog">
+            <div class="modal fade show right-align-modal" style="display:block;" tabindex="-1" role="dialog">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title">@Localizer["Reservation Details"]</h5>
-                            <button type="button" class="btn-close" @onclick="CloseModal"></button>
-                        </div>
-                        <div class="modal-body">
-                            <ReservationDetail SelectedReservation="selectedReservation" />
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" @onclick="CloseModal">@Localizer["Close"]</button>
-                        </div>
+                        <divk class="ms-md-3">
+                            <div class="modal-header ms-3">
+                                <h3 class="modal-title fw-bold">@Localizer["Reservation"] #@selectedReservation.Id</h3>
+                                <button type="button" class="btn-close" @onclick="CloseModal"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="header row"></div>
+                                <h4 class="fw-bold ms-3">Guest details</h4>
+                                <ReservationDetail SelectedReservation="selectedReservation" />
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" @onclick="CloseModal">@Localizer["Close"]</button>
+                            </div>
+                        </divk>
                     </div>
                 </div>
+                <div>Hello</div>
             </div>
             <div class="modal-backdrop fade show"></div>
         }
-         
+
     </Authorized>
 </AuthorizeView>
-
-
-
 
 
 

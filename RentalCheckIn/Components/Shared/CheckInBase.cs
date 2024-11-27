@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
-using RentalCheckIn.Services.UI;
 using SignaturePad;
 using System.Drawing;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace RentalCheckIn.Components.Shared;
 public class CheckInBase : ComponentBase
@@ -10,6 +8,8 @@ public class CheckInBase : ComponentBase
     protected bool displaySignaturePad;
 
     private string StatusMessage;
+
+    protected string signatureValidationError;
 
     [Parameter]
     public int Id { get; set; }
@@ -24,38 +24,13 @@ public class CheckInBase : ComponentBase
     [Inject]
     private IDocumentService DocumentService{ get; set; }
     // Nullable Agreement properties
-    protected bool AgreeEnergyConsumption
-    {
-        get => checkInModel?.AgreeEnergyConsumption ?? false;
-        set
-        {
-            if (checkInModel != null)
-                checkInModel.AgreeEnergyConsumption = value;
-        }
-    }
+    protected bool AgreeEnergyConsumption = true;
 
-    protected bool ReceivedKeys
-    {
-        get => checkInModel?.ReceivedKeys ?? false;
-        set
-        {
-            if (checkInModel != null)
-                checkInModel.ReceivedKeys = value;
-        }
-    }
+    protected bool ReceivedKeys = true;
 
-    protected bool AgreeTerms
-    {
-        get => checkInModel?.AgreeTerms ?? false;
-        set
-        {
-            if (checkInModel != null)
-                checkInModel.AgreeTerms = value;
-        }
-    }
+    protected bool AgreeTerms = true;
 
-    // Signature property model
-    protected byte[]? SignatureBytes
+    public byte[]? SignatureBytes
     {
         get
         {
@@ -83,19 +58,39 @@ public class CheckInBase : ComponentBase
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
+        // Check the partial display issues even with this configuration specified
         displaySignaturePad = true;
     }
     protected async Task HandleValidSubmit()
     {
-        // Calculate TotalPrice
-        CalculateTotalPrice();
 
-        await SaveData();
-        await SharePdf();
-        //NavigationManager.NavigateTo("/confirmation");
+        bool isValid = CheckSignatureValidation();
+
+        if (isValid)
+        {
+            CalculateTotalPrice();
+            await SaveData();
+            await SharePdf();
+        }
     }
 
-    protected void CalculateTotalPrice()
+
+    private bool CheckSignatureValidation()
+    {
+        // Check custom field
+        if (SignatureBytes == null || SignatureBytes.Length == 0)
+        {
+            signatureValidationError = "Signature is required.";
+            return false;
+        }
+        else
+        {
+            signatureValidationError = null;
+            return true;
+        }
+    }
+
+    private void CalculateTotalPrice()
     {
         checkInModel.TotalPrice = checkInModel.ApartmentFee + checkInModel.SecurityDeposit;
     }

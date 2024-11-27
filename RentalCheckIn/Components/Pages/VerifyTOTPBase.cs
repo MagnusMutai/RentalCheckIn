@@ -46,7 +46,11 @@ public class VerifyTOTPBase : ComponentBase
         try
         {
             var result = await AuthService.VerifyTOTPAsync(oTPModel);
-            if (!result.IsSuccess)
+            if (result.IsSuccess)
+            {
+                await LocalStorage.DeleteAsync("emailForOtp");
+            }
+            else
             {
                 ErrorMessage = result.Message;
             }

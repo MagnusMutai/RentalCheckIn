@@ -11,6 +11,8 @@ public class VerifyFaceIdBase : ComponentBase
     protected string? DisplayToast { get; set; } = "d-block";
     [Inject]
     private IAuthService AuthService { get; set; }
+    [Inject]
+    private ProtectedLocalStorage LocalStorage { get; set; }
 
 
     protected override async Task OnInitializedAsync()
@@ -27,14 +29,15 @@ public class VerifyFaceIdBase : ComponentBase
         {
             var result = await AuthService.AuthenticateFaceIdAsync();
 
-            if (!result.IsSuccess)
+            if (result.IsSuccess)
             {
-                shouldDisplayAuthButton = true;
-                ErrorMessage = result.Message;
+                shouldDisplayAuthButton = false;
+                await LocalStorage.DeleteAsync("UserIdFor2FA");
             }
             else 
             {
-                shouldDisplayAuthButton = false;
+                shouldDisplayAuthButton = true;
+                ErrorMessage = result.Message;
             }
         }
         catch
