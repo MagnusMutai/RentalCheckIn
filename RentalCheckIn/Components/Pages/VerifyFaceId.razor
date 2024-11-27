@@ -26,14 +26,15 @@
             <div class="mx-auto col-10 col-sm-8 col-md-8 col-lg-8 mt-md-5 pt-md-2">
                 <h3 class="my-3">Authenticate yourself</h3>
                 <p>SignIn with face Id, pin or fingerprints</p>
-                    @if (IsAuthenticating)
-                    {
-                        <div class="text-success d-flex gap-4 mt-4">
-                            <div class="spinner-border" role="status">
-                            </div>
-                            <span>Authenticate and wait as we try to log you in...</span>
+                @if (IsAuthenticating)
+                {
+                    <div class="d-flex mt-4 text-success">
+                        <div>
+                            <div class="spinner-border" role="status"></div>
                         </div>
-                    }
+                        <span class="ms-3">Authenticate and wait as we try to log you in...</span>
+                    </div>
+                }
                 @if (shouldDisplayAuthButton)
                 {
                     <div class="d-flex flex-column">

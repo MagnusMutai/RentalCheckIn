@@ -39,8 +39,6 @@ public class LoginBase : ComponentBase
             {
                 var lHost = result.Data;
 
-                // Store necessary user information temporarily
-                await LocalStorage.SetAsync("UserIdFor2FA", lHost.HostId);
 
                 // Redirect based on the selected 2FA method
                 if (lHost.Selected2FA.Equals("TOTP", StringComparison.OrdinalIgnoreCase))
@@ -51,6 +49,8 @@ public class LoginBase : ComponentBase
                 }
                 else if (lHost.Selected2FA.Equals("FaceID", StringComparison.OrdinalIgnoreCase))
                 {
+                    // Store necessary user ID temporarily for 2FA
+                    await LocalStorage.SetAsync("UserIdFor2FA", lHost.HostId);
                     NavigationManager.NavigateTo("/verify-faceid");
                 }
                 else
