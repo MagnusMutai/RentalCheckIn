@@ -156,11 +156,8 @@ public class AuthController : ControllerBase
     // Add TOTP Authentication here
 
     // Fido2 Face Recognition 
-
     // Implement error handling
-    /// <summary>
-    /// Validate and save registration response (Step 2: Register)
-    /// </summary>
+    // Validate and save registration response
     [HttpPost("faceid/register")]
     public async Task<IActionResult> RegisterCredential([FromBody] AuthenticatorAttestationRawResponse response)
     {
@@ -215,9 +212,7 @@ public class AuthController : ControllerBase
     }
 
     // Implement error handling
-    /// <summary>
-    /// Generate options for registration (Step 1: Register)
-    /// </summary>
+    // Generate options for registration
     [HttpGet("faceid/register/options")]
     public async Task<IActionResult> GetRegistrationOptions(uint hostId)
     {
@@ -253,9 +248,8 @@ public class AuthController : ControllerBase
     }
 
     // Implement error handling
-    /// <summary>
-    /// Generate options for login (Step 1: Login)
-    /// </summary>
+    // Generate options for login
+
     [HttpGet("faceid/authenticate/options")]
     public async Task<IActionResult> GetAuthenticationOptions(uint hostId)
     {
@@ -279,9 +273,7 @@ public class AuthController : ControllerBase
         return Ok(options);
     }
     // Implement error handling
-    /// <summary>
-    /// Validate and process login response (Step 2: Login)
-    /// </summary>
+    // Validate and process login response
     [HttpPost("faceid/authenticate")]
     public async Task<IActionResult> AuthenticateCredential([FromBody] AuthenticatorAssertionRawResponse response)
     {
