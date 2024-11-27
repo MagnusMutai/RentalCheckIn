@@ -1,4 +1,6 @@
-﻿namespace RentalCheckIn.Services.Core;
+﻿using RentalCheckIn.DTOs;
+
+namespace RentalCheckIn.Services.Core;
 public class AccountService : IAccountService
 {
     private readonly ILHostRepository lHostRepository;
@@ -362,7 +364,7 @@ public class AccountService : IAccountService
             var encodedToken = HttpUtility.UrlEncode(passResetToken);
             // Send the new verification email
             var resetLink = $"{configuration["ApplicationSettings:AppUrl"]}/reset-password?resetToken={encodedToken}";
-            await emailService.SendEmailAsync(lHost.MailAddress, "Confirm your email", $"Please click <a href=\"{resetLink}\">here</a> to reset your password.");
+            await emailService.SendEmailAsync(lHost.MailAddress, "Reset your password", $"Please click <a href=\"{resetLink}\">here</a> to reset your password.");
 
             return new OperationResult
             {
@@ -394,8 +396,16 @@ public class AccountService : IAccountService
                 };
             }
 
+            if (VerifyPassword(request.NewPassword, lHost.PasswordHash))
+            {
+                return new OperationResult<string>
+                {
+                    IsSuccess = false,
+                    Message = "You cannot use an old password, choose a new password instead."
+                };
 
-            // Determine what to do with the bool return type
+            }
+
             bool result = await lHostRepository.UpdateLHostPartialAsync(lHost, host =>
              {
                  host.PasswordHash = HashPassword(request.NewPassword);
