@@ -254,4 +254,31 @@ Enregistrement</value>
   <data name="FirstNameRequired" xml:space="preserve">
     <value>Le prénom est requis</value>
   </data>
+  <data name="LastNameRequired" xml:space="preserve">
+    <value>Le nom de famille est requis</value>
+  </data>
+  <data name="EmailRequired" xml:space="preserve">
+    <value> L'e-mail est requis</value>
+  </data>
+  <data name="PasswordRequired" xml:space="preserve">
+    <value>Le mot de passe est requis</value>
+  </data>
+  <data name="PasswordRegexError" xml:space="preserve">
+    <value>Le mot de passe doit comporter au moins 8 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial.</value>
+  </data>
+  <data name="ConfirmPasswordCompareError" xml:space="preserve">
+    <value>Les mots de passe ne correspondent pas.</value>
+  </data>
+  <data name="Selected2FARequired" xml:space="preserve">
+    <value>Veuillez sélectionner une méthode d'authentification à deux facteurs.</value>
+  </data>
+  <data name="Selected2FARegexError" xml:space="preserve">
+    <value>Méthode d'authentification à deux facteurs invalide sélectionnée.</value>
+  </data>
+  <data name="OTPCodeRequired" xml:space="preserve">
+    <value>Code TOTP requis</value>
+  </data>
+  <data name="ConfirmPasswordRequired" xml:space="preserve">
+    <value>Le champ de confirmation du mot de passe est requis</value>
+  </data>
 </root>

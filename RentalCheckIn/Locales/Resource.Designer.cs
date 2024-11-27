@@ -124,6 +124,33 @@ namespace RentalCheckIn.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Passwords do not match..
+        /// </summary>
+        public static string ConfirmPasswordCompareError {
+            get {
+                return ResourceManager.GetString("ConfirmPasswordCompareError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Confirm Password field is required.
+        /// </summary>
+        public static string ConfirmPasswordRequired {
+            get {
+                return ResourceManager.GetString("ConfirmPasswordRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Email is required.
+        /// </summary>
+        public static string EmailRequired {
+            get {
+                return ResourceManager.GetString("EmailRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Filter by Apartment.
         /// </summary>
         public static string Filter {
@@ -183,6 +210,15 @@ namespace RentalCheckIn.Locales {
         public static string LastName {
             get {
                 return ResourceManager.GetString("LastName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Last name is required.
+        /// </summary>
+        public static string LastNameRequired {
+            get {
+                return ResourceManager.GetString("LastNameRequired", resourceCulture);
             }
         }
         
@@ -259,6 +295,15 @@ namespace RentalCheckIn.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to TOTP code required.
+        /// </summary>
+        public static string OTPCodeRequired {
+            get {
+                return ResourceManager.GetString("OTPCodeRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Password.
         /// </summary>
         public static string Password {
@@ -291,6 +336,24 @@ namespace RentalCheckIn.Locales {
         public static string Password_R_RequestSecMessage {
             get {
                 return ResourceManager.GetString("Password_R_RequestSecMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Password must be at least 8 characters long, have an upper letter, a lowercase letter, a number, and a special character..
+        /// </summary>
+        public static string PasswordRegexError {
+            get {
+                return ResourceManager.GetString("PasswordRegexError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Password is required.
+        /// </summary>
+        public static string PasswordRequired {
+            get {
+                return ResourceManager.GetString("PasswordRequired", resourceCulture);
             }
         }
         
@@ -392,6 +455,24 @@ namespace RentalCheckIn.Locales {
         public static string Reservation {
             get {
                 return ResourceManager.GetString("Reservation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Selected2FARegexError.
+        /// </summary>
+        public static string Selected2FARegexError {
+            get {
+                return ResourceManager.GetString("Selected2FARegexError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please select a two-factor authentication method..
+        /// </summary>
+        public static string Selected2FARequired {
+            get {
+                return ResourceManager.GetString("Selected2FARequired", resourceCulture);
             }
         }
         
