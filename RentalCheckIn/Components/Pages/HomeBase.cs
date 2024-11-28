@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
+using RentalCheckIn.Components.Layout;
 using System.Globalization;
 namespace RentalCheckIn.Components.Pages;
 public class HomeBase : ComponentBase
@@ -10,7 +11,7 @@ public class HomeBase : ComponentBase
     protected ReservationDTO selectedReservation;
     protected string SelectedApartment { get; set; } = "All";
     protected List<string> ApartmentNames = new List<string>();
-    protected List<ReservationDTO> Reservation = new List<ReservationDTO>();
+    protected List<ReservationDTO> Reservations = new List<ReservationDTO>();
     protected List<Setting> Settings = new List<Setting>();
 
     [Inject]
@@ -25,21 +26,31 @@ public class HomeBase : ComponentBase
     private IAppartmentService AppartmentService { get; set; }
     [Inject]
     private ILocalizationUIService LocalizationUIService { get; set; }
+    [Inject]
+    private ILogger<HomeBase> Logger { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
         try
         {
-
-
             // Fetch reservations
-            Reservation = (await ReservationService.GetAllTableReservationsAsync()).ToList();
+            // Implement Result pattern in future
+            var reservationResult = (await ReservationService.GetAllTableReservationsAsync()).ToList();
+            if (reservationResult != null)
+            {
+                Reservations = reservationResult;
+            }
 
             // Fetch settings
-            Settings = (await ReservationService.GetSettingsAsync()).ToList();
+            // Implement Result pattern in future
+            var settingsResult = (await ReservationService.GetSettingsAsync()).ToList();
+            if (settingsResult != null)
+            {
+                Settings = settingsResult;
+            }
 
             // Determine items per page from settings
-            if (Settings != null && Settings.Any())
+            if (Settings != null && Settings.Any() && Settings[0].RowsPerPage > 0)
             {
                 itemsPerPage = Settings[0].RowsPerPage;
             }
@@ -50,15 +61,14 @@ public class HomeBase : ComponentBase
             }
 
             // Fetch localized apartment names and status labels
-            var apartmentIds = Reservation.Select(r => r.ApartmentId).Distinct();
-            var statusIds = Reservation.Select(r => r.StatusId).Distinct();
-
+            var apartmentIds = Reservations.Select(r => r.ApartmentId).Distinct();
+            var statusIds = Reservations.Select(r => r.StatusId).Distinct();
             var culture = CultureInfo.CurrentCulture.Name;
             var apartmentNamesDict = await LocalizationUIService.GetApartmentNamesAsync(apartmentIds, culture);
             var statusLabelsDict = await LocalizationUIService.GetStatusLabelsAsync(statusIds, culture);
 
             // Assign localized names to reservations
-            foreach (var reservation in Reservation)
+            foreach (var reservation in Reservations)
             {
                 reservation.ApartmentName = apartmentNamesDict.ContainsKey(reservation.ApartmentId)
                     ? apartmentNamesDict[reservation.ApartmentId]
@@ -70,7 +80,7 @@ public class HomeBase : ComponentBase
             }
 
             // Extract distinct apartment names for the dropdown
-            ApartmentNames = Reservation.Select(r => r.ApartmentName).Distinct().ToList();
+            ApartmentNames = Reservations.Select(r => r.ApartmentName).Distinct().ToList();
 
             // Add 'All' option to allow viewing all apartments
             ApartmentNames.Insert(0, "All");
@@ -78,6 +88,8 @@ public class HomeBase : ComponentBase
         catch (Exception ex)
         {
             Message = "Could not load resources.";
+            Logger.LogError(ex, "Could not load reservations or its dependencies, like language specific/culture-based data.");
+            
         }
     }
 
@@ -92,18 +104,18 @@ public class HomeBase : ComponentBase
             if (AuthStateProvider is CustomAuthStateProvider customAuthStateProvider)
             {
                 var authState = await customAuthStateProvider.NotifyUserAuthentication(Constants.JWTToken);
+
                 if (authState.User.Identity is { IsAuthenticated: false })
                 {
                     // User is not authenticated; redirect to login
                     NavigationManager.NavigateTo("/login", forceLoad: false);
                 }
             }
-
-
         }
         catch (Exception ex)
         {
             Message = "An unexpected error occurred.";
+            Logger.LogError(ex, "An error occurred while trying to log in user on Reservation page.");
         }
     }
 
@@ -118,11 +130,11 @@ public class HomeBase : ComponentBase
         {
             if (SelectedApartment == "All")
             {
-                return Reservation;
+                return Reservations;
             }
             else
             {
-                return Reservation.Where(r => r.ApartmentName == SelectedApartment);
+                return Reservations.Where(r => r.ApartmentName == SelectedApartment);
             }
         }
     }
@@ -166,8 +178,11 @@ public class HomeBase : ComponentBase
 
     protected void OpenModal(ReservationDTO reservation)
     {
-        selectedReservation = reservation;
-        showModal = true;
+        if (reservation != null)
+        {
+            selectedReservation = reservation;
+            showModal = true;
+        }
     }
 
     protected void CloseModal()
