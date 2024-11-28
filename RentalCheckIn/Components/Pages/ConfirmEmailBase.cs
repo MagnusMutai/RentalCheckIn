@@ -12,37 +12,50 @@ public class ConfirmEmailBase : ComponentBase
     private NavigationManager NavigationManager { get; set; }
     [Inject]
     private IAuthService AuthService { get; set; }
-
+    [Inject]
+    private ILogger<ConfirmEmailBase> Logger { get; set; }
     protected async Task HandleVerifyEmail()
     {
-        // Parse the current URI to extract query parameters
-        var uri = NavigationManager.ToAbsoluteUri(NavigationManager.Uri);
-        var queryParams = QueryHelpers.ParseQuery(uri.Query);
-
-        if (queryParams.TryGetValue("emailToken", out var tokenValues))
+        try
         {
-            var eVerificationToken = tokenValues.FirstOrDefault();
-            if (!string.IsNullOrWhiteSpace(eVerificationToken))
-            {
-                verificationResult = await AuthService.VerifyEmailAsync(eVerificationToken);
-            }
+            // Parse the current URI to extract query parameters
+            var uri = NavigationManager.ToAbsoluteUri(NavigationManager.Uri);
+            var queryParams = QueryHelpers.ParseQuery(uri.Query);
 
-            if (verificationResult.IsSuccess)
+            if (queryParams.TryGetValue("emailToken", out var tokenValues))
             {
-                isSuccess = true;
-                Message = verificationResult.Message;
+                var eVerificationToken = tokenValues.FirstOrDefault();
+
+                if (!string.IsNullOrWhiteSpace(eVerificationToken))
+                {
+                    verificationResult = await AuthService.VerifyEmailAsync(eVerificationToken);
+                }
+
+                if (verificationResult.IsSuccess)
+                {
+                    isSuccess = true;
+                    Message = verificationResult.Message;
+                }
+                else
+                {
+                    errorMessage = verificationResult.Message;
+                }
             }
             else
             {
-                errorMessage = verificationResult.Message;
+                // No verification token was provided in the URL.
+                errorMessage = "Verification is invalid, please contact support";
             }
-        }
-        else
-        {
-            // No verification token was provided in the URL.
-            errorMessage = "Verification is invalid, please contact support";
-        }
 
-        isLoading = false;
+        }
+        catch(Exception ex)
+        {
+            errorMessage = "An unexpected error occurred. Please contact support.";
+            Logger.LogError(ex, "An unhandled exception has occured during email verification in Email confirmation page");
+        }
+        finally
+        {
+            isLoading = false;
+        }
     }
 }
