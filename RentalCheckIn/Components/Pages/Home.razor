@@ -29,7 +29,7 @@
                 </div>
                 @if (PaginatedReservations != null)
                 {
-                    <div class="table-responsive">
+                    <div class="table-responsive d-none d-md-block">
 
                         <table class="table table-responsive custom-table .table-sm">
                             <thead class="text-nowrap">
@@ -69,19 +69,24 @@
 
                             </tbody>
                         </table>
-                        <div class="pagination-controls text-center mt-3 pb-3">
-                            <button class="btn btn-primary btn-sm me-2" @onclick="PreviousPage" disabled="@(currentPage == 1)">@Localizer["Previous"]</button>
+                    </div>
 
-                            @for (uint page = 1; page <= totalPages; page++)
-                            {
-                                uint numPage = page;
-                                <button class="btn btn-secondary btn-sm me-1 @(currentPage == page ? "active" : "")" disabled="@(currentPage == page)" @onclick="() => GoToPage(numPage)">
-                                    @numPage
-                                </button>
-                            }
+                    <div class="d-md-none">
+                        <StackedReservationView PaginatedReservations="PaginatedReservations" OnOpenModal="OpenModal" />
+                    </div>
 
-                            <button class="btn btn-primary btn-sm ms-2" @onclick="NextPage" disabled="@(currentPage == totalPages)">@Localizer["Next"]</button>
-                        </div>
+                    <div class="pagination-controls text-center mt-3 pb-3">
+                        <button class="btn btn-primary btn-sm me-2" @onclick="PreviousPage" disabled="@(currentPage == 1)">@Localizer["Previous"]</button>
+
+                        @for (uint page = 1; page <= totalPages; page++)
+                        {
+                            uint numPage = page;
+                            <button class="btn btn-secondary btn-sm me-1 @(currentPage == page ? "active" : "")" disabled="@(currentPage == page)" @onclick="() => GoToPage(numPage)">
+                                @numPage
+                            </button>
+                        }
+
+                        <button class="btn btn-primary btn-sm ms-2" @onclick="NextPage" disabled="@(currentPage == totalPages)">@Localizer["Next"]</button>
                     </div>
                 }
                 else if(Message != null) 
