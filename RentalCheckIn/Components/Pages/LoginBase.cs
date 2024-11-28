@@ -15,30 +15,42 @@ public class LoginBase : ComponentBase
     private IAuthService AuthService { get; set; }
     [Inject]
     private AuthenticationStateProvider AuthStateProvider { get; set; }
+    [Inject]
+    private ILogger<LoginBase> Logger { get; set; }
+
 
     protected override async Task OnInitializedAsync()
     {
-        // Get the current authentication state
-        var authState = await AuthStateProvider.GetAuthenticationStateAsync();
-
-        // Check if the user is authenticated
-        if (authState.User.Identity is { IsAuthenticated: true } )
+        try
         {
-            // Redirect to the home page if the user is already logged in
-            NavigationManager.NavigateTo("/", forceLoad:true);
+            // Get the current authentication state
+            var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+
+            // Check if the user is authenticated
+            if (authState.User.Identity is { IsAuthenticated: true })
+            {
+                // Redirect to the home page if the user is already logged in
+                NavigationManager.NavigateTo("/", forceLoad: true);
+            }
+        }
+        catch (Exception ex) 
+        {
+            ErrorMessage = "An unexpected error occurred";
+            Logger.LogError(ex, "Error occurred while getting the state of authentication of the user in Login page.");
         }
     }
 
     protected async Task HandleLogin()
     {
-        IsRegistering = true;
         try
         {
+            IsRegistering = true;
+    
             var result = await AuthService.LoginAsync(loginModel);
+            
             if (result.IsSuccess)
             {
                 var lHost = result.Data;
-
 
                 // Redirect based on the selected 2FA method
                 if (lHost.Selected2FA.Equals("TOTP", StringComparison.OrdinalIgnoreCase))
@@ -69,8 +81,12 @@ public class LoginBase : ComponentBase
         catch (Exception ex) 
         {
             ErrorMessage = "An unexpected error occurred";
+            Logger.LogError(ex, "An error occurred in the login page while trying to login a user.");
         }
-        IsRegistering = false;
+        finally
+        {
+            IsRegistering = false;
+        }
     }
 
     protected void HandleCloseToast()
