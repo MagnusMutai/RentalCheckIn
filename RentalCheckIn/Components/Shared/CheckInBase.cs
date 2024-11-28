@@ -7,7 +7,7 @@ public class CheckInBase : ComponentBase
 {
     protected bool displaySignaturePad;
 
-    private string StatusMessage;
+    private string Message;
 
     protected string signatureValidationError;
 
@@ -23,6 +23,10 @@ public class CheckInBase : ComponentBase
     private IReservationService ReservationService { get; set; }
     [Inject]
     private IDocumentService DocumentService{ get; set; }
+    [Inject]
+    private AuthenticationStateProvider AuthStateProvider { get; set; }
+    [Inject]
+    private ProtectedLocalStorage LocalStorage { get; set; }
     // Nullable Agreement properties
     protected bool AgreeEnergyConsumption = true;
 
@@ -58,9 +62,33 @@ public class CheckInBase : ComponentBase
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        // Check the partial display issues even with this configuration specified
-        displaySignaturePad = true;
+        try
+        {
+            // Get the accessToken if it exists
+            var response = await LocalStorage.GetAsync<string>("token");
+            Constants.JWTToken = response.Success ? response.Value : "";
+
+            if (AuthStateProvider is CustomAuthStateProvider customAuthStateProvider)
+            {
+                var authState = await customAuthStateProvider.NotifyUserAuthentication(Constants.JWTToken);
+                if (authState.User.Identity is { IsAuthenticated: false })
+                {
+                    // User is not authenticated; redirect to login
+                    NavigationManager.NavigateTo("/login", forceLoad: false);
+                }
+            }
+
+            // Check the partial display issues even with this configuration specified
+            displaySignaturePad = true;
+
+        }
+        catch (Exception ex)
+        {
+            // Log error
+            Message = "An unexpected error occurred.";
+        }
     }
+
     protected async Task HandleValidSubmit()
     {
 
@@ -123,11 +151,11 @@ public class CheckInBase : ComponentBase
         // Implement PDF generation and sharing
         try
         {
-            StatusMessage = await DocumentService.GenerateAndSendCheckInFormAsync(checkInModel);
+            Message = await DocumentService.GenerateAndSendCheckInFormAsync(checkInModel);
         }
         catch (Exception ex)
         {
-            StatusMessage = $"Error: {ex.Message}";
+            Message = $"Error: {ex.Message}";
         }
     }
 
