@@ -49,7 +49,8 @@ public class ReservationService : IReservationService
             else
             {
                 var message = await response.Content.ReadAsStringAsync();
-                throw new Exception($"{message}");
+                return new CheckInReservationDTO();
+                //throw new Exception($"{message}");
             }
         }
         catch (Exception ex)
