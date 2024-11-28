@@ -1,6 +1,9 @@
 using Fido2NetLib;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Localization;
 using RentalCheckIn.Configuration.WhatsApp;
+using Serilog;
+using Serilog.Formatting.Compact;
 using System.Globalization;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,21 +12,19 @@ builder.Services.AddLocalization();
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
-
 builder.Services.AddControllers();
 // Add in-memory distributed cache **Check later
-builder.Services.AddDistributedMemoryCache(); 
+builder.Services.AddDistributedMemoryCache();
 builder.Services.AddMemoryCache();
 builder.Services.AddHttpContextAccessor();
 
-
 builder.Services.AddSession(options =>
 {
-    options.IdleTimeout = TimeSpan.FromMinutes(30); // Set session timeout
-    options.Cookie.HttpOnly = true; // Make the cookie HttpOnly
-    options.Cookie.IsEssential = true; // Ensure the cookie is essential
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
+    options.Cookie.HttpOnly = true;
+    // Ensure the cookie is essential
+    options.Cookie.IsEssential = true; 
 });
-
 
 builder.Services.AddSwaggerGen(c =>
 {
@@ -39,7 +40,6 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://localhost:7110") });
 builder.Services.AddHttpClient();
 
-
 // Configure JWT Authentication
 var secretKey = builder.Configuration["Jwt:SecretKey"];
 var key = Encoding.ASCII.GetBytes(secretKey);
@@ -54,7 +54,7 @@ builder.Services.AddAuthentication(options =>
 .AddJwtBearer(options =>
 {
     // Set to false only during development
-    options.RequireHttpsMetadata = true; 
+    options.RequireHttpsMetadata = true;
     options.SaveToken = true;
     options.TokenValidationParameters = new TokenValidationParameters
     {
@@ -66,27 +66,40 @@ builder.Services.AddAuthentication(options =>
         ValidAudience = builder.Configuration["Jwt:Audience"],
         IssuerSigningKey = new SymmetricSecurityKey(key),
         ClockSkew = TimeSpan.Zero,
-        // Explicitly set the NameClaimType
-        NameClaimType = ClaimTypes.Name 
+        NameClaimType = ClaimTypes.Name
     };
 });
 
+// Configure Serilog
+Log.Logger = new LoggerConfiguration()
+    .Enrich.FromLogContext()
+    .Enrich.WithMachineName()
+    .Enrich.WithThreadId()
+    .MinimumLevel.Information()
+    .WriteTo.File(
+        path: @"C:\Logs\log-.txt",
+        rollingInterval: RollingInterval.Day,
+        retainedFileCountLimit: 7,
+        formatter: new CompactJsonFormatter())
+    .CreateLogger();
+
+builder.Host.UseSerilog();
+
 // Add Fido2 configuration
+// Investigate why Fido2 is faded
 builder.Services.AddSingleton<Fido2>(sp =>
 {
     var config = new Fido2Configuration
     {
-        ServerDomain = "localhost", // Your server domain
-        ServerName = "RentalCheckIn", // Your application name
-        Origins = new HashSet<string>() { "https://localhost:7110" }// Your origin (e.g., https://yourdomain.com)
+        ServerDomain = "localhost", 
+        ServerName = "RentalCheckIn",
+        Origins = new HashSet<string>() { "https://localhost:7110" }
     };
 
     return new Fido2(config);
 });
 
-
 // Register application services
-//builder.Services.AddScoped<ILHostRepository, HostRepository>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ILHostRepository, LHostRepository>();
 builder.Services.AddScoped<ILHostService, LHostService>();
@@ -110,24 +123,35 @@ builder.Services.AddScoped<IStatusTranslationRepository, StatusTranslationReposi
 builder.Services.AddScoped<IReservationTranslationRepository, ReservationTranslationRepository>();
 builder.Services.AddScoped<ILocalizationService, LocalizationService>();
 builder.Services.AddScoped<ILocalizationUIService, LocalizationUIService>();
-
 builder.Services.AddScoped<RefreshTokenService>();
 builder.Services.AddScoped<ProtectedLocalStorage>();
 builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
-
 builder.Services.Configure<WhatsAppSettings>(builder.Configuration.GetSection("WhatsAppSettings"));
-
-
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
-    app.UseExceptionHandler("/Error", createScopeForErrors: true);
+    // Global exception handling
+    app.UseExceptionHandler(errorApp =>
+    {
+        errorApp.Run(async context =>
+        {
+            var exception = context.Features.Get<IExceptionHandlerFeature>()?.Error;
+            if (exception != null)
+            {
+                Log.Error(exception, "Unhandled exception occurred");
+            }
+
+            context.Response.StatusCode = 500;
+            await context.Response.WriteAsync("An unexpected error occurred.");
+        });
+    });
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
+
 
 
 app.UseRequestLocalization(options =>
@@ -139,20 +163,18 @@ app.UseRequestLocalization(options =>
         new CultureInfo("nl-NL"),
     };
     // Default to English as fallback language
-    options.DefaultRequestCulture = new RequestCulture(new CultureInfo("en-EN")); 
+    options.DefaultRequestCulture = new RequestCulture(new CultureInfo("en-EN"));
     options.SupportedCultures = supportedCultures;
     options.SupportedUICultures = supportedCultures;
-
     options.RequestCultureProviders.Clear();
-
     // Add a provider to check for the culture in a cookie
     options.RequestCultureProviders.Add(new CookieRequestCultureProvider());
-
     // Add a custom provider to handle fallbacks and browser defaults
     options.RequestCultureProviders.Insert(0, new CustomRequestCultureProvider(async context =>
     {
         // Check if a culture cookie is already set
         var cultureCookie = context.Request.Cookies[CookieRequestCultureProvider.DefaultCookieName];
+
         if (!string.IsNullOrEmpty(cultureCookie))
         {
             var cookieCulture = CookieRequestCultureProvider.ParseCookieValue(cultureCookie);
@@ -173,8 +195,8 @@ app.UseRequestLocalization(options =>
 
 
 app.UseRouting();
-
-app.UseSession(); // Enable session middleware
+// Enable session middleware
+app.UseSession(); 
 app.UseHttpsRedirection();
 
 app.MapControllers();
