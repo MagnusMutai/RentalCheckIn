@@ -5,30 +5,55 @@
 public class LocalizationController : ControllerBase
 {
     private readonly ILocalizationService localizationService;
+    private readonly ILogger<LocalizationController> logger;
 
-    public LocalizationController(ILocalizationService localizationService)
+    public LocalizationController(ILocalizationService localizationService, ILogger<LocalizationController> logger)
     {
         this.localizationService = localizationService;
+        this.logger = logger;
     }
 
     [HttpPost("apartments/names")]
     public async Task<ActionResult<Dictionary<uint, string>>> GetApartmentNames([FromBody] ApartmentNamesRequest request)
     {
-        var apartmentNames = await localizationService.GetApartmentNamesAsync(request.ApartmentIds, request.Culture);
-        return Ok(apartmentNames);
+        try
+        {
+            var apartmentNames = await localizationService.GetApartmentNamesAsync(request.ApartmentIds, request.Culture);
+         
+            if (apartmentNames == null) 
+            {
+                return NotFound();
+            }
+
+            return Ok(apartmentNames);
+        }
+        catch (Exception ex)       
+        {
+            logger.LogError(ex, "An unexpected error occurred in LocalizationController while trying to register a user.");
+            return StatusCode(StatusCodes.Status500InternalServerError,
+                      "Error retrieving Data from Database");
+        }
     }
 
     [HttpPost("statuses/labels")]
     public async Task<ActionResult<Dictionary<uint, string>>> GetStatusLabels([FromBody] StatusLabelsRequest request)
     {
-        var statusLabels = await localizationService.GetStatusLabelsAsync(request.StatusIds, request.Culture);
-        return Ok(statusLabels);
-    }
+        try
+        {
+            var statusLabels = await localizationService.GetStatusLabelsAsync(request.StatusIds, request.Culture);
 
-    [HttpGet("reservation/{reservationId}/times")]
-    public async Task<ActionResult<(string? CheckInTime, string? CheckOutTime)>> GetReservationTimes(uint reservationId)
-    {
-        var times = await localizationService.GetReservationTimesAsync(reservationId);
-        return Ok(times);
+            if (statusLabels == null)
+            {
+                return NotFound();
+            }
+            
+            return Ok(statusLabels);
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "An unexpected error occurred in LocalizationController while trying to fetch language-specific StatusLabels.");
+            return StatusCode(StatusCodes.Status500InternalServerError,
+                      "Error retrieving Data from Database");
+        }
     }
 }

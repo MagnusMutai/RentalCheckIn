@@ -6,10 +6,12 @@ namespace RentalCheckIn.Controllers;
 public class ReservationController : ControllerBase
 {
     private readonly IReservationBusinessService reservationService;
+    private readonly ILogger<ReservationController> logger;
 
-    public ReservationController(IReservationBusinessService reservationService) 
+    public ReservationController(IReservationBusinessService reservationService, ILogger<ReservationController> logger) 
     {
         this.reservationService = reservationService;
+        this.logger = logger;
     }
 
     [HttpGet("AllTableReservations")]
@@ -18,17 +20,18 @@ public class ReservationController : ControllerBase
         try
         {
             var reservations = await reservationService.GetAllTableReservationsAsync();
+
             if (reservations == null )
             {
                 return NotFound();
             }
-            else
-            {
-                return Ok(reservations);
-            }
+
+            return Ok(reservations);
+
         }
         catch (Exception ex)
         {
+            logger.LogError(ex, "An unexpected error occurred in ReservationController while trying to get All Reservation Table reservations.");
             return StatusCode(StatusCodes.Status500InternalServerError,
                   "Error retrieving Data from Database");
         }
@@ -44,13 +47,12 @@ public class ReservationController : ControllerBase
             {
                 return NotFound();
             }
-            else
-            {
-                return Ok(settings);
-            }
+
+            return Ok(settings);
         }
         catch (Exception ex)
         {
+            logger.LogError(ex, "An unexpected error occurred in ReservationController while trying to get table application settings.");
             return StatusCode(StatusCodes.Status500InternalServerError,
                   "Error retrieving Data from Database");
         }
@@ -62,17 +64,18 @@ public class ReservationController : ControllerBase
         try
         {
             var reservations = await reservationService.GetCheckInReservationByIdAsync(reservationId);
+            
             if (reservations == null)
             {
                 return NotFound();
             }
-            else
-            {
-                return Ok(reservations);
-            }
+
+            return Ok(reservations);
+
         }
         catch (Exception ex)
         {
+            logger.LogError(ex, "An unexpected error occurred in ReservationController while trying to get Check-In Form reservation by Id.");
             return StatusCode(StatusCodes.Status500InternalServerError,
                   "Error retrieving Data from Database");
         }
@@ -92,10 +95,12 @@ public class ReservationController : ControllerBase
             {
                 return NotFound();
             }
+
             return Ok(result);
         }
         catch (Exception ex)
         {
+            logger.LogError(ex, "An unexpected error occurred in ReservationController while trying to partially Update a reservation through check-in form.");
             return StatusCode(StatusCodes.Status500InternalServerError,
                   "Error retrieving Data from Database");
         }
