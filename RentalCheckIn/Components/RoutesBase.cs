@@ -9,10 +9,9 @@ public class RoutesBase : ComponentBase, IAsyncDisposable
     private bool isTokenRefreshed;
     private bool isFirstTokenRefreshed;
     private bool isDisposed;
-    private Timer tokenRefreshTimer;
     private bool isRefreshing = false;
-    private PeriodicTimer timer;
-    private CancellationTokenSource cts;
+    private PeriodicTimer? timer;
+    private CancellationTokenSource? cts;
     [Inject]
     private AuthenticationStateProvider AuthStateProvider { get; set; }
     [Inject]
@@ -21,65 +20,93 @@ public class RoutesBase : ComponentBase, IAsyncDisposable
     private ProtectedLocalStorage LocalStorage { get; set; }
     [Inject]
     private NavigationManager NavigationManager { get; set; }
-
+    [Inject]
+    private ILogger<RoutesBase> Logger { get; set; }
     protected override void OnInitialized()
     {
         // Subscribe to authentication state changes
-        AuthStateProvider.AuthenticationStateChanged += async (task) => await OnAuthenticationStateChanged(task);
+        if (AuthStateProvider != null)
+        {
+            AuthStateProvider.AuthenticationStateChanged += async (task) =>
+            {
+                try
+                {
+                    await OnAuthenticationStateChanged(task);
+                }
+                catch (Exception ex) 
+                {
+                    Logger.LogError(ex, "An unexpected error has on OnAuthenticationStateChanged in Routes Component.");
+                }
+            };
+        }
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (!isDisposed)
+        try
         {
-
-            if (firstRender && !isTokenRefreshed)
+            if (!isDisposed)
             {
-                isTokenRefreshed = true;
-                await StartRefreshTokenAsync();
-            }
 
-            if (!isFirstTokenRefreshed)
-            {
-                isFirstTokenRefreshed = true;
-
-                var response = await AuthService.RefreshTokenAsync();
-
-                if (response.IsSuccess)
+                if (firstRender && !isTokenRefreshed)
                 {
-                    await LocalStorage.SetAsync("refreshToken", response.RefreshToken);
-                    await LocalStorage.SetAsync("token", response.AccessToken);
-                    Constants.JWTToken = response.AccessToken;
+                    isTokenRefreshed = true;
+                    await StartRefreshTokenAsync();
+                }
 
-                    // Notify the authentication state provider
-                    if (AuthStateProvider is CustomAuthStateProvider customAuthStateProvider)
+                if (!isFirstTokenRefreshed)
+                {
+                    isFirstTokenRefreshed = true;
+
+                    var response = await AuthService.RefreshTokenAsync();
+
+                    if (response.IsSuccess)
                     {
-                        await customAuthStateProvider.NotifyUserAuthentication(Constants.JWTToken);
+                        await LocalStorage.SetAsync("refreshToken", response.RefreshToken);
+                        await LocalStorage.SetAsync("token", response.AccessToken);
+                        Constants.JWTToken = response.AccessToken;
+
+                        // Notify the authentication state provider
+                        if (AuthStateProvider is CustomAuthStateProvider customAuthStateProvider)
+                        {
+                            customAuthStateProvider.NotifyUserAuthentication(Constants.JWTToken);
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Not authorized");
+                        StopRefreshToken();
                     }
                 }
-                else
-                {
-                    Console.WriteLine("Not authorized");
-                    StopRefreshToken();
-                }
             }
+        }
+        catch(Exception ex)
+        {
+            Logger.LogError(ex, "An unexpected errror occurred while trying to refresh JWT tokens in Routes Component. FirstRender: {firstRender}, isTokenRefreshed: {isTokenRefreshed}", firstRender, isTokenRefreshed);
         }
     }
 
     private async Task OnAuthenticationStateChanged(Task<AuthenticationState> task)
     {
-        var authState = await task;
-        var isAuthenticated = authState.User.Identity?.IsAuthenticated == true;
+        try
+        {
+            var authState = await task;
+            var isAuthenticated = authState.User.Identity?.IsAuthenticated == true;
 
-        if (isAuthenticated)
-        {
-            // User has logged in, start the token refresh loop
-            await StartRefreshTokenAsync();
+            if (isAuthenticated)
+            {
+                // User has logged in, start the token refresh loop
+                await StartRefreshTokenAsync();
+            }
+            else
+            {
+                // User has logged out, stop the token refresh loop
+                StopRefreshToken();
+            }
         }
-        else
+        catch (Exception ex)
         {
-            // User has logged out, stop the token refresh loop
-            StopRefreshToken();
+            Logger.LogError(ex, "An unexpected error occurred while trying to set the timer state of Refreshing tokens in Routes Component.");
         }
     }
 
@@ -87,11 +114,9 @@ public class RoutesBase : ComponentBase, IAsyncDisposable
     {
         if (isRefreshing)
             return;
-
         isRefreshing = true;
         try
         {
-
             cts = new CancellationTokenSource();
             timer = new PeriodicTimer(TimeSpan.FromMinutes(15));
 
@@ -108,7 +133,7 @@ public class RoutesBase : ComponentBase, IAsyncDisposable
                     // Notify the authentication state provider
                     if (AuthStateProvider is CustomAuthStateProvider customAuthStateProvider)
                     {
-                        await customAuthStateProvider.NotifyUserAuthentication(Constants.JWTToken);
+                        customAuthStateProvider.NotifyUserAuthentication(Constants.JWTToken);
                     }
                 }
                 else
@@ -119,11 +144,11 @@ public class RoutesBase : ComponentBase, IAsyncDisposable
         }
         catch (OperationCanceledException)
         {
-            Console.WriteLine("Timer was canceled");
+            Logger.LogError("Token refresh loop was cancelled.");
         }
         catch (Exception ex)
         {
-            Console.Error.WriteLine($"Error in token refresh loop: {ex.Message}");
+            Logger.LogError(ex, "An unexpected error occurred while executing the token refresh timer loop.");
         }
         finally
         {
@@ -134,8 +159,25 @@ public class RoutesBase : ComponentBase, IAsyncDisposable
     private void StopRefreshToken()
     {
         isDisposed = true;
-        cts?.Cancel();
-        timer?.Dispose();
+
+        try
+        {
+            cts?.Cancel();
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Failed to cancel the CancellationTokenSource in StopRefreshToken in Routes component.");
+        }
+
+        try
+        {
+            timer?.Dispose();
+        }
+        catch (Exception ex) 
+        {
+            Logger.LogError(ex, "Failed to dispose the timer in StopRefreshToken.");
+        }
+
         isRefreshing = false;
     }
 
@@ -143,17 +185,44 @@ public class RoutesBase : ComponentBase, IAsyncDisposable
     public async ValueTask DisposeAsync()
     {
         isDisposed = true;
-        AuthStateProvider.AuthenticationStateChanged -= async (task) => await OnAuthenticationStateChanged(task);
-
+        try
+        {
+            AuthStateProvider.AuthenticationStateChanged -= async (task) => await OnAuthenticationStateChanged(task);
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Failed to unsubscribe from AuthenticationStateChanged in DisposeAsync in Routes component.");
+        }
         if (cts != null)
         {
-         await cts.CancelAsync();
-            cts.Dispose();
+            try
+            {
+                await cts.CancelAsync();
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError(ex, "Failed to cancel the CancellationTokenSource in DisposeAsync in Routes component.");
+            }
+            try
+            {
+                cts.Dispose();
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError(ex, "Failed to dispose the CancellationTokenSource in DisposeAsync in Routes component.");
+            }
             cts = null;
         }
         if (timer != null)
         {
-            timer.Dispose();
+            try
+            {
+                timer.Dispose();
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError(ex, "Failed to dispose the timer in DisposeAsync in Routes component.");
+            }
             timer = null;
         }
     }

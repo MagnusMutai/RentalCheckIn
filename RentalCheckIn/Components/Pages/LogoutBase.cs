@@ -10,23 +10,32 @@ public class LogoutBase : ComponentBase
 
     [Inject]
     private ProtectedLocalStorage LocalStorage { get; set; }
+    [Inject]
+    private ILogger<LogoutBase> Logger { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        // Delete email for TOTP
-        await LocalStorage.DeleteAsync("emailForOtp");
-        // Mark user as logged out
-        await LocalStorage.DeleteAsync("token");
-        Constants.JWTToken = "";
-        await AuthStateProvider.GetAuthenticationStateAsync();
-
-        // Notify the authentication state provider
-        if (AuthStateProvider is CustomAuthStateProvider customAuthStateProvider)
+        try
         {
-            await customAuthStateProvider.NotifyUserLogout();
-        }
+            // Delete email for TOTP
+            await LocalStorage.DeleteAsync("emailForTOTP");
+            // Mark user as logged out
+            await LocalStorage.DeleteAsync("token");
+            Constants.JWTToken = "";
+            await AuthStateProvider.GetAuthenticationStateAsync();
 
-        // Redirect to login page
-        NavigationManager.NavigateTo("/login");
+            // Notify the authentication state provider
+            if (AuthStateProvider is CustomAuthStateProvider customAuthStateProvider)
+            {
+                await customAuthStateProvider.NotifyUserLogout();
+            }
+
+            // Redirect to login page
+            NavigationManager.NavigateTo("/login");
+        }
+        catch(Exception ex) 
+        {
+            Logger.LogError(ex, "An unexpected error occurred while trying to log out a user.");
+        }
     }
 }

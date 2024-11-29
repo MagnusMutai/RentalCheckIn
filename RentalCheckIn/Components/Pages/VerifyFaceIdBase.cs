@@ -4,7 +4,7 @@ namespace RentalCheckIn.Components.Pages;
 
 public class VerifyFaceIdBase : ComponentBase
 {
-    protected string ErrorMessage;
+    protected string? ErrorMessage;
     protected bool IsAuthenticating;
     protected bool shouldDisplayAuthButton;
 
@@ -13,7 +13,8 @@ public class VerifyFaceIdBase : ComponentBase
     private IAuthService AuthService { get; set; }
     [Inject]
     private ProtectedLocalStorage LocalStorage { get; set; }
-
+    [Inject]
+    private ILogger<VerifyFaceIdBase> Logger { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -22,11 +23,11 @@ public class VerifyFaceIdBase : ComponentBase
 
     protected async Task Authenticate()
     {
-        IsAuthenticating = true;
-        ErrorMessage = string.Empty;
 
         try
         {
+            IsAuthenticating = true;
+            ErrorMessage = string.Empty;
             var result = await AuthService.AuthenticateFaceIdAsync();
 
             if (result.IsSuccess)
@@ -40,9 +41,10 @@ public class VerifyFaceIdBase : ComponentBase
                 ErrorMessage = result.Message;
             }
         }
-        catch
+        catch(Exception ex) 
         {
             ErrorMessage = $"An unexpected error has occurred, please try again later.";
+            Logger.LogError(ex, "An unexpected error occurred while trying to verify face Id in VerifyFaceIdComponent.");
         }
         finally
         {

@@ -9,7 +9,7 @@ public class PasswordResetBase : ComponentBase
     protected bool IsRegistering;
     protected PasswordResetDTO resetPasswordModel = new PasswordResetDTO();
     protected HostLoginDTO autoHostLoginDTO = new HostLoginDTO();
-    protected string Message { get; set; }
+    protected string? Message { get; set; }
     protected bool IsPasswordResetSuccessful { get; set; }
     protected bool IsLoading { get; set; } = false;
     protected OperationResult<string> ResetPasswordResponse { get; set; }
@@ -21,13 +21,13 @@ public class PasswordResetBase : ComponentBase
     protected ProtectedLocalStorage LocalStorage { get; set; }
     [Inject]
     protected IStringLocalizer<Resource> Localizer { get; set; }
+    [Inject]
+    private ILogger<PasswordResetBase> Logger { get; set; }
     protected async Task HandleResetPassword()
     {
-
-        IsRegistering = true;
-
         try
         {
+            IsRegistering = true;
 
             // Parse the current URI to extract query parameters
             var uri = NavigationManager.ToAbsoluteUri(NavigationManager.Uri);
@@ -61,7 +61,7 @@ public class PasswordResetBase : ComponentBase
                                 if (lHost.Selected2FA.Equals("TOTP", StringComparison.OrdinalIgnoreCase))
                                 {
                                     // Store email for OTP verification
-                                    await LocalStorage.SetAsync("emailForOtp", lHost.MailAddress);
+                                    await LocalStorage.SetAsync("emailForTOTP", lHost.MailAddress);
                                     NavigationManager.NavigateTo("/verify-otp");
                                 }
                                 else if (lHost.Selected2FA.Equals("FaceID", StringComparison.OrdinalIgnoreCase))
@@ -88,8 +88,12 @@ public class PasswordResetBase : ComponentBase
         catch (Exception ex) 
         {
             Message = Localizer["PasswordResetErrorMessage"];
+            Logger.LogError(ex, "An unexpected occurred while trying to reset a user's password.");
+        }
+        finally
+        {
+            IsRegistering = false;
         }
 
-        IsRegistering = false;
     }
 }

@@ -4,7 +4,7 @@ namespace RentalCheckIn.Components.Pages;
 public class VerifyTOTPBase : ComponentBase
 {
     protected TOTPDTO oTPModel = new();
-    protected string ErrorMessage;
+    protected string? ErrorMessage;
     protected bool IsRegistering;
     public string? DisplayToast { get; set; } = "d-block";
 
@@ -25,18 +25,27 @@ public class VerifyTOTPBase : ComponentBase
     protected AuthenticationStateProvider AuthStateProvider { get; set; }
     [Inject]
     private IAuthService AuthService { get; set; }
+    [Inject]
+    private ILogger<VerifyTOTPBase> Logger { get; set; }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        var result = await LocalStorage.GetAsync<string>("emailForOtp");
+        try
+        {
+            var result = await LocalStorage.GetAsync<string>("emailForTOTP");
 
-        if (result.Success)
-        {
-            oTPModel.Email = result.Value;
+            if (result.Success)
+            {
+                oTPModel.Email = result.Value;
+            }
+            if (string.IsNullOrEmpty(oTPModel.Email))
+            {
+                NavigationManager.NavigateTo("/login");
+            }
         }
-        if (string.IsNullOrEmpty(oTPModel.Email))
+        catch (Exception ex) 
         {
-            NavigationManager.NavigateTo("/login");
+            Logger.LogError(ex, "An unexpected error occurred while trying to check for emailForTOTP in LocalStorage.");
         }
     }
 
@@ -48,7 +57,7 @@ public class VerifyTOTPBase : ComponentBase
             var result = await AuthService.VerifyTOTPAsync(oTPModel);
             if (result.IsSuccess)
             {
-                await LocalStorage.DeleteAsync("emailForOtp");
+                await LocalStorage.DeleteAsync("emailForTOTP");
             }
             else
             {
@@ -58,8 +67,13 @@ public class VerifyTOTPBase : ComponentBase
         catch (Exception ex)
         {
             ErrorMessage = "An unexpected error has occurred. Please try again later.";
+            Logger.LogError(ex, "An unexpected error occurred while trying to verify TOTP in VerifyTOTP component");
         }
-        IsRegistering = false;
+        finally
+        {
+            IsRegistering = false;
+        }
+
     }
 
     protected void HandleCloseToast()
