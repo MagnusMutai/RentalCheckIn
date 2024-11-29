@@ -2,28 +2,27 @@
 public class RefreshTokenService
 {
     private readonly IRefreshTokenRepository refreshTokenRepository;
-    private readonly ProtectedLocalStorage localStorage;
-    private readonly HttpClient httpClient;
     private readonly IAccountService accountService;
     private readonly IJWTService jWTService;
     private readonly AuthenticationStateProvider authStateProvider;
+    private readonly ILogger<RefreshTokenService> logger;
 
-    public RefreshTokenService(IRefreshTokenRepository refreshTokenRepository, ProtectedLocalStorage localStorage, HttpClient httpClient, IAccountService accountService, IJWTService jWTService, AuthenticationStateProvider authStateProvider)
+    public RefreshTokenService(IRefreshTokenRepository refreshTokenRepository, IAccountService accountService, IJWTService jWTService, AuthenticationStateProvider authStateProvider, ILogger<RefreshTokenService> logger)
     {
         this.refreshTokenRepository = refreshTokenRepository;
-        this.localStorage = localStorage;
-        this.httpClient = httpClient;
         this.accountService = accountService;
         this.jWTService = jWTService;
         this.authStateProvider = authStateProvider;
+        this.logger = logger;
     }
 
-    public async Task<RefreshToken> GenerateRefreshToken(uint lHostId)
+    public async Task<RefreshToken?> GenerateRefreshToken(uint lHostId)
     {
         try
         {
             // Revoke any existing active refresh tokens for the host
             var existingTokens = await refreshTokenRepository.GetActiveRefreshTokensByHostIdAsync(lHostId);
+
             foreach (var token in existingTokens)
             {
                 token.IsRevoked = true;
@@ -43,13 +42,13 @@ public class RefreshTokenService
             // Save revoked tokens and the new token to the database
             await refreshTokenRepository.RevokeAndAddRefreshTokenAsync(existingTokens, newRefreshToken);
 
-
             return newRefreshToken;
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred while generating a new refresh token: {ex.Message}");
-            throw;
+            // Use Result pattern for good user experience.
+            logger.LogError(ex, "An unexpected error has occurred in RefreshTokenService while trying to generate refresh token");
+            return null;
         }
     }
 
@@ -68,7 +67,6 @@ public class RefreshTokenService
     {
         try
         {
-
             if (string.IsNullOrEmpty(refreshToken) || string.IsNullOrEmpty(accessToken))
             {
                 Console.WriteLine("No tokens found");
@@ -107,20 +105,18 @@ public class RefreshTokenService
 
             if (returnedToken == null || !returnedToken.IsActive)
             {
-                Console.WriteLine("Invalid or expired refresh token.");
                 return new TokenValidateResult
                 {
                     IsSuccess = false,
                     Message = "Invalid or expired refresh token."
                 };
             }
-            // AND We have an Active refreshToken in the 
+
             // Retrieve the host associated with this refresh token
             var response = await accountService.GetLHostByIdAsync(returnedToken.HostId);
             var lHost = response?.Data; 
             if (lHost == null)
             {
-                Console.WriteLine("Associated host not found.");
                 return new TokenValidateResult
                 {
                     IsSuccess = false,
@@ -132,7 +128,6 @@ public class RefreshTokenService
             var newRefreshToken = await GenerateRefreshToken(lHost.HostId);
             Constants.JWTToken = newAccessToken;
             await authStateProvider.GetAuthenticationStateAsync();
-            Console.WriteLine("Tokens refreshed successfully.");
             return new TokenValidateResult
             {
                 IsSuccess = true,
@@ -143,7 +138,8 @@ public class RefreshTokenService
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred during token validation or refresh: {ex.Message}");
+            logger.LogError(ex, "An unexpected error occurred during token validation or refresh in RefreshTokenService");
+
             return new TokenValidateResult
             {
                 IsSuccess = false,

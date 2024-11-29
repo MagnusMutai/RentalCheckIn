@@ -1,4 +1,5 @@
-﻿using RentalCheckIn.DTOs;
+﻿using RentalCheckIn.Controllers;
+using RentalCheckIn.DTOs;
 
 namespace RentalCheckIn.Services.Core;
 public class AccountService : IAccountService
@@ -8,21 +9,23 @@ public class AccountService : IAccountService
     private readonly IEmailService emailService;
     private readonly IRefreshTokenRepository refreshTokenRepository;
     private readonly ITOTPService tOTPService;
+    private readonly ILogger<AccountService> logger;
 
-    public AccountService(ILHostRepository lHostRepository, IConfiguration configuration, IEmailService emailService, IRefreshTokenRepository refreshTokenRepository, ITOTPService tOTPService)
+    public AccountService(ILHostRepository lHostRepository, IConfiguration configuration, IEmailService emailService, IRefreshTokenRepository refreshTokenRepository, ITOTPService tOTPService, ILogger<AccountService> logger)
     {
         this.lHostRepository = lHostRepository;
         this.configuration = configuration;
         this.emailService = emailService;
         this.refreshTokenRepository = refreshTokenRepository;
         this.tOTPService = tOTPService;
+        this.logger = logger;
     }
     public async Task<OperationResult<LHost>> LoginAsync(HostLoginDTO hostLoginDTO)
     {
         try
         {
-
             var lHost = await lHostRepository.GetLHostByEmailAsync(hostLoginDTO.Email);
+
             if (lHost == null)
             {
                 return new OperationResult<LHost>
@@ -72,6 +75,7 @@ public class AccountService : IAccountService
                         host.IsBlockedSince = DateTime.UtcNow;
                     }
                 });
+
                 return new OperationResult<LHost>
                 {
                     IsSuccess = false,
@@ -115,8 +119,7 @@ public class AccountService : IAccountService
         }
         catch (Exception ex)
         {
-            // Implement logging to store the actual errors
-
+            logger.LogError(ex, "An unexpected error occurred in AccountService while trying to login LHost.");
             return new OperationResult<LHost>
             {
                 IsSuccess = false,
@@ -135,6 +138,7 @@ public class AccountService : IAccountService
         try
         {
             var existingHost = await lHostRepository.GetLHostByEmailAsync(hostSignUpDTO.Email);
+
             if (existingHost != null)
             {
                 return new OperationResult<LHost>
@@ -176,8 +180,7 @@ public class AccountService : IAccountService
         }
         catch (Exception ex) 
         {
-            // Implement logging to store the actual errors
-
+            logger.LogError(ex, "An unexpected error occurred in AccountService while trying to Register LHost.");
             return new OperationResult<LHost>
             {
                 IsSuccess = false,
@@ -236,7 +239,7 @@ public class AccountService : IAccountService
         }
         catch(Exception ex)
         {
-            // Implement logging to store the actual errors
+            logger.LogError(ex, "An unexpected error occurred in AccountService while trying to verify LHost's email.");
 
             return new EmailVerificationResponse
             {
@@ -270,7 +273,7 @@ public class AccountService : IAccountService
         }
         catch (Exception ex) 
         {
-            // Implement logging to store the actual errors
+            logger.LogError(ex, "An unexpected error occurred in AccountService while trying to fetch refresh token from the database.");
 
             return new OperationResult<RefreshToken>
             {
@@ -302,6 +305,7 @@ public class AccountService : IAccountService
         try
         {
             var lHost = await lHostRepository.GetLHostByIdAsync(id);
+
             if (lHost == null)
             {
                 return new OperationResult<LHost>
@@ -310,6 +314,7 @@ public class AccountService : IAccountService
                     Message = "Host not found."
                 };
             }
+
             return new OperationResult<LHost>
             {
                 IsSuccess = true,
@@ -318,7 +323,8 @@ public class AccountService : IAccountService
         }
         catch(Exception ex)
         {
-            // Implement logging to store the actual errors
+            logger.LogError(ex, "An unexpected error occurred in AccountService while trying to fetch LHost by Id.");
+
             return new OperationResult<LHost>
             {
                 IsSuccess = false,
@@ -335,7 +341,8 @@ public class AccountService : IAccountService
         }
         catch (Exception ex) 
         {
-            // log error
+            logger.LogError(ex, "An unexpected error occurred in AccountService while trying to fetch LHost by Email.");
+
             return new LHost();
         }
     }
@@ -374,6 +381,8 @@ public class AccountService : IAccountService
         }
         catch (Exception ex)
         {
+            logger.LogError(ex, "An unexpected error occurred in AccountService while trying to create a password reset request for LHost.");
+
             return new OperationResult
             {
                 IsSuccess = false,
@@ -387,6 +396,7 @@ public class AccountService : IAccountService
         try
         {
             var lHost = await lHostRepository.GetLHostByPasswordResetTokenAsync(request.ResetToken);
+
             if (lHost == null)
             {
                 return new OperationResult<string>
@@ -407,11 +417,11 @@ public class AccountService : IAccountService
             }
 
             bool result = await lHostRepository.UpdateLHostPartialAsync(lHost, host =>
-             {
+            {
                  host.PasswordHash = HashPassword(request.NewPassword);
                  host.PasswordResetToken = null;
                  host.ResetTokenExpires = null;
-             });
+            });
 
             if (!result)
             {
@@ -430,7 +440,9 @@ public class AccountService : IAccountService
             };
         }
         catch (Exception ex)
-        { 
+        {
+            logger.LogError(ex, "An unexpected error occurred in AccountService while trying to reset LHost's password.");
+
             return new OperationResult<string>
             {
                 IsSuccess = false,

@@ -4,57 +4,25 @@ namespace RentalCheckIn.Services.Core;
 
 public class CustomAuthStateProvider : AuthenticationStateProvider
 {
-    private readonly HttpClient http;
+    private readonly HttpClient httpClient;
+    private readonly ILogger<CustomAuthStateProvider> logger;
 
-    public CustomAuthStateProvider(HttpClient http)
+    public CustomAuthStateProvider(HttpClient httpClient, ILogger<CustomAuthStateProvider> logger)
     {
-        this.http = http;
+        this.httpClient = httpClient;
+        this.logger = logger;
     }
 
-    public override async Task<AuthenticationState> GetAuthenticationStateAsync()
+    public override Task<AuthenticationState> GetAuthenticationStateAsync()
     {
-
-        var identity = new ClaimsIdentity();
-        http.DefaultRequestHeaders.Authorization = null;
-        
-        if (!string.IsNullOrEmpty(Constants.JWTToken))
-        { 
-            var tokenExpired = Extensions.IsTokenExpired(Constants.JWTToken);
-            if (!tokenExpired) 
-            {
-                identity = new ClaimsIdentity(ParseClaimsFromJwt(Constants.JWTToken), "jwt");
-                http.DefaultRequestHeaders.Authorization =
-                    new AuthenticationHeaderValue("Bearer", Constants.JWTToken.Replace("\"", ""));
-            }
-        }
-
-        var user = new ClaimsPrincipal(identity);
-        var state = new AuthenticationState(user);
-
+        var state = BuildAuthenticationState(Constants.JWTToken);
         NotifyAuthenticationStateChanged(Task.FromResult(state));
-
-        return state;
+        return Task.FromResult(state);
     }
 
-    public async Task<AuthenticationState> NotifyUserAuthentication(string token)
+    public AuthenticationState NotifyUserAuthentication(string token)
     {
-        //// Optionally, you can store the token if needed
-        //await localStorage.SetAsync("token", token);
-        var identity = new ClaimsIdentity();
-        http.DefaultRequestHeaders.Authorization = null;
-        if (!string.IsNullOrEmpty(Constants.JWTToken))
-        {
-            var tokenExpired = Extensions.IsTokenExpired(Constants.JWTToken);
-            if (!tokenExpired)
-            {
-                identity = new ClaimsIdentity(ParseClaimsFromJwt(token), "jwt");
-                http.DefaultRequestHeaders.Authorization =
-                new AuthenticationHeaderValue("Bearer", Constants.JWTToken.Replace("\"", ""));
-            }
-        }
-                var user = new ClaimsPrincipal(identity);
-                var state = new AuthenticationState(user);
-
+        var state = BuildAuthenticationState(token);
         NotifyAuthenticationStateChanged(Task.FromResult(state));
         return state;
     }
@@ -63,6 +31,33 @@ public class CustomAuthStateProvider : AuthenticationStateProvider
     {
         var anonymousUser = new ClaimsPrincipal(new ClaimsIdentity());
         NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(anonymousUser)));
+    }
+
+    private AuthenticationState BuildAuthenticationState(string token)
+    {
+        var identity = new ClaimsIdentity();
+        httpClient.DefaultRequestHeaders.Authorization = null;
+
+        try
+        {
+            if (!string.IsNullOrEmpty(token))
+            {
+                var tokenExpired = Extensions.IsTokenExpired(token);
+                if (!tokenExpired)
+                {
+                    identity = new ClaimsIdentity(ParseClaimsFromJwt(token), "jwt");
+                    httpClient.DefaultRequestHeaders.Authorization =
+                        new AuthenticationHeaderValue("Bearer", token.Replace("\"", ""));
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "An unexpected error occurred in CustomAuthStateProvider while trying to process the authentication state.");
+        }
+
+        var user = new ClaimsPrincipal(identity);
+        return new AuthenticationState(user);
     }
 
     public static IEnumerable<Claim> ParseClaimsFromJwt(string jwt)
@@ -80,6 +75,7 @@ public class CustomAuthStateProvider : AuthenticationStateProvider
             case 2: base64 += "=="; break;
             case 3: base64 += "="; break;
         }
+
         return Convert.FromBase64String(base64);
     }
 }

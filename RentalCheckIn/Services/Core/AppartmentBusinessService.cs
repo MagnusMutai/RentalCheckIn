@@ -1,23 +1,27 @@
-﻿namespace RentalCheckIn.Services.Core;
+﻿//using RentalCheckIn.Controllers;
 
-public class AppartmentBusinessService : IAppartmentBusinessService
-{
-    private readonly IAppartmentRepository appartmentRepository;
+//namespace RentalCheckIn.Services.Core;
 
-    public AppartmentBusinessService(IAppartmentRepository appartmentRepository)
-    {
-        this.appartmentRepository = appartmentRepository;
-    }
-    public async Task<IEnumerable<string>> GetDistinctAppartmentNames()
-    {
-        try
-        {
-            return await appartmentRepository.GetDistinctAppartmentNames();
-        }
-        catch (Exception ex)
-        {
-            // Return an empty list on error
-            return Enumerable.Empty<string>();
-        }
-    }
-}
+//public class ApartmentBusinessService : IApartmentBusinessService
+//{
+//    private readonly IApartmentRepository ApartmentRepository;
+//    private readonly ILogger<ApartmentBusinessService> logger;
+
+//    public ApartmentBusinessService(IApartmentRepository ApartmentRepository, ILogger<ApartmentBusinessService> logger)
+//    {
+//        this.ApartmentRepository = ApartmentRepository;
+//        this.logger = logger;
+//    }
+//    public async Task<IEnumerable<string>> GetDistinctApartmentNames()
+//    {
+//        try
+//        {
+//            return await ApartmentRepository.GetDistinctApartmentNames();
+//        }
+//        catch (Exception ex)
+//        {
+//            logger.LogError(ex, "An unexpected error occurred in AccountService while trying to login LHost.");
+//            return Enumerable.Empty<string>();
+//        }
+//    }
+//}
