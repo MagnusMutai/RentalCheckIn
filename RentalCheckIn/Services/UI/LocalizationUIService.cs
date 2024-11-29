@@ -36,10 +36,4 @@ public class LocalizationUIService : ILocalizationUIService
         response.EnsureSuccessStatusCode();
         return await response.Content.ReadFromJsonAsync<Dictionary<uint, string>>();
     }
-    public async Task<(string? CheckInTime, string? CheckOutTime)> GetReservationTimesAsync(uint reservationId)
-    {
-        var response = await httpClient.GetAsync($"api/localization/reservation/{reservationId}/times");
-        response.EnsureSuccessStatusCode();
-        return await response.Content.ReadFromJsonAsync<(string?, string?)>();
-    }
 }

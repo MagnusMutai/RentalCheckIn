@@ -13,8 +13,9 @@ public class AuthService : IAuthService
     private readonly RefreshTokenService refreshTokenService;
     private readonly IJWTService jWTService;
     private readonly ITOTPService tOTPService;
+    private readonly ILogger<AuthService> logger;
 
-    public AuthService(HttpClient httpClient, ProtectedLocalStorage localStorage, IJSRuntime jSRuntime, NavigationManager navigationManager, AuthenticationStateProvider authStateProvider, RefreshTokenService refreshTokenService, IJWTService jWTService, ITOTPService tOTPService)
+    public AuthService(HttpClient httpClient, ProtectedLocalStorage localStorage, IJSRuntime jSRuntime, NavigationManager navigationManager, AuthenticationStateProvider authStateProvider, RefreshTokenService refreshTokenService, IJWTService jWTService, ITOTPService tOTPService, ILogger<AuthService> logger)
     {
         this.httpClient = httpClient;
         this.localStorage = localStorage;
@@ -24,30 +25,36 @@ public class AuthService : IAuthService
         this.refreshTokenService = refreshTokenService;
         this.jWTService = jWTService;
         this.tOTPService = tOTPService;
+        this.logger = logger;
     }
+
     public async Task<OperationResult<LHost>> LoginAsync(HostLoginDTO hostLoginDTO)
     {
         try
         {
-
             var response = await httpClient.PostAsJsonAsync("api/auth/login", hostLoginDTO);
+
             if (response.IsSuccessStatusCode)
             {
                 if (response.StatusCode == HttpStatusCode.NoContent)
                 {
                     return default;
                 }
+
                 return await response.Content.ReadFromJsonAsync<OperationResult<LHost>>();
             }
             else
             {
-                var message = await response.Content.ReadAsStringAsync();
-                throw new Exception(message);
+                return new OperationResult<LHost>
+                {
+                    IsSuccess = false,
+                    Message = "An error has occurred. Please try again later."
+                };
             }
         }
         catch (Exception ex)
         {
-            Console.WriteLine(ex.Message);
+            logger.LogError(ex, "An unexpected error occurred in AuthService while trying to login a LHost.");
             return new OperationResult<LHost>();
         }
 
@@ -58,25 +65,33 @@ public class AuthService : IAuthService
         try
         {
             var response = await httpClient.PostAsJsonAsync("api/auth/register", hostSignUpDTO);
+
             if (response.IsSuccessStatusCode)
             {
                 if (response.StatusCode == HttpStatusCode.NoContent)
                 {
                     return default;
                 }
+
                 return await response.Content.ReadFromJsonAsync<OperationResult<LHost>>();
             }
             else
             {
-                var message = await response.Content.ReadAsStringAsync();
-                throw new Exception(message);
+                return new OperationResult<LHost>
+                {
+                    IsSuccess = false,
+                    Message = "An error has occurred. Please try again later."
+                };
             }
         }
         catch (Exception ex)
         {
-            // Log exception
-            Console.WriteLine(ex.Message);
-            return new OperationResult<LHost>();
+            logger.LogError(ex, "An unexpected error occurred in AuthService while trying to register an.");
+            return new OperationResult<LHost>
+            {
+                IsSuccess = false,
+                Message = "An unexpected error has occurred. Please try again later."
+            };
         }
 
     }
@@ -94,9 +109,10 @@ public class AuthService : IAuthService
                 return new TokenValidateResult
                 {
                     IsSuccess = false,
-                    Message = "Cannot send empty tokens to the server."
+                    Message = "An error occurred while trying to log you in."
                 };
             }
+
             var data = new
             {
                 AccessToken = accessToken,
@@ -105,21 +121,29 @@ public class AuthService : IAuthService
 
             var json = JsonSerializer.Serialize(data);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
-
             var response = await httpClient.PostAsync("api/auth/refresh-token", content);
+
             if (response.IsSuccessStatusCode)
             {
                 if (response.StatusCode == HttpStatusCode.NoContent)
                 {
-                    return default(TokenValidateResult);
+                    return new TokenValidateResult
+                    {
+                        IsSuccess = false,
+                        Message = "Not authorized."
+                    };
                 }
                 return await response.Content.ReadFromJsonAsync<TokenValidateResult>();
             }
             else
             {
-                var message = await response.Content.ReadAsStringAsync();
-                throw new Exception(message);
+                return new TokenValidateResult
+                {
+                    IsSuccess = false,
+                    Message = "An error has occurred. Please try again later."
+                };
             }
+
             // Put it outside for single responsibility
             async Task<string> RetrieveToken(string key)
             {
@@ -130,8 +154,13 @@ public class AuthService : IAuthService
         }
         catch (Exception ex)
         {
-            Console.WriteLine(ex.Message);
-            return new TokenValidateResult();
+            logger.LogError(ex, "An unexpected error has occurred in AuthService while trying to refresh tokens");
+
+            return new TokenValidateResult
+            {
+                IsSuccess = false,
+                Message = "An unexpected error has occurred. Please try again later."
+            };
         }
 
     }
@@ -154,14 +183,21 @@ public class AuthService : IAuthService
             }
             else
             {
-                var message = await response.Content.ReadAsStringAsync();
-                throw new Exception(message);
+                return new OperationResult()
+                {
+                    IsSuccess = false,
+                    Message = "An error has occurred. Please try again later."
+                };
             }
         }
         catch (Exception ex)
         {
-            Console.WriteLine(ex.Message);
-            return new OperationResult();
+            logger.LogError(ex, "An unexpected error has occurred in AuthService while trying to send password reset request to the server.");
+            return new OperationResult()
+            {
+                IsSuccess = false,
+                Message = "An unexpected error has occurred. Please try again later."
+            };
         }
 
     }
@@ -237,7 +273,6 @@ public class AuthService : IAuthService
             var lHostResponseEntity = await httpClient.GetAsync($"api/LHost/email/{oTPModel.Email}");
             if (lHostResponseEntity.IsSuccessStatusCode)
             {
-
                 if (lHostResponseEntity.StatusCode == HttpStatusCode.NoContent)
                 {
                     return new OperationResult
@@ -245,10 +280,11 @@ public class AuthService : IAuthService
                         IsSuccess = false,
                         Message = "User not found. Please register or contact support."
                     };
-
                 }
+
                 lHost = await lHostResponseEntity.Content.ReadFromJsonAsync<LHost>();
             }
+
             if (lHost == null)
             {
                 return new OperationResult
@@ -260,12 +296,21 @@ public class AuthService : IAuthService
 
             if (!tOTPService.VerifyCode(lHost.TotpSecret, oTPModel.Code))
                 return new OperationResult { IsSuccess = false, Message = "Invalid OTP code." };
-
+            // Add null checks before assignments.
             var refreshToken = await refreshTokenService.GenerateRefreshToken(lHost.HostId);
-            await localStorage.SetAsync("refreshToken", refreshToken.Token);
+            
+            if (refreshToken != null)
+            {
+                await localStorage.SetAsync("refreshToken", refreshToken.Token);
+            }
+
             var accessToken = jWTService.GenerateToken(lHost);
-            Constants.JWTToken = accessToken;
-            await localStorage.SetAsync("token", accessToken);
+
+            if (accessToken != null) 
+            { 
+                Constants.JWTToken = accessToken;
+                await localStorage.SetAsync("token", accessToken);
+            }
 
             await authStateProvider.GetAuthenticationStateAsync();
 
@@ -349,13 +394,13 @@ public class AuthService : IAuthService
         {
             // Retrieve UserIdFor2FA from Protected Local Storage
             var userIdResult = await localStorage.GetAsync<uint>("UserIdFor2FA");
+
             if (!userIdResult.Success)
             {
                 navigationManager.NavigateTo("/login");
             }
 
             uint lHostId = userIdResult.Value;
-
             // Fetch authentication options from the server
             var optionsUrl = $"api/auth/faceid/authenticate/options?hostId={lHostId}";
             var options = await httpClient.GetFromJsonAsync<AssertionOptions>(optionsUrl);
@@ -390,9 +435,9 @@ public class AuthService : IAuthService
                 LHost lHost = new LHost();
                 // Retrieve the authenticated user
                 var lHostResponseEntity = await httpClient.GetAsync($"api/LHost/id/{lHostId}");
+
                 if (lHostResponseEntity.IsSuccessStatusCode)
                 {
-
                     if (lHostResponseEntity.StatusCode == HttpStatusCode.NoContent)
                     {
                         return new OperationResult
@@ -402,6 +447,7 @@ public class AuthService : IAuthService
                         };
 
                     }
+
                     lHost = await lHostResponseEntity.Content.ReadFromJsonAsync<LHost>();
                 }
                 if (lHost == null)
@@ -416,15 +462,12 @@ public class AuthService : IAuthService
                 // Generate Refresh Token
                 var refreshToken = await refreshTokenService.GenerateRefreshToken(lHost.HostId);
                 await localStorage.SetAsync("refreshToken", refreshToken.Token);
-
                 // Generate JWT Token
                 var accessToken = jWTService.GenerateToken(lHost);
                 Constants.JWTToken = accessToken; // Consider removing global constants for JWT
                 await localStorage.SetAsync("token", accessToken);
-
                 // Update Authentication State
                 await authStateProvider.GetAuthenticationStateAsync();
-
                 // Navigate to the home page or dashboard
                 navigationManager.NavigateTo("/");
 
