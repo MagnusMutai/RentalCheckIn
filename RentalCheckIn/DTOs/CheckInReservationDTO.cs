@@ -59,12 +59,7 @@ public class CheckInReservationDTO
 
     public string CountryISO2 { get; set; }
     public string LanguageName { get; set; }
-    // Signature
-    [Required(ErrorMessage = "Signature is required")]
     public string SignatureDataUrl { get; set; }
-
-    // Additional Information
-
     public string CurrencySymbol { get; set; }
 
     public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
