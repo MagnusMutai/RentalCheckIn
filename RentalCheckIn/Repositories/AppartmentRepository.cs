@@ -1,16 +1,16 @@
 ﻿
 namespace RentalCheckIn.Repositories;
 
-public class AppartmentRepository : IAppartmentRepository
+public class ApartmentRepository : IApartmentRepository
 {
     private readonly AppDbContext context;
 
-    public AppartmentRepository(AppDbContext context)
+    public ApartmentRepository(AppDbContext context)
     {
         this.context = context;
     }
 
-    public async Task<IEnumerable<string>> GetDistinctAppartmentNames()
+    public async Task<IEnumerable<string>> GetDistinctApartmentNames()
     {
         return await context.Apartments
             .Select(r => r.ApartmentName)
