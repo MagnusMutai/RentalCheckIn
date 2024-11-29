@@ -1,6 +1,5 @@
 ﻿
 using Microsoft.Extensions.Caching.Memory;
-using System.Globalization;
 
 namespace RentalCheckIn.Services.Core;
 
@@ -9,21 +8,21 @@ public class LocalizationService : ILocalizationService
     private readonly ILanguageRepository languageRepository;
     private readonly IApartmentTranslationRepository apartmentTranslationRepository;
     private readonly IStatusTranslationRepository statusTranslationRepository;
-    private readonly IReservationTranslationRepository reservationTranslationRepository;
     private readonly IMemoryCache cache;
+    private readonly ILogger<LocalizationService> logger;
 
     public LocalizationService(
         ILanguageRepository languageRepository,
         IApartmentTranslationRepository apartmentTranslationRepository,
         IStatusTranslationRepository statusTranslationRepository,
-        IReservationTranslationRepository reservationTranslationRepository,
-        IMemoryCache cache)
+        IMemoryCache cache,
+        ILogger<LocalizationService> logger)
     {
         this.languageRepository = languageRepository;
         this.apartmentTranslationRepository = apartmentTranslationRepository;
         this.statusTranslationRepository = statusTranslationRepository;
-        this.reservationTranslationRepository = reservationTranslationRepository;
         this.cache = cache;
+        this.logger = logger;
     }
 
     public async Task<Dictionary<uint, string>> GetApartmentNamesAsync(IEnumerable<uint> apartmentIds, string culture)
@@ -53,10 +52,10 @@ public class LocalizationService : ILocalizationService
                 var language = await languageRepository.GetLanguageByCultureAsync(culture)
                                ?? await languageRepository.GetDefaultLanguageAsync();
 
-                if (language == null)
-                {
-                    throw new Exception("Default language not found in the database.");
-                }
+                //if (language == null)
+                //{
+                //    // Handle gracefully by using Result pattern
+                //}
 
                 var translations = await apartmentTranslationRepository.GetTranslationsAsync(idsToFetch, language.LanguageId);
 
@@ -76,87 +75,80 @@ public class LocalizationService : ILocalizationService
         }
         catch(Exception ex)
         {
-            Console.WriteLine(ex.Message);
-            throw;
+            logger.LogError(ex, "An unexpected error occurred in LocalizationService while trying to fetch language-specific apartment names.");
+            // Result pattern is an alternative
+            return new Dictionary<uint, string>();
         }
     }
 
 
     public async Task<Dictionary<uint, string>> GetStatusLabelsAsync(IEnumerable<uint> statusIds, string culture)
     {
-        // Prepare cache keys
-        var cacheKeys = statusIds.Select(id => new { Id = id, CacheKey = $"StatusLabel{id}{culture}" }).ToList();
+
         var result = new Dictionary<uint, string>();
-        var idsToFetch = new List<uint>();
 
-        // Check cache first
-        foreach (var item in cacheKeys)
+        try
         {
-            if (cache.TryGetValue(item.CacheKey, out string statusLabel))
+            if (statusIds == null || !statusIds.Any())
             {
-                result[item.Id] = statusLabel;
+                return result;
             }
-            else
+
+            // Prepare cache keys
+            var cacheKeys = statusIds.Select(id => new { Id = id, CacheKey = $"StatusLabel{id}{culture}" }).ToList();
+            var idsToFetch = new List<uint>();
+
+            // Check cache first
+            foreach (var item in cacheKeys)
             {
-                idsToFetch.Add(item.Id);
+                if (cache.TryGetValue(item.CacheKey, out string statusLabel))
+                {
+                    result[item.Id] = statusLabel;
+                }
+                else
+                {
+                    idsToFetch.Add(item.Id);
+                }
             }
+
+            if (idsToFetch.Any())
+            {
+                var language = await languageRepository.GetLanguageByCultureAsync(culture)
+                               ?? await languageRepository.GetDefaultLanguageAsync();
+
+                if (language == null)
+                {
+                    throw new Exception("Default language not found in the database.");
+                }
+
+                var translations = await statusTranslationRepository.GetTranslationsAsync(idsToFetch, language.LanguageId);
+
+                foreach (var id in idsToFetch)
+                {
+                    var translation = translations.FirstOrDefault(t => t.StatusId == id);
+                    var statusLabel = translation?.StatusLabel ?? "[Status Label]";
+                    result[id] = statusLabel;
+
+                    // Set cache
+                    string cacheKey = $"StatusLabel{id}{culture}";
+                    cache.Set(cacheKey, statusLabel, TimeSpan.FromHours(1));
+                }
+            }
+
         }
-
-        if (idsToFetch.Any())
+        catch (Exception ex) 
         {
-            var language = await languageRepository.GetLanguageByCultureAsync(culture)
-                           ?? await languageRepository.GetDefaultLanguageAsync();
+            // Log the error
+            logger.LogError(ex, "An unexpected error occurred while fetching status labels for culture '{Culture}'. Returning fallback labels.", culture);
 
-            if (language == null)
+            // Return fallback labels for all IDs
+            foreach (var id in statusIds ?? Enumerable.Empty<uint>())
             {
-                throw new Exception("Default language not found in the database.");
-            }
-
-            var translations = await statusTranslationRepository.GetTranslationsAsync(idsToFetch, language.LanguageId);
-
-            foreach (var id in idsToFetch)
-            {
-                var translation = translations.FirstOrDefault(t => t.StatusId == id);
-                var statusLabel = translation?.StatusLabel ?? "[Status Label]";
-                result[id] = statusLabel;
-
-                // Set cache
-                string cacheKey = $"StatusLabel{id}{culture}";
-                cache.Set(cacheKey, statusLabel, TimeSpan.FromHours(1));
+                result[id] = "[Status Label]";
             }
         }
 
         return result;
     }
 
-    public async Task<(string? CheckInTime, string? CheckOutTime)> GetReservationTimesAsync(uint reservationId)
-    {
-        var culture = CultureInfo.CurrentCulture.Name;
-        return await GetReservationTimesAsync(reservationId, culture);
-    }
-
-    private async Task<(string? CheckInTime, string? CheckOutTime)> GetReservationTimesAsync(uint reservationId, string culture)
-    {
-        string cacheKey = $"ReservationTimes{reservationId}{culture}";
-        if (cache.TryGetValue(cacheKey, out (string? CheckInTime, string? CheckOutTime) times))
-        {
-            return times;
-        }
-
-        var language = await languageRepository.GetLanguageByCultureAsync(culture)
-                       ?? await languageRepository.GetDefaultLanguageAsync();
-
-        if (language == null)
-        {
-            throw new Exception("Default language not found in the database.");
-        }
-
-        var translation = await reservationTranslationRepository.GetTranslationAsync(reservationId, language.LanguageId);
-
-        times = (translation?.CheckInTime, translation?.CheckOutTime);
-
-        cache.Set(cacheKey, times, TimeSpan.FromHours(1));
-
-        return times;
-    }
 }

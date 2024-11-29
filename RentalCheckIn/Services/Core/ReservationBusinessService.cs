@@ -6,11 +6,13 @@ public class ReservationBusinessService : IReservationBusinessService
 {
     private readonly IReservationRepository reservationRepository;
     private readonly ILanguageRepository languageRepository;
+    private readonly ILogger<ReservationBusinessService> logger;
 
-    public ReservationBusinessService(IReservationRepository reservationRepository, ILanguageRepository languageRepository)
+    public ReservationBusinessService(IReservationRepository reservationRepository, ILanguageRepository languageRepository, ILogger<ReservationBusinessService> logger)
     {
         this.reservationRepository = reservationRepository;
         this.languageRepository = languageRepository;
+        this.logger = logger;
     }
 
     public async Task<IEnumerable<ReservationDTO>> GetAllTableReservationsAsync()
@@ -35,6 +37,7 @@ public class ReservationBusinessService : IReservationBusinessService
         }
         catch (Exception ex)
         {
+            logger.LogError(ex, "An unexpected error occurred in ReservationBusinessService while trying to fetch all reservations for the reservation list table.");
             // Return an empty list on error
             return Enumerable.Empty<ReservationDTO>(); 
         }
@@ -48,6 +51,7 @@ public class ReservationBusinessService : IReservationBusinessService
         }
         catch (Exception ex) 
         {
+            logger.LogError(ex, "An unexpected error occurred in ReservationBusinessService while trying to fetch Check-In form Reservation by Id.");
             return new CheckInReservationDTO();
         }
     }
@@ -134,6 +138,8 @@ public class ReservationBusinessService : IReservationBusinessService
         }
         catch (Exception ex)
         {
+            logger.LogError(ex, "An unexpected error occurred in ReservationBusinessService while trying to partially update a reservation from the check-In form.");
+
             return new OperationResult
             {
                 IsSuccess = false,
@@ -151,6 +157,8 @@ public class ReservationBusinessService : IReservationBusinessService
         }
         catch (Exception ex)
         {
+            logger.LogError(ex, "An unexpected error occurred in ReservationBusinessService while trying to retrieve settings.");
+
             return Enumerable.Empty<Setting>();
         }
     }

@@ -7,10 +7,12 @@ namespace RentalCheckIn.Services.Core;
 public class PDFService : IPDFService
 {
     private readonly IWebHostEnvironment environment;
+    private readonly ILogger<PDFService> logger;
 
-    public PDFService(IWebHostEnvironment environment) 
+    public PDFService(IWebHostEnvironment environment, ILogger<PDFService> logger)
     {
         this.environment = environment;
+        this.logger = logger;
     }
 
     public string FillCheckInFormAsync(CheckInReservationDTO model)
@@ -26,11 +28,9 @@ public class PDFService : IPDFService
         // Generate a unique filename using a GUID
         string uniqueFileName = $"GeneratedCheckInForm_{Guid.NewGuid()}.docx";
         string outputPath = Path.Combine(outputDir, uniqueFileName);
-
         // Load the template document
         Document doc = new Document();
         doc.LoadFromFile(templatePath);
-
         // Data for Mail Merge
         Dictionary<string, string> mergeData = new Dictionary<string, string>
         {
@@ -52,7 +52,7 @@ public class PDFService : IPDFService
             { "GuestFullName", model.GuestFullName },
             { "SignatureDataUrl", "placeholderpath" }
         };
-        
+
         // Specify the field names and values from the dictionary
         string[] fieldNames = new string[mergeData.Count];
         string[] fieldValues = new string[mergeData.Count];
@@ -64,93 +64,73 @@ public class PDFService : IPDFService
             fieldValues[index] = kvp.Value;
             index++;
         }
-        Image signatureImage = null;
-        Image resizedImage = null;
+
+        Image? signatureImage = null;
 
         // Insert the signature image if available
         if (!string.IsNullOrEmpty(model.SignatureDataUrl))
         {
-            try
+
+            // Insert the signature image if available
+            if (!string.IsNullOrEmpty(model.SignatureDataUrl))
             {
-
-                // Insert the signature image if available
-                if (!string.IsNullOrEmpty(model.SignatureDataUrl))
+                try
                 {
-                    try
+
+                    //Decode Base64 string into an Image
+                    string base64String = model.SignatureDataUrl.Contains(",")
+                        ? model.SignatureDataUrl.Split(',')[1] // Remove the "data:image/png;base64," prefix
+                        : model.SignatureDataUrl;
+                    // Step 1: Convert Base64 string to byte array
+                    byte[] utf8Bytes = Convert.FromBase64String(base64String);
+                    // Step 2: Decode UTF8 byte array to string
+                    string decodedString = Encoding.UTF8.GetString(utf8Bytes);
+                    string base64String2 = decodedString.Contains(",")
+                        ? decodedString.Split(',')[1] // Remove the "data:image/png;base64," prefix
+                        : decodedString;
+                    byte[] imageBytes = Convert.FromBase64String(base64String2);
+
+                    using (var ms = new MemoryStream(imageBytes))
                     {
+                        signatureImage = Image.FromStream(ms);
+                    }
 
-                        //Decode Base64 string into an Image
-                        string base64String = model.SignatureDataUrl.Contains(",")
-                            ? model.SignatureDataUrl.Split(',')[1] // Remove the "data:image/png;base64," prefix
-                            : model.SignatureDataUrl;
+                    // Register event for handling the image field
+                    doc.MailMerge.MergeImageField += (sender, field) =>
+                    {
+                        field.Image = signatureImage;
+                    };
 
-                        // Step 1: Convert Base64 string to byte array
-                        byte[] utf8Bytes = Convert.FromBase64String(base64String);
-
-                        // Step 2: Decode UTF8 byte array to string
-                        string decodedString = Encoding.UTF8.GetString(utf8Bytes);
-
-                        string base64String2 = decodedString.Contains(",")
-                            ? decodedString.Split(',')[1] // Remove the "data:image/png;base64," prefix
-                            : decodedString;
-
-                        byte[] imageBytes = Convert.FromBase64String(base64String2);
-
-
-                        //byte[] photoBytes = File.ReadAllBytes("wwwroot/images/snowylodge.jpg");
-                        // Save the decoded bytes to a file for debugging
-                        File.WriteAllBytes("test_image.png", imageBytes);
-                        Console.WriteLine("Image saved successfully for debugging.");
-
-
-                        using (var ms = new MemoryStream(imageBytes))
-                        {
-                            signatureImage = Image.FromStream(ms);
-                        }
-
-                        // Register event for handling the image field
-                        doc.MailMerge.MergeImageField += (sender, field) =>
-                        {
-                            field.Image = signatureImage;
-                        };
-
-                        // Mapping of hotel view names to aliases
-                        Dictionary<string, string> hotelAliasMapping = new Dictionary<string, string>
+                    // Mapping of apartment names to aliases
+                    Dictionary<string, string> hotelAliasMapping = new Dictionary<string, string>
                         {
                             { "Snowy (street view)", "Snowy" },
                             { "Massi (garden view)", "Massi" }
                         };
 
-                        // Get the alias for the selected view of the lodge
-                        if (hotelAliasMapping.TryGetValue(model.ApartmentName, out string? targetAlias))
-                        {
-                            // Check the checkbox corresponding to the alias
-                            ChooseViewOfLodge(doc, targetAlias);
-                        }
-
-                    }
-                    catch (Exception ex)
+                    // Get the alias for the selected apartment
+                    if (hotelAliasMapping.TryGetValue(model.ApartmentName, out string? targetAlias))
                     {
-                        Console.WriteLine($"Error inserting signature: {ex.Message}");
-                        throw;
+                        // Check the checkbox corresponding to the alias
+                        ChooseApartment(doc, targetAlias);
                     }
-                }
 
-                // Perform the mail merge
-                doc.MailMerge.Execute(fieldNames, fieldValues);
+                }
+                catch (Exception ex)
+                {
+                    logger.LogError(ex, "An unexpected error occurred in PDFService while trying to fill Check-In Form .docx template.");
+                }
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error inserting signature: {ex.Message}");
-                throw;
-            }
+
+            // Perform the mail merge
+            doc.MailMerge.Execute(fieldNames, fieldValues);
         }
         // Save the generated document
         doc.SaveToFile(outputPath, FileFormat.Docx);
         return uniqueFileName;
     }
 
-    static void ChooseViewOfLodge(Document document, string targetAlias)
+    private void ChooseApartment(Document document, string targetAlias)
     {
         try
         {
@@ -180,7 +160,7 @@ public class PDFService : IPDFService
                                                 if (checkBox != null)
                                                 {
                                                     // Set checkbox to checked
-                                                    checkBox.Checked = true; 
+                                                    checkBox.Checked = true;
                                                 }
                                             }
                                         }
@@ -193,10 +173,9 @@ public class PDFService : IPDFService
 
             }
         }
-        catch(Exception ex) 
+        catch (Exception ex)
         {
-            Console.WriteLine(ex.Message);
-            throw;
+            logger.LogError(ex, "An unexpected error occurred while trying to Choose ");
         }
     }
 
