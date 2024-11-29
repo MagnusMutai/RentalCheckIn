@@ -7,9 +7,9 @@ public class CheckInBase : ComponentBase
 {
     protected bool displaySignaturePad;
 
-    private string Message;
+    private string? Message;
 
-    protected string signatureValidationError;
+    protected string? signatureValidationError;
 
     [Parameter]
     public int Id { get; set; }
@@ -27,7 +27,9 @@ public class CheckInBase : ComponentBase
     private AuthenticationStateProvider AuthStateProvider { get; set; }
     [Inject]
     private ProtectedLocalStorage LocalStorage { get; set; }
-    // Nullable Agreement properties
+    [Inject]
+    private ILogger<CheckInBase> Logger { get; set; }
+
     protected bool AgreeEnergyConsumption = true;
 
     protected bool ReceivedKeys = true;
@@ -50,14 +52,20 @@ public class CheckInBase : ComponentBase
         }
     }
 
-
     protected override async Task OnInitializedAsync()
     {
-        var reservationData = await ReservationService.GetCheckInReservationByIdAsync((uint)Id);
-        if (reservationData != null) 
+        try
         {
-            checkInModel =  reservationData;
-        }        
+            var reservationData = await ReservationService.GetCheckInReservationByIdAsync((uint)Id);
+            if (reservationData != null)
+            {
+                checkInModel = reservationData;
+            }
+        }
+        catch (Exception ex) 
+        {
+            Logger.LogError(ex, "An unexpected error occurred while trying to load check-In reservation data on OnInitializedAsync.");
+        }
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -70,7 +78,8 @@ public class CheckInBase : ComponentBase
 
             if (AuthStateProvider is CustomAuthStateProvider customAuthStateProvider)
             {
-                var authState = await customAuthStateProvider.NotifyUserAuthentication(Constants.JWTToken);
+                var authState = customAuthStateProvider.NotifyUserAuthentication(Constants.JWTToken);
+
                 if (authState.User.Identity is { IsAuthenticated: false })
                 {
                     // User is not authenticated; redirect to login
@@ -84,31 +93,36 @@ public class CheckInBase : ComponentBase
         }
         catch (Exception ex)
         {
-            // Log error
             Message = "An unexpected error occurred.";
+            Logger.LogError(ex, "An unexpected error occurred while trying to authenticate user on OnAfterRenderAsync on CheckIn component.");
         }
     }
 
     protected async Task HandleValidSubmit()
     {
-
-        bool isValid = CheckSignatureValidation();
-
-        if (isValid)
+        try
         {
-            CalculateTotalPrice();
-            await SaveData();
-            await SharePdf();
+            bool isValid = CheckSignatureValidation();
+
+            if (isValid)
+            {
+                CalculateTotalPrice();
+                await SaveData();
+                await SharePdf();
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "An unexpected error occurred while updating check-In data to the db and sharing it via WhatsApp in CheckIn component HandleValidSubmit method.");
         }
     }
-
 
     private bool CheckSignatureValidation()
     {
         // Check custom field
         if (SignatureBytes == null || SignatureBytes.Length == 0)
         {
-            signatureValidationError = "Signature is required.";
+            signatureValidationError = "The signature is required.";
             return false;
         }
         else
@@ -130,11 +144,9 @@ public class CheckInBase : ComponentBase
             // Convert DateOnly to DateTime for subtraction
             var checkInDateTime = checkInModel.CheckInDate.ToDateTime(TimeOnly.MinValue);
             var checkOutDateTime = checkInModel.CheckOutDate.ToDateTime(TimeOnly.MinValue);
-
             checkInModel.NumberOfNights = (checkOutDateTime - checkInDateTime).Days;
         }
     }
-
 
     protected void OnFeeChanged(ChangeEventArgs e)
     {
@@ -143,7 +155,20 @@ public class CheckInBase : ComponentBase
 
     private async Task SaveData()
     {
-        await ReservationService.UpdateCheckInFormReservationAsync(checkInModel);
+        try
+        {
+           var isSaved = await ReservationService.UpdateCheckInFormReservationAsync(checkInModel);
+
+            if (isSaved) 
+            {
+                Message = "Quest checked-in successfully!";
+            }
+            // Implement Result pattern to get more relevant and specific responses from the server.
+        }
+        catch (Exception ex) 
+        {
+            Logger.LogError(ex, "An unexpected error occurred while trying to update the user check-In information in CheckIn component.");
+        }
     }
 
     private async Task SharePdf()
@@ -155,10 +180,9 @@ public class CheckInBase : ComponentBase
         }
         catch (Exception ex)
         {
-            Message = $"Error: {ex.Message}";
+            Logger.LogError(ex, "An unexpected error occurred while trying to merge form data to the document template in CheckIn component.");
         }
     }
-
     
     protected SignaturePadOptions _options = new SignaturePadOptions
     {
@@ -166,6 +190,5 @@ public class CheckInBase : ComponentBase
         LineJoin = LineJoin.Round,
         LineWidth = 2,
         StrokeStyle = strokeColor
-        // Blue ink
     };
 }

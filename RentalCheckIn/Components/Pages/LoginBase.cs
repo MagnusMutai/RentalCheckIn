@@ -4,7 +4,7 @@ namespace RentalCheckIn.Components.Pages;
 public class LoginBase : ComponentBase
 {
     protected HostLoginDTO loginModel = new();
-    protected string ErrorMessage;
+    protected string? ErrorMessage;
     protected bool IsRegistering;
     protected string? DisplayToast { get; set; } = "d-block";
     [Inject]
@@ -36,7 +36,7 @@ public class LoginBase : ComponentBase
         catch (Exception ex) 
         {
             ErrorMessage = "An unexpected error occurred";
-            Logger.LogError(ex, "Error occurred while getting the state of authentication of the user in Login page.");
+            Logger.LogError(ex, "An unexpected error occurred while getting the state of authentication of the user in Login page.");
         }
     }
 
@@ -56,7 +56,7 @@ public class LoginBase : ComponentBase
                 if (lHost.Selected2FA.Equals("TOTP", StringComparison.OrdinalIgnoreCase))
                 {
                     // Store email for OTP verification
-                    await LocalStorage.SetAsync("emailForOtp", lHost.MailAddress);
+                    await LocalStorage.SetAsync("emailForTOTP", lHost.MailAddress);
                     NavigationManager.NavigateTo("/verify-otp");
                 }
                 else if (lHost.Selected2FA.Equals("FaceID", StringComparison.OrdinalIgnoreCase))
@@ -81,7 +81,7 @@ public class LoginBase : ComponentBase
         catch (Exception ex) 
         {
             ErrorMessage = "An unexpected error occurred";
-            Logger.LogError(ex, "An error occurred in the login page while trying to login a user.");
+            Logger.LogError(ex, "An unexpected error occurred in the login page while trying to login a user.");
         }
         finally
         {

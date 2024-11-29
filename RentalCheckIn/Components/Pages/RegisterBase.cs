@@ -5,8 +5,8 @@ namespace RentalCheckIn.Components.Pages;
 public class RegisterBase : ComponentBase
 {
     protected HostSignUpDTO registerModel = new();
-    protected string Message;
-    protected string TotpSecret;
+    protected string? Message;
+    protected string? TotpSecret;
     protected string TOTP = "TOTP";
     protected string FaceID = "FaceID";
     protected bool IsRegistering;
@@ -16,13 +16,15 @@ public class RegisterBase : ComponentBase
     protected bool IsFaceIdSelected => registerModel.Selected2FA == "FaceID";
     protected uint RegisteredUserId { get; set; } // To store the user ID after registration
 
-    protected string QrCodeImageData { get; set; }
+    protected string? QrCodeImageData { get; set; }
     [Inject]
     protected IAuthService AuthService { get; set; }
     [Inject]
     private AuthenticationStateProvider AuthStateProvider { get; set; }
     [Inject]
     private NavigationManager NavigationManager { get; set; }
+    [Inject]
+    private ILogger<RegisterBase> Logger { get; set; }
     protected override async Task OnInitializedAsync()
     {
         // Get the current authentication state
@@ -88,6 +90,7 @@ public class RegisterBase : ComponentBase
             Message = "An unexpected error has occurred. Please try again later";
             DisplayToast = "d-block";
             IsRegistering = false;
+            Logger.LogError(ex, "An unexpected error occurred while trying to register a user.");
         }
     }
 

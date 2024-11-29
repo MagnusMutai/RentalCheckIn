@@ -5,11 +5,13 @@ public class RequestPasswordResetBase : ComponentBase
 {
     protected ResetRequestDTO resetModel = new ResetRequestDTO();
     protected bool isEmailSent = false;
-    protected string Message;
+    protected string? Message;
     protected bool IsRegistering;
 
     [Inject]
     protected IAuthService AuthService { get; set; }
+    [Inject]
+    private ILogger<RequestPasswordResetBase> Logger { get; set; }
 
     protected async Task HandleValidSubmit()
     {
@@ -27,6 +29,7 @@ public class RequestPasswordResetBase : ComponentBase
         catch (Exception ex) 
         {
             Message = "An unexpected error has occurred. Please try again later";
+            Logger.LogError(ex, "An unexpected error occurred while requeting password reset in RequestPasswordReset component");
         }
     }
 }

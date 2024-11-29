@@ -1,14 +1,13 @@
 ﻿using Microsoft.AspNetCore.Components;
-using RentalCheckIn.Components.Layout;
 using System.Globalization;
 namespace RentalCheckIn.Components.Pages;
 public class HomeBase : ComponentBase
 {
     protected uint currentPage = 1;
     protected uint itemsPerPage;
-    protected string Message;
+    protected string? Message;
     protected bool showModal = false;
-    protected ReservationDTO selectedReservation;
+    protected ReservationDTO? selectedReservation;
     protected string SelectedApartment { get; set; } = "All";
     protected List<string> ApartmentNames = new List<string>();
     protected List<ReservationDTO> Reservations = new List<ReservationDTO>();
@@ -22,8 +21,8 @@ public class HomeBase : ComponentBase
     private ProtectedLocalStorage LocalStorage { get; set; }
     [Inject]
     private IReservationService ReservationService { get; set; }
-    [Inject]
-    private IAppartmentService AppartmentService { get; set; }
+    //[Inject]
+    //private IApartmentService ApartmentService { get; set; }
     [Inject]
     private ILocalizationUIService LocalizationUIService { get; set; }
     [Inject]
@@ -88,8 +87,7 @@ public class HomeBase : ComponentBase
         catch (Exception ex)
         {
             Message = "Could not load resources.";
-            Logger.LogError(ex, "Could not load reservations or its dependencies, like language specific/culture-based data.");
-            
+            Logger.LogError(ex, "An unexpected error occurred while trying to load reservations or its dependencies in the Reservation Page.");
         }
     }
 
@@ -103,7 +101,7 @@ public class HomeBase : ComponentBase
 
             if (AuthStateProvider is CustomAuthStateProvider customAuthStateProvider)
             {
-                var authState = await customAuthStateProvider.NotifyUserAuthentication(Constants.JWTToken);
+                var authState = customAuthStateProvider.NotifyUserAuthentication(Constants.JWTToken);
 
                 if (authState.User.Identity is { IsAuthenticated: false })
                 {
@@ -115,7 +113,7 @@ public class HomeBase : ComponentBase
         catch (Exception ex)
         {
             Message = "An unexpected error occurred.";
-            Logger.LogError(ex, "An error occurred while trying to log in user on Reservation page.");
+            Logger.LogError(ex, "An unexpected error occurred while trying to authenticate a user on Reservation page.");
         }
     }
 

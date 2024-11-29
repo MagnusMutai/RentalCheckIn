@@ -1,4 +1,5 @@
 ﻿@using Fido2NetLib
+@inherits RegisterFaceIdBase
 @inject HttpClient Http
 @inject IJSRuntime JSRuntime
 
@@ -23,69 +24,3 @@
         </div>
     }
 </div>
-
-@code {
-    private string message;
-    private bool isRegistering;
-    private bool isRegisteringOnce;
-    private bool shouldDisplayRegButton;
-
-
-    [Inject]
-    protected IAuthService AuthService { get; set; }
-
-    [Parameter]
-    public uint HostId { get; set; }
-
-    [Parameter]
-    public EventCallback<OperationResult> OnRegistrationComplete { get; set; }
-    public OperationResult RegistrationResult { get; set; }
-
-
-    protected override async Task OnInitializedAsync()
-    {
-        if (!isRegisteringOnce)
-        {
-            isRegisteringOnce = true;
-            await HandleRegisterFaceId();
-        }
-    }
-
-    private async Task HandleRegisterFaceId()
-    {
-        isRegistering = true;
-        message = string.Empty;
-
-        try
-        {
-            var result = await AuthService.RegisterFaceIdAsync(HostId);
-            RegistrationResult = result;
-            message = result.Message;
-
-            await OnRegistrationComplete.InvokeAsync(result);
-            if (!RegistrationResult.IsSuccess)
-            {
-                shouldDisplayRegButton = true;
-            }
-            else
-            {
-                shouldDisplayRegButton = false;
-            }
-        }
-        catch
-        {
-            message = "An unexpected error occurred during Face ID registration.";
-            RegistrationResult = new OperationResult
-                {
-                    IsSuccess = false,
-                    Message = "An unexpected error occurred during Face ID registration."
-                };
-
-            await OnRegistrationComplete.InvokeAsync(RegistrationResult);
-        }
-        finally
-        {
-            isRegistering = false;
-        }
-    }
-}

@@ -51,7 +51,7 @@ public class ConfirmEmailBase : ComponentBase
         catch(Exception ex)
         {
             errorMessage = "An unexpected error occurred. Please contact support.";
-            Logger.LogError(ex, "An unhandled exception has occured during email verification in Email confirmation page");
+            Logger.LogError(ex, "An unexpected occured during email verification in Email confirmation page");
         }
         finally
         {

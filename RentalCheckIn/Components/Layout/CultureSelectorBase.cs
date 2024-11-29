@@ -37,7 +37,7 @@ public class CultureSelectorBase : ComponentBase
             }
             catch (Exception ex)
             {
-                Logger.LogError(ex, "Error setting the culture.");
+                Logger.LogError(ex, "An unexpected error occurred while trying to set the culture in Culture selector component.");
             }
         }
     }
