@@ -61,11 +61,65 @@ namespace RentalCheckIn.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Your account was created. An account confirmation link has been sent to your email..
+        /// </summary>
+        public static string AccountCreatedConfirmationEmailSent {
+            get {
+                return ResourceManager.GetString("AccountCreatedConfirmationEmailSent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Close.
+        /// </summary>
+        public static string Action_Close_Label {
+            get {
+                return ResourceManager.GetString("Action.Close.Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to All.
+        /// </summary>
+        public static string All {
+            get {
+                return ResourceManager.GetString("All", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Apartment.
         /// </summary>
         public static string Apartment {
             get {
                 return ResourceManager.GetString("Apartment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to  Apartment fee must be greater than 0..
+        /// </summary>
+        public static string ApartmentFeeRange {
+            get {
+                return ResourceManager.GetString("ApartmentFeeRange", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Apartment fee is required..
+        /// </summary>
+        public static string ApartmentFeeRequired {
+            get {
+                return ResourceManager.GetString("ApartmentFeeRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to  Apartment name is required..
+        /// </summary>
+        public static string ApartmentNameRequired {
+            get {
+                return ResourceManager.GetString("ApartmentNameRequired", resourceCulture);
             }
         }
         
@@ -88,11 +142,56 @@ namespace RentalCheckIn.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to  Check-in date is required..
+        /// </summary>
+        public static string CheckInDateRequired {
+            get {
+                return ResourceManager.GetString("CheckInDateRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to CheckInTimeRequired.
+        /// </summary>
+        public static string CheckInTimeRequired {
+            get {
+                return ResourceManager.GetString("CheckInTimeRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Check-Out.
         /// </summary>
         public static string CheckOut {
             get {
                 return ResourceManager.GetString("CheckOut", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Check-Out Date must be after Check-In Date..
+        /// </summary>
+        public static string CheckOutDateAfterCheckIn {
+            get {
+                return ResourceManager.GetString("CheckOutDateAfterCheckIn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Check-out date is required..
+        /// </summary>
+        public static string CheckOutDateRequired {
+            get {
+                return ResourceManager.GetString("CheckOutDateRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to  Check-out time is required..
+        /// </summary>
+        public static string CheckOutTimeRequired {
+            get {
+                return ResourceManager.GetString("CheckOutTimeRequired", resourceCulture);
             }
         }
         
@@ -142,11 +241,83 @@ namespace RentalCheckIn.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Mobile.
+        /// </summary>
+        public static string Contact_Mobile_Label {
+            get {
+                return ResourceManager.GetString("Contact.Mobile.Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not load resources..
+        /// </summary>
+        public static string CouldNotLoadResources {
+            get {
+                return ResourceManager.GetString("CouldNotLoadResources", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Passport Number.
+        /// </summary>
+        public static string Document_PassportNumber_Label {
+            get {
+                return ResourceManager.GetString("Document.PassportNumber.Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Email.
+        /// </summary>
+        public static string Email {
+            get {
+                return ResourceManager.GetString("Email", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Email is required.
         /// </summary>
         public static string EmailRequired {
             get {
                 return ResourceManager.GetString("EmailRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Face ID registration failed.
+        /// </summary>
+        public static string FaceID_Registration_Failed {
+            get {
+                return ResourceManager.GetString("FaceID.Registration.Failed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to  Face ID registration successful!.
+        /// </summary>
+        public static string FaceID_Registration_Success {
+            get {
+                return ResourceManager.GetString("FaceID.Registration.Success", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An unexpected error occurred during Face ID registration..
+        /// </summary>
+        public static string FaceID_Registration_UnexpectedError {
+            get {
+                return ResourceManager.GetString("FaceID.Registration.UnexpectedError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Apartment Fee.
+        /// </summary>
+        public static string Fee_Apartment_Label {
+            get {
+                return ResourceManager.GetString("Fee.Apartment.Label", resourceCulture);
             }
         }
         
@@ -187,6 +358,42 @@ namespace RentalCheckIn.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to CHECK-IN FORM.
+        /// </summary>
+        public static string Form_CheckIn_Title {
+            get {
+                return ResourceManager.GetString("Form.CheckIn.Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Details.
+        /// </summary>
+        public static string General_Details_Label {
+            get {
+                return ResourceManager.GetString("General.Details.Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to adults.
+        /// </summary>
+        public static string Guest_Adults_Label {
+            get {
+                return ResourceManager.GetString("Guest.Adults.Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Guest details.
+        /// </summary>
+        public static string Guest_Details_Label {
+            get {
+                return ResourceManager.GetString("Guest.Details.Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Guests.
         /// </summary>
         public static string Guests {
@@ -201,6 +408,33 @@ namespace RentalCheckIn.Locales {
         public static string Hello {
             get {
                 return ResourceManager.GetString("Hello", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Email address is invalid..
+        /// </summary>
+        public static string InvalidEmail {
+            get {
+                return ResourceManager.GetString("InvalidEmail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to  Meter reading must be greater than 0..
+        /// </summary>
+        public static string KwhAtCheckInRange {
+            get {
+                return ResourceManager.GetString("KwhAtCheckInRange", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Meter reading is required..
+        /// </summary>
+        public static string KwhAtCheckInRequired {
+            get {
+                return ResourceManager.GetString("KwhAtCheckInRequired", resourceCulture);
             }
         }
         
@@ -268,6 +502,15 @@ namespace RentalCheckIn.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Mobile number is required..
+        /// </summary>
+        public static string MobileRequired {
+            get {
+                return ResourceManager.GetString("MobileRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Name.
         /// </summary>
         public static string Name {
@@ -295,11 +538,38 @@ namespace RentalCheckIn.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to  Number of nights must be greater than 0..
+        /// </summary>
+        public static string NumberOfNightsGreaterThanZero {
+            get {
+                return ResourceManager.GetString("NumberOfNightsGreaterThanZero", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to TOTP code required.
         /// </summary>
         public static string OTPCodeRequired {
             get {
                 return ResourceManager.GetString("OTPCodeRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Passport number cannot exceed 50 characters..
+        /// </summary>
+        public static string PassportNrMaxLength {
+            get {
+                return ResourceManager.GetString("PassportNrMaxLength", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Passport number is required..
+        /// </summary>
+        public static string PassportNrRequired {
+            get {
+                return ResourceManager.GetString("PassportNrRequired", resourceCulture);
             }
         }
         
@@ -394,6 +664,15 @@ namespace RentalCheckIn.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Total Payment.
+        /// </summary>
+        public static string Payment_Total_Label {
+            get {
+                return ResourceManager.GetString("Payment.Total.Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Previous.
         /// </summary>
         public static string Previous {
@@ -412,11 +691,47 @@ namespace RentalCheckIn.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Price summary.
+        /// </summary>
+        public static string Price_Summary_Label {
+            get {
+                return ResourceManager.GetString("Price.Summary.Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Total Price.
+        /// </summary>
+        public static string Price_Total_Label {
+            get {
+                return ResourceManager.GetString("Price.Total.Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Quest checked-in successfully!.
+        /// </summary>
+        public static string Quest_CheckIn_Success {
+            get {
+                return ResourceManager.GetString("Quest.CheckIn.Success", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Register.
         /// </summary>
         public static string Register {
             get {
                 return ResourceManager.GetString("Register", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Your account was created successfully..
+        /// </summary>
+        public static string RegisterAccountCreatedSuccessfully {
+            get {
+                return ResourceManager.GetString("RegisterAccountCreatedSuccessfully", resourceCulture);
             }
         }
         
@@ -450,11 +765,65 @@ namespace RentalCheckIn.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to By signing this form, the tenant declares to agree with the (house) rules from the &quot;IMPORTANT&quot; handbook and the general terms and conditions of Snowy Lodge..
+        /// </summary>
+        public static string Rental_Agreement_Signature_Info {
+            get {
+                return ResourceManager.GetString("Rental.Agreement.Signature.Info", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Energy consumption up to 30 kWh per day is included in the rental price! For additional use, $0.20 per kWh will be charged at check-out.
+        /// </summary>
+        public static string Rental_EnergyConsumption_CheckBox {
+            get {
+                return ResourceManager.GetString("Rental.EnergyConsumption.CheckBox", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Received alarm remote control, remote control sliding gate, house key, gate key, and room keys..
+        /// </summary>
+        public static string Rental_ReceivedKeys_Info {
+            get {
+                return ResourceManager.GetString("Rental.ReceivedKeys.Info", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Reservation.
         /// </summary>
         public static string Reservation {
             get {
                 return ResourceManager.GetString("Reservation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Security Deposit.
+        /// </summary>
+        public static string SecurityDeposit_Label {
+            get {
+                return ResourceManager.GetString("SecurityDeposit.Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Security deposit must be greater than 0..
+        /// </summary>
+        public static string SecurityDepositRange {
+            get {
+                return ResourceManager.GetString("SecurityDepositRange", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Security deposit is required..
+        /// </summary>
+        public static string SecurityDepositRequired {
+            get {
+                return ResourceManager.GetString("SecurityDepositRequired", resourceCulture);
             }
         }
         
@@ -477,11 +846,47 @@ namespace RentalCheckIn.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to  The signature is required..
+        /// </summary>
+        public static string Signature_Required_ {
+            get {
+                return ResourceManager.GetString("Signature.Required ", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Status.
         /// </summary>
         public static string Status {
             get {
                 return ResourceManager.GetString("Status", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An unexpected error occurred. Please try again later..
+        /// </summary>
+        public static string UnexpectedErrorOccurred {
+            get {
+                return ResourceManager.GetString("UnexpectedErrorOccurred", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unsupported 2FA method selected..
+        /// </summary>
+        public static string Unsupported2FAMethod {
+            get {
+                return ResourceManager.GetString("Unsupported2FAMethod", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Verification is invalid, please contact support..
+        /// </summary>
+        public static string VerificationInvalid {
+            get {
+                return ResourceManager.GetString("VerificationInvalid", resourceCulture);
             }
         }
         

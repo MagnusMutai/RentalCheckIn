@@ -282,4 +282,141 @@ Uitchecken</value>
   <data name="ConfirmPasswordRequired" xml:space="preserve">
     <value>Het veld bevestig wachtwoord is vereist</value>
   </data>
+  <data name="Email" xml:space="preserve">
+    <value>E-mail</value>
+  </data>
+  <data name="PassportNrRequired" xml:space="preserve">
+    <value>Paspoortnummer is verplicht.</value>
+  </data>
+  <data name="PassportNrMaxLength" xml:space="preserve">
+    <value> Paspoortnummer mag niet meer dan 50 tekens bevatten.</value>
+  </data>
+  <data name="InvalidEmail" xml:space="preserve">
+    <value> E-mailadres is ongeldig.</value>
+  </data>
+  <data name="MobileRequired" xml:space="preserve">
+    <value> Mobiel nummer is verplicht.</value>
+  </data>
+  <data name="CheckInDateRequired" xml:space="preserve">
+    <value>Incheckdatum is verplicht.</value>
+  </data>
+  <data name="CheckOutDateRequired" xml:space="preserve">
+    <value>Uitcheckdatum is verplicht.</value>
+  </data>
+  <data name="CheckInTimeRequired" xml:space="preserve">
+    <value> Inchecktijd is verplicht.</value>
+  </data>
+  <data name="CheckOutTimeRequired" xml:space="preserve">
+    <value>Uitchecktijd is verplicht.</value>
+  </data>
+  <data name="ApartmentNameRequired" xml:space="preserve">
+    <value>Appartementnaam is verplicht.</value>
+  </data>
+  <data name="ApartmentFeeRequired" xml:space="preserve">
+    <value>Appartementkosten zijn verplicht.</value>
+  </data>
+  <data name="ApartmentFeeRange" xml:space="preserve">
+    <value>Appartementkosten moeten groter zijn dan 0.</value>
+  </data>
+  <data name="SecurityDepositRequired" xml:space="preserve">
+    <value>Borgsom is verplicht.</value>
+  </data>
+  <data name="SecurityDepositRange" xml:space="preserve">
+    <value>Borgsom moet groter zijn dan 0.</value>
+  </data>
+  <data name="KwhAtCheckInRequired" xml:space="preserve">
+    <value>Meterstand moet groter zijn dan 0.</value>
+  </data>
+  <data name="KwhAtCheckInRange" xml:space="preserve">
+    <value> Meterstand moet groter zijn dan 0.</value>
+  </data>
+  <data name="CheckOutDateAfterCheckIn" xml:space="preserve">
+    <value> Uitcheckdatum moet na de incheckdatum zijn.</value>
+  </data>
+  <data name="NumberOfNightsGreaterThanZero" xml:space="preserve">
+    <value> Aantal nachten moet groter zijn dan 0.</value>
+  </data>
+  <data name="VerificationInvalid" xml:space="preserve">
+    <value>De verificatie is ongeldig, neem contact op met de ondersteuning.
+</value>
+  </data>
+  <data name="UnexpectedErrorOccurred" xml:space="preserve">
+    <value>Er is een onverwachte fout opgetreden. Probeer het later opnieuw.</value>
+  </data>
+  <data name="All" xml:space="preserve">
+    <value>Alles
+</value>
+  </data>
+  <data name="CouldNotLoadResources" xml:space="preserve">
+    <value>Kon bronnen niet laden.</value>
+  </data>
+  <data name="Unsupported2FAMethod" xml:space="preserve">
+    <value>Niet-ondersteunde 2FA-methode geselecteerd.</value>
+  </data>
+  <data name="RegisterAccountCreatedSuccessfully" xml:space="preserve">
+    <value>Uw account is succesvol aangemaakt.</value>
+  </data>
+  <data name="AccountCreatedConfirmationEmailSent" xml:space="preserve">
+    <value>Uw account is aangemaakt. Een bevestigingslink is naar uw e-mail verzonden.</value>
+  </data>
+  <data name="FaceID.Registration.Success" xml:space="preserve">
+    <value>Face ID-registratie succesvol!</value>
+  </data>
+  <data name="FaceID.Registration.Failed" xml:space="preserve">
+    <value>Face ID-registratie mislukt</value>
+  </data>
+  <data name="FaceID.Registration.UnexpectedError" xml:space="preserve">
+    <value>Er trad een onverwachte fout op tijdens de Face ID-registratie.</value>
+  </data>
+  <data name="Signature.Required " xml:space="preserve">
+    <value>De handtekening is vereist.</value>
+  </data>
+  <data name="Quest.CheckIn.Success" xml:space="preserve">
+    <value>Quest succesvol ingecheckt!</value>
+  </data>
+  <data name="SecurityDeposit.Label" xml:space="preserve">
+    <value>Borg</value>
+  </data>
+  <data name="Payment.Total.Label" xml:space="preserve">
+    <value>Totale Betaling</value>
+  </data>
+  <data name="Guest.Adults.Label" xml:space="preserve">
+    <value>volwassenen</value>
+  </data>
+  <data name="Price.Summary.Label" xml:space="preserve">
+    <value>Prijsoverzicht</value>
+  </data>
+  <data name="Guest.Details.Label" xml:space="preserve">
+    <value>Gastgegevens</value>
+  </data>
+  <data name="Action.Close.Label" xml:space="preserve">
+    <value>Sluiten</value>
+  </data>
+  <data name="Form.CheckIn.Title" xml:space="preserve">
+    <value>INCHECKFORMULIER</value>
+  </data>
+  <data name="Contact.Mobile.Label" xml:space="preserve">
+    <value>Mobiel</value>
+  </data>
+  <data name="Document.PassportNumber.Label" xml:space="preserve">
+    <value>Paspoortnummer</value>
+  </data>
+  <data name="General.Details.Label" xml:space="preserve">
+    <value>Gegevens</value>
+  </data>
+  <data name="Fee.Apartment.Label" xml:space="preserve">
+    <value>Appartementkosten</value>
+  </data>
+  <data name="Price.Total.Label" xml:space="preserve">
+    <value>Totale Prijs</value>
+  </data>
+  <data name="Rental.EnergyConsumption.CheckBox" xml:space="preserve">
+    <value>Energieverbruik tot 30 kWh per dag is inbegrepen in de huurprijs! Voor extra verbruik wordt $0,20 per kWh in rekening gebracht bij het uitchecken</value>
+  </data>
+  <data name="Rental.ReceivedKeys.Info" xml:space="preserve">
+    <value>Ontvangen: alarm afstandsbediening, afstandsbediening schuifpoort, huissleutel, poortsleutel en kamersleutels.</value>
+  </data>
+  <data name="Rental.Agreement.Signature.Info" xml:space="preserve">
+    <value>Door dit formulier te ondertekenen, verklaart de huurder akkoord te gaan met de (huis)regels uit het "BELANGRIJK" handboek en de algemene voorwaarden van Snowy Lodge.</value>
+  </data>
 </root>

@@ -8,11 +8,17 @@ public class DocumentService : IDocumentService
         this.httpClient = httpClient;
     }
 
-    public async Task<string> GenerateAndSendCheckInFormAsync(CheckInReservationDTO model)
+    public async Task<string> GenerateAndSendCheckInFormAsync(CheckInReservationDTO model, string culture)
     {
         try
         {
-            var response = await httpClient.PostAsJsonAsync("api/Document/GenerateAndSendCheckInForm", model);
+            var request = new OperationRequest
+            {
+                Model = model,
+                Culture = culture
+            };
+
+            var response = await httpClient.PostAsJsonAsync("api/Document/GenerateAndSendCheckInForm", request);
 
             if (response.IsSuccessStatusCode)
             {

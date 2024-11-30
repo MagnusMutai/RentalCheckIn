@@ -9,8 +9,7 @@ public class DocumentController : ControllerBase
     private readonly IWhatsAppService whatsAppService;
     private readonly ILogger<DocumentController> logger;
 
-    public DocumentController(IPDFService pdfService, IWhatsAppService whatsAppService, ILogger<DocumentController> logger
-)
+    public DocumentController(IPDFService pdfService, IWhatsAppService whatsAppService, ILogger<DocumentController> logger)
     {
         this.pdfService = pdfService;
         this.whatsAppService = whatsAppService;
@@ -18,16 +17,16 @@ public class DocumentController : ControllerBase
     }
 
     [HttpPost("GenerateAndSendCheckInForm")]
-    public async Task<IActionResult> GenerateAndSendCheckInForm([FromBody] CheckInReservationDTO model)
+    public async Task<IActionResult> GenerateAndSendCheckInForm([FromBody] OperationRequest request)
     {
         try
         {
             // Generate the document
-            string uniqueFileName = pdfService.FillCheckInFormAsync(model);
+            string uniqueFileName = pdfService.FillCheckInFormAsync(request.Model, request.Culture);
             // Construct the document URL
             string documentUrl = $"{Request.Scheme}://{Request.Host}/output/{uniqueFileName}";
             // Send the document via WhatsApp
-            await whatsAppService.SendDocumentAsync(model.Mobile, documentUrl, "Your check-in form");
+            await whatsAppService.SendDocumentAsync(request.Model.Mobile, documentUrl, "Your check-in form");
 
             return Ok("Document sent via WhatsApp.");
         }

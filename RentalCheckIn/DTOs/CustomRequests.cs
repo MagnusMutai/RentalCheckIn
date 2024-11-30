@@ -13,15 +13,15 @@ public class CustomRequests
         public string NewPassword { get; set; }
     }
 
-    public class ApartmentNamesRequest
+    public class LocalizationRequest<T>
     {
-        public List<uint> ApartmentIds { get; set; }
+        public List<T> Data { get; set; }
         public string Culture { get; set; }
     }
 
-    public class StatusLabelsRequest
+    public class OperationRequest
     {
-        public List<uint> StatusIds { get; set; }
+        public  CheckInReservationDTO Model { get; set; }
         public string Culture { get; set; }
     }
 

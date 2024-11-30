@@ -1,5 +1,4 @@
 ﻿using RentalCheckIn.Locales;
-
 namespace RentalCheckIn.DTOs;
 
 public class HostLoginDTO

@@ -1,4 +1,6 @@
-﻿namespace RentalCheckIn.Controllers;
+﻿using static RentalCheckIn.DTOs.CustomRequests;
+
+namespace RentalCheckIn.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
@@ -14,11 +16,11 @@ public class LocalizationController : ControllerBase
     }
 
     [HttpPost("apartments/names")]
-    public async Task<ActionResult<Dictionary<uint, string>>> GetApartmentNames([FromBody] ApartmentNamesRequest request)
+    public async Task<ActionResult<Dictionary<uint, string>>> GetApartmentNames([FromBody] LocalizationRequest<uint> request)
     {
         try
         {
-            var apartmentNames = await localizationService.GetApartmentNamesAsync(request.ApartmentIds, request.Culture);
+            var apartmentNames = await localizationService.GetApartmentNamesAsync(request.Data, request.Culture);
          
             if (apartmentNames == null) 
             {
@@ -36,11 +38,11 @@ public class LocalizationController : ControllerBase
     }
 
     [HttpPost("statuses/labels")]
-    public async Task<ActionResult<Dictionary<uint, string>>> GetStatusLabels([FromBody] StatusLabelsRequest request)
+    public async Task<ActionResult<Dictionary<uint, string>>> GetStatusLabels([FromBody] LocalizationRequest<uint> request)
     {
         try
         {
-            var statusLabels = await localizationService.GetStatusLabelsAsync(request.StatusIds, request.Culture);
+            var statusLabels = await localizationService.GetStatusLabelsAsync(request.Data, request.Culture);
 
             if (statusLabels == null)
             {

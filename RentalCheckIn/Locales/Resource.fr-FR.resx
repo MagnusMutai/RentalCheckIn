@@ -121,8 +121,7 @@
     <value>Filtrer par appartement</value>
   </data>
   <data name="CheckIn" xml:space="preserve">
-    <value>
-Enregistrement</value>
+    <value>Enregistrement</value>
   </data>
   <data name="CheckOut" xml:space="preserve">
     <value>Départ</value>
@@ -280,5 +279,142 @@ Enregistrement</value>
   </data>
   <data name="ConfirmPasswordRequired" xml:space="preserve">
     <value>Le champ de confirmation du mot de passe est requis</value>
+  </data>
+  <data name="Email" xml:space="preserve">
+    <value>E-mail</value>
+  </data>
+  <data name="PassportNrRequired" xml:space="preserve">
+    <value> Le numéro de passeport est obligatoire.</value>
+  </data>
+  <data name="PassportNrMaxLength" xml:space="preserve">
+    <value>Le numéro de passeport ne peut pas dépasser 50 caractères.</value>
+  </data>
+  <data name="InvalidEmail" xml:space="preserve">
+    <value>L'adresse e-mail est invalide.</value>
+  </data>
+  <data name="MobileRequired" xml:space="preserve">
+    <value>Le numéro de mobile est obligatoire.</value>
+  </data>
+  <data name="CheckInDateRequired" xml:space="preserve">
+    <value>La date d'arrivée est obligatoire.</value>
+  </data>
+  <data name="CheckOutDateRequired" xml:space="preserve">
+    <value>La date de départ est obligatoire.</value>
+  </data>
+  <data name="CheckInTimeRequired" xml:space="preserve">
+    <value> L'heure d'arrivée est obligatoire.</value>
+  </data>
+  <data name="CheckOutTimeRequired" xml:space="preserve">
+    <value> L'heure de départ est obligatoire.</value>
+  </data>
+  <data name="ApartmentNameRequired" xml:space="preserve">
+    <value>Le nom de l'appartement est obligatoire.</value>
+  </data>
+  <data name="ApartmentFeeRequired" xml:space="preserve">
+    <value>Les frais de l'appartement sont obligatoires.</value>
+  </data>
+  <data name="ApartmentFeeRange" xml:space="preserve">
+    <value> Les frais de l'appartement doivent être supérieurs à 0.</value>
+  </data>
+  <data name="SecurityDepositRequired" xml:space="preserve">
+    <value> Le dépôt de garantie est obligatoire.</value>
+  </data>
+  <data name="SecurityDepositRange" xml:space="preserve">
+    <value>Le dépôt de garantie doit être supérieur à 0.</value>
+  </data>
+  <data name="KwhAtCheckInRequired" xml:space="preserve">
+    <value>La lecture du compteur est obligatoire.</value>
+  </data>
+  <data name="KwhAtCheckInRange" xml:space="preserve">
+    <value> La lecture du compteur doit être supérieure à 0.</value>
+  </data>
+  <data name="CheckOutDateAfterCheckIn" xml:space="preserve">
+    <value>La date de départ doit être après la date d'arrivée.</value>
+  </data>
+  <data name="NumberOfNightsGreaterThanZero" xml:space="preserve">
+    <value>Le nombre de nuits doit être supérieur à 0.</value>
+  </data>
+  <data name="VerificationInvalid" xml:space="preserve">
+    <value>La vérification est invalide, veuillez contacter le support.
+</value>
+  </data>
+  <data name="UnexpectedErrorOccurred" xml:space="preserve">
+    <value>Une erreur inattendue s'est produite. Veuillez réessayer plus tard.</value>
+  </data>
+  <data name="All" xml:space="preserve">
+    <value>Tous
+</value>
+  </data>
+  <data name="CouldNotLoadResources" xml:space="preserve">
+    <value>Impossible de charger les ressources.</value>
+  </data>
+  <data name="Unsupported2FAMethod" xml:space="preserve">
+    <value>Méthode 2FA non prise en charge sélectionnée.</value>
+  </data>
+  <data name="RegisterAccountCreatedSuccessfully" xml:space="preserve">
+    <value>Votre compte a été créé avec succès.</value>
+  </data>
+  <data name="AccountCreatedConfirmationEmailSent" xml:space="preserve">
+    <value>Votre compte a été créé. Un lien de confirmation a été envoyé à votre adresse e-mail.</value>
+  </data>
+  <data name="FaceID.Registration.Success" xml:space="preserve">
+    <value>Enregistrement Face ID réussi !</value>
+  </data>
+  <data name="FaceID.Registration.Failed" xml:space="preserve">
+    <value>Échec de l'enregistrement Face ID </value>
+  </data>
+  <data name="FaceID.Registration.UnexpectedError" xml:space="preserve">
+    <value>Une erreur inattendue s'est produite lors de l'enregistrement Face ID.</value>
+  </data>
+  <data name="Signature.Required " xml:space="preserve">
+    <value>La signature est requise.</value>
+  </data>
+  <data name="Quest.CheckIn.Success" xml:space="preserve">
+    <value>Quête enregistrée avec succès !</value>
+  </data>
+  <data name="SecurityDeposit.Label" xml:space="preserve">
+    <value>Dépôt de garantie</value>
+  </data>
+  <data name="Payment.Total.Label" xml:space="preserve">
+    <value>Paiement Total</value>
+  </data>
+  <data name="Guest.Adults.Label" xml:space="preserve">
+    <value>adultes</value>
+  </data>
+  <data name="Price.Summary.Label" xml:space="preserve">
+    <value>Résumé du prix</value>
+  </data>
+  <data name="Guest.Details.Label" xml:space="preserve">
+    <value>Détails du client</value>
+  </data>
+  <data name="Action.Close.Label" xml:space="preserve">
+    <value> Fermer</value>
+  </data>
+  <data name="Form.CheckIn.Title" xml:space="preserve">
+    <value> FORMULAIRE D'ENREGISTREMENT</value>
+  </data>
+  <data name="Contact.Mobile.Label" xml:space="preserve">
+    <value> Mobile</value>
+  </data>
+  <data name="Document.PassportNumber.Label" xml:space="preserve">
+    <value>Numéro de passeport </value>
+  </data>
+  <data name="General.Details.Label" xml:space="preserve">
+    <value>Détails</value>
+  </data>
+  <data name="Fee.Apartment.Label" xml:space="preserve">
+    <value> Frais d'appartement</value>
+  </data>
+  <data name="Price.Total.Label" xml:space="preserve">
+    <value>Prix Total</value>
+  </data>
+  <data name="Rental.EnergyConsumption.CheckBox" xml:space="preserve">
+    <value>La consommation d'énergie jusqu'à 30 kWh par jour est incluse dans le prix de location ! Pour une utilisation supplémentaire, 0,20 $ par kWh sera facturé lors du départ</value>
+  </data>
+  <data name="Rental.ReceivedKeys.Info" xml:space="preserve">
+    <value>Reçu : télécommande d'alarme, télécommande de portail coulissant, clé de maison, clé de portail et clés de chambre.</value>
+  </data>
+  <data name="Rental.Agreement.Signature.Info" xml:space="preserve">
+    <value>En signant ce formulaire, le locataire déclare accepter le règlement intérieur du manuel "IMPORTANT" ainsi que les conditions générales de Snowy Lodge.</value>
   </data>
 </root>
