@@ -11,7 +11,7 @@
         {
             <div class="row border bg-white mb-1 rounded-3 p-3">
                 <div class="col-12 py-1">@reservation.QuestName, @reservation.CheckInDate - @reservation.CheckOutDate</div>
-                <div class="col-12 py-1">@reservation.NumberOfNights nights, @reservation.NumberOfQuests quests</div>
+                <div class="col-12 py-1">@reservation.NumberOfNights @Localizer["Nights"], @reservation.NumberOfQuests @Localizer["Guests"]</div>
                 <div class="col-12 py-1">@Localizer["Apartment"]: @reservation.ApartmentName</div>
                 <div class="col-12 py-1">@reservation.CurrencySymbol @reservation.TotalPrice</div>
                 <button class="btn btn-success btn-sm border-0 rounded-3 ms-2 mt-3" @onclick="() => OpenModal(reservation)">@Localizer["View"]</button>

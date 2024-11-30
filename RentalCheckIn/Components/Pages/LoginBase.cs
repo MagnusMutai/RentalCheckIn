@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Localization;
+using RentalCheckIn.Locales;
 namespace RentalCheckIn.Components.Pages;
 
 public class LoginBase : ComponentBase
@@ -17,7 +19,8 @@ public class LoginBase : ComponentBase
     private AuthenticationStateProvider AuthStateProvider { get; set; }
     [Inject]
     private ILogger<LoginBase> Logger { get; set; }
-
+    [Inject]
+    protected IStringLocalizer<Resource> Localizer { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -35,7 +38,7 @@ public class LoginBase : ComponentBase
         }
         catch (Exception ex) 
         {
-            ErrorMessage = "An unexpected error occurred";
+            ErrorMessage = Localizer["UnexpectedErrorOccurred"];
             Logger.LogError(ex, "An unexpected error occurred while getting the state of authentication of the user in Login page.");
         }
     }
@@ -68,7 +71,7 @@ public class LoginBase : ComponentBase
                 else
                 {
                     // Handle cases where no 2FA is selected or unsupported method
-                    ErrorMessage = "Unsupported 2FA method selected.";
+                    ErrorMessage = Localizer["Unsupported2FAMethod"];
                     DisplayToast = "d-block";
                 }
             }
@@ -80,7 +83,7 @@ public class LoginBase : ComponentBase
         }
         catch (Exception ex) 
         {
-            ErrorMessage = "An unexpected error occurred";
+            ErrorMessage = Localizer["UnexpectedErrorOccurred"];
             Logger.LogError(ex, "An unexpected error occurred in the login page while trying to login a user.");
         }
         finally

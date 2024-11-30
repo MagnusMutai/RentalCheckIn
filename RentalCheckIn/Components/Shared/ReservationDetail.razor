@@ -32,12 +32,12 @@
 
         <div>
             <h5 class="m-0 fs-5">@Localizer["Guests"]:</h5>
-            <p class="text-black-50">@SelectedReservation.NumberOfQuests adults</p>
+            <p class="text-black-50">@SelectedReservation.NumberOfQuests @Localizer["Guest.Adults.Label"]</p>
         </div>
 
         <div>
             <h5 class="m-0 fs-5">@Localizer["Nights"]:</h5>
-            <p class="text-black-50">@SelectedReservation.NumberOfNights nights</p>
+            <p class="text-black-50">@SelectedReservation.NumberOfNights @Localizer["Nights"]</p>
         </div>
 
         <div>
@@ -46,7 +46,7 @@
         </div>
 
         <div>
-            <h5 class="m-0 fs-5">Price summary</h5>
+            <h5 class="m-0 fs-5">@Localizer["Price.Summary.Label"]</h5>
 
             <div class="text-nowrap">
                 <div class="row mb-2 mb-md-0">
@@ -60,7 +60,7 @@
 
                 <div class="row mb-2 mb-md-0">
                     <div class="col-md-3">
-                        <p class="text-black-50 m-0">@Localizer["Security Deposit"]</p>
+                        <p class="text-black-50 m-0">@Localizer["SecurityDeposit.Label"]</p>
                     </div>
 
                     <div class="col-md-9">
@@ -70,7 +70,7 @@
 
                 <div class="row">
                     <div class="col-md-3">
-                        <p class="text-black-50 m-0">@Localizer["Total Payment"]</p>
+                        <p class="text-black-50 m-0">@Localizer["Payment.Total.Label"]</p>
                     </div>
                     <div class="col-md-9">
                         <p class="fw-bold ms-md-5">@SelectedReservation.CurrencySymbol @SelectedReservation.TotalPrice</p>
@@ -79,7 +79,7 @@
             </div>
         </div>
 
-        <button class="btn btn-success border-0 rounded-3 mt-4" @onclick="NavigateToCheckIn">Check-In</button>
+        <button class="btn btn-success border-0 rounded-3 mt-4" @onclick="NavigateToCheckIn">@Localizer["CheckIn"]</button>
     </div>
 }
 else

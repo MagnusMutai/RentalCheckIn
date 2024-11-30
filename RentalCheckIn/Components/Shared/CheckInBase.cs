@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Localization;
+using RentalCheckIn.Locales;
 using SignaturePad;
 using System.Drawing;
+using System.Globalization;
 
 namespace RentalCheckIn.Components.Shared;
 public class CheckInBase : ComponentBase
@@ -29,6 +32,8 @@ public class CheckInBase : ComponentBase
     private ProtectedLocalStorage LocalStorage { get; set; }
     [Inject]
     private ILogger<CheckInBase> Logger { get; set; }
+    [Inject]
+    protected IStringLocalizer<Resource> Localizer { get; set; }
 
     protected bool AgreeEnergyConsumption = true;
 
@@ -93,7 +98,7 @@ public class CheckInBase : ComponentBase
         }
         catch (Exception ex)
         {
-            Message = "An unexpected error occurred.";
+            Message = Localizer["UnexpectedErrorOccurred"];
             Logger.LogError(ex, "An unexpected error occurred while trying to authenticate user on OnAfterRenderAsync on CheckIn component.");
         }
     }
@@ -122,7 +127,7 @@ public class CheckInBase : ComponentBase
         // Check custom field
         if (SignatureBytes == null || SignatureBytes.Length == 0)
         {
-            signatureValidationError = "The signature is required.";
+            signatureValidationError = Localizer["Signature.Required"];
             return false;
         }
         else
@@ -161,7 +166,7 @@ public class CheckInBase : ComponentBase
 
             if (isSaved) 
             {
-                Message = "Quest checked-in successfully!";
+                Message = Localizer["Quest.CheckIn.Success"];
             }
             // Implement Result pattern to get more relevant and specific responses from the server.
         }
@@ -173,10 +178,12 @@ public class CheckInBase : ComponentBase
 
     private async Task SharePdf()
     {
+        var culture = CultureInfo.CurrentCulture.Name;
+
         // Implement PDF generation and sharing
         try
         {
-            Message = await DocumentService.GenerateAndSendCheckInFormAsync(checkInModel);
+            Message = await DocumentService.GenerateAndSendCheckInFormAsync(checkInModel, culture);
         }
         catch (Exception ex)
         {

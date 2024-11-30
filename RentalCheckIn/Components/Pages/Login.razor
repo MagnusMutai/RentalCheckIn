@@ -2,7 +2,6 @@
 @inherits LoginBase
 @using Microsoft.Extensions.Localization
 @using RentalCheckIn.Locales
-@inject IStringLocalizer<Resource> Localizer
 
 <PageTitle>Login</PageTitle>
 <div class="container-fluid text-white">
@@ -30,7 +29,7 @@
                 <EditForm Model="loginModel" OnValidSubmit="HandleLogin">
                     <DataAnnotationsValidator />
                     <div class="mb-4">
-                        <InputText class="bg-transparent text-white rounded-pill form-control" @bind-Value="loginModel.Email" placeholder="Email" />
+                        <InputText class="bg-transparent text-white rounded-pill form-control" @bind-Value="loginModel.Email" placeholder="@Localizer["Email"]" />
                         <ValidationMessage For="@(() => loginModel.Email)" class="ms-2 text-danger" />
                     </div>
                     <div class="mb-1 py-2">

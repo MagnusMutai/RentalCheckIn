@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Localization;
+using RentalCheckIn.Locales;
 
 namespace RentalCheckIn.Components.Pages;
 
@@ -15,6 +17,9 @@ public class VerifyFaceIdBase : ComponentBase
     private ProtectedLocalStorage LocalStorage { get; set; }
     [Inject]
     private ILogger<VerifyFaceIdBase> Logger { get; set; }
+
+    [Inject]
+    protected IStringLocalizer<Resource> Localizer { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -43,7 +48,7 @@ public class VerifyFaceIdBase : ComponentBase
         }
         catch(Exception ex) 
         {
-            ErrorMessage = $"An unexpected error has occurred, please try again later.";
+            ErrorMessage = Localizer["UnexpectedErrorOccurred"];
             Logger.LogError(ex, "An unexpected error occurred while trying to verify face Id in VerifyFaceIdComponent.");
         }
         finally

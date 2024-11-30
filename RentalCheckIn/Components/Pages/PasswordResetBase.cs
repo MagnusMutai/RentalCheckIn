@@ -73,7 +73,7 @@ public class PasswordResetBase : ComponentBase
                                 else
                                 {
                                     // Handle cases where no 2FA is selected or unsupported method
-                                    Message = "Unsupported 2FA method selected.";
+                                    Message = Localizer["Unsupported2FAMethod"];
                                 }
                             }
                         }

@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Localization;
+using RentalCheckIn.Locales;
 
 namespace RentalCheckIn.Components.Pages;
 public class RegisterFaceIdBase : ComponentBase
@@ -20,6 +22,8 @@ public class RegisterFaceIdBase : ComponentBase
     public OperationResult RegistrationResult { get; set; }
     [Inject]
     private ILogger<RegisterFaceIdBase> Logger { get; set; }
+    [Inject]
+    protected IStringLocalizer<Resource> Localizer { get; set; }
 
 
     protected override async Task OnInitializedAsync()
@@ -47,11 +51,11 @@ public class RegisterFaceIdBase : ComponentBase
         }
         catch(Exception ex)
         {
-            message = "An unexpected error occurred during Face ID registration.";
+            message = Localizer["FaceID.Registration.UnexpectedError"];
             RegistrationResult = new OperationResult
             {
                 IsSuccess = false,
-                Message = "An unexpected error occurred during Face ID registration."
+                Message = Localizer["FaceID.Registration.UnexpectedError"]
             };
 
             await OnRegistrationComplete.InvokeAsync(RegistrationResult);
