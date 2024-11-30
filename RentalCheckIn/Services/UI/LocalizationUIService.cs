@@ -1,4 +1,5 @@
 ﻿using System.Net.Http;
+using static RentalCheckIn.DTOs.CustomRequests;
 
 namespace RentalCheckIn.Services.UI;
 public class LocalizationUIService : ILocalizationUIService
@@ -12,9 +13,9 @@ public class LocalizationUIService : ILocalizationUIService
 
     public async Task<Dictionary<uint, string>> GetApartmentNamesAsync(IEnumerable<uint> apartmentIds, string culture)
     {
-        var request = new ApartmentNamesRequest
+        var request = new LocalizationRequest<uint>
         {
-            ApartmentIds = apartmentIds.ToList(),
+            Data = apartmentIds.ToList(),
             Culture = culture
         };
 
@@ -25,9 +26,9 @@ public class LocalizationUIService : ILocalizationUIService
 
     public async Task<Dictionary<uint, string>> GetStatusLabelsAsync(IEnumerable<uint> statusIds, string culture)
     {
-        var request = new StatusLabelsRequest
+        var request = new LocalizationRequest<uint>
         {
-            StatusIds = statusIds.ToList(),
+            Data = statusIds.ToList(),
             Culture = culture
         };
 

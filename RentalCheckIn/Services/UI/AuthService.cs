@@ -87,6 +87,7 @@ public class AuthService : IAuthService
         catch (Exception ex)
         {
             logger.LogError(ex, "An unexpected error occurred in AuthService while trying to register an.");
+
             return new OperationResult<LHost>
             {
                 IsSuccess = false,
@@ -179,6 +180,7 @@ public class AuthService : IAuthService
                 {
                     return default;
                 }
+
                 return await response.Content.ReadFromJsonAsync<OperationResult>();
             }
             else
@@ -193,6 +195,7 @@ public class AuthService : IAuthService
         catch (Exception ex)
         {
             logger.LogError(ex, "An unexpected error has occurred in AuthService while trying to send password reset request to the server.");
+
             return new OperationResult()
             {
                 IsSuccess = false,

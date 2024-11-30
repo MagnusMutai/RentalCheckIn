@@ -15,9 +15,19 @@ public class PDFService : IPDFService
         this.logger = logger;
     }
 
-    public string FillCheckInFormAsync(CheckInReservationDTO model)
+    public string FillCheckInFormAsync(CheckInReservationDTO model, string culture)
     {
-        string templatePath = Path.Combine(environment.WebRootPath, "templates", "CheckInForm-English.docx");
+        var template = "CheckInForm-English.docx";
+
+        if (culture != null) 
+        { 
+            if (culture == "nl-NL")
+            {
+                template = "CheckInForm-Dutch.docx";
+            }
+        }
+
+        string templatePath = Path.Combine(environment.WebRootPath, "templates", template);
         string outputDir = Path.Combine(environment.WebRootPath, "output");
 
         if (!Directory.Exists(outputDir))
