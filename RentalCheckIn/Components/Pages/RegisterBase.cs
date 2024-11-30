@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Localization;
 using QRCoder;
+using RentalCheckIn.Locales;
 
 namespace RentalCheckIn.Components.Pages;
 public class RegisterBase : ComponentBase
@@ -25,6 +27,8 @@ public class RegisterBase : ComponentBase
     private NavigationManager NavigationManager { get; set; }
     [Inject]
     private ILogger<RegisterBase> Logger { get; set; }
+    [Inject]
+    protected IStringLocalizer<Resource> Localizer { get; set;}
     protected override async Task OnInitializedAsync()
     {
         // Get the current authentication state
@@ -50,7 +54,7 @@ public class RegisterBase : ComponentBase
             {
                 RegisteredUserId = result.Data.HostId;
                 BackGroundColor = "bg-success";
-                Message = "Your account was created successfully.";
+                Message = Localizer["RegisterAccountCreatedSuccessfully"];
 
                 // Mark registration as complete
                 isRegistrationComplete = true;
@@ -73,7 +77,7 @@ public class RegisterBase : ComponentBase
                     // Convert the image to a base64 string
                     QrCodeImageData = "data:image/png;base64," + Convert.ToBase64String(qrCodeAsPng);
                     BackGroundColor = "bg-success";
-                    Message = "Your account was created. An account confirmation link has been sent to your email.";
+                    Message = Localizer["AccountCreatedConfirmationEmailSent"];
                 }
             }
             else
@@ -87,7 +91,7 @@ public class RegisterBase : ComponentBase
         catch (Exception ex)
         {
             BackGroundColor = "bg-danger";
-            Message = "An unexpected error has occurred. Please try again later";
+            Message = Localizer["UnexpectedErrorOccurred"];
             DisplayToast = "d-block";
             IsRegistering = false;
             Logger.LogError(ex, "An unexpected error occurred while trying to register a user.");
@@ -99,12 +103,12 @@ public class RegisterBase : ComponentBase
     {
         if (result.IsSuccess)
         {
-            Message = "Face ID registration successful!";
+            Message = Localizer["FaceID.Registration.Success"];
             BackGroundColor = "bg-success";
         }
         else
         {
-            Message = $"Face ID registration failed: {result.Message}";
+            Message = $"{Localizer["FaceID.Registration.Failed"]}: {result.Message}";
             BackGroundColor = "bg-danger";
         }
         DisplayToast = "d-block";

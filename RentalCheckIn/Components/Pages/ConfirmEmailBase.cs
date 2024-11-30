@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Localization;
+using RentalCheckIn.Locales;
 namespace RentalCheckIn.Components.Pages;
 
 public class ConfirmEmailBase : ComponentBase
@@ -14,6 +16,8 @@ public class ConfirmEmailBase : ComponentBase
     private IAuthService AuthService { get; set; }
     [Inject]
     private ILogger<ConfirmEmailBase> Logger { get; set; }
+    [Inject]
+    protected IStringLocalizer<Resource> Localizer { get; set; }
     protected async Task HandleVerifyEmail()
     {
         try
@@ -44,13 +48,13 @@ public class ConfirmEmailBase : ComponentBase
             else
             {
                 // No verification token was provided in the URL.
-                errorMessage = "Verification is invalid, please contact support";
+                errorMessage = Localizer["VerificationInvalid"];
             }
 
         }
         catch(Exception ex)
         {
-            errorMessage = "An unexpected error occurred. Please contact support.";
+            errorMessage = Localizer["UnexpectedErrorOccurred"];
             Logger.LogError(ex, "An unexpected occured during email verification in Email confirmation page");
         }
         finally

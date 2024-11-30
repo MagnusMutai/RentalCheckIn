@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Localization;
+using RentalCheckIn.Locales;
 namespace RentalCheckIn.Components.Pages;
 
 public class VerifyTOTPBase : ComponentBase
@@ -27,6 +29,9 @@ public class VerifyTOTPBase : ComponentBase
     private IAuthService AuthService { get; set; }
     [Inject]
     private ILogger<VerifyTOTPBase> Logger { get; set; }
+
+    [Inject]
+    protected IStringLocalizer<Resource> Localizer { get; set; }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -66,7 +71,7 @@ public class VerifyTOTPBase : ComponentBase
         }
         catch (Exception ex)
         {
-            ErrorMessage = "An unexpected error has occurred. Please try again later.";
+            ErrorMessage = Localizer["UnexpectedErrorOccurred"];
             Logger.LogError(ex, "An unexpected error occurred while trying to verify TOTP in VerifyTOTP component");
         }
         finally

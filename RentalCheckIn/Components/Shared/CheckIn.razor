@@ -23,7 +23,7 @@
                 <div class="container rounded-3 my-4">
                     <div class="row p-5">
                         <div class="col-10 d-none d-md-block mt-3">
-                            <h5 class="welcome fw-bolder">UNWIND, RELAX, STAY AWHILE</h5>
+                            <h5 class="welcome fw-bolder text-uppercase">@Localizer["WelcomeMessage"]</h5>
                         </div>
                         <div class="col-2">
                             <img src="/icons/snowylogo.svg" alt="Snowylodge logo" width="95" height="50">
@@ -33,25 +33,25 @@
                     <div class="header row"></div>
 
                     <div class="p-5">
-                        <h5 class="text-center my-4">CHECK-IN FORM</h5>
+                        <h5 class="text-center my-4">@Localizer["Form.CheckIn.Title"]</h5>
 
                         <!-- Guest Information -->
                         <h4>@checkInModel.GuestFirstName</h4>
                         <div class="row mb-3">
                             <div class="col-md-6">
-                                <label>Mail Address</label>
+                                <label>@Localizer["Email"]</label>
                                 <InputText class="form-control" @bind-Value="checkInModel.MailAddress" />
                                 <ValidationMessage For="@(() => checkInModel.MailAddress)" />
                             </div>
                             <div class="col-md-6 mt-3 mt-md-0">
-                                <label>Mobile</label>
+                                <label>@Localizer["Contact.Mobile.Label"]</label>
                                 <InputText class="form-control" @bind-Value="checkInModel.Mobile" />
                                 <ValidationMessage For="@(() => checkInModel.Mobile)" />
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-6">
-                                <label>Passport Number</label>
+                                <label>@Localizer["Document.PassportNumber.Label"]</label>
                                 <InputText class="form-control" @bind-Value="checkInModel.PassportNr" maxlength="50" />
                                 <ValidationMessage For="@(() => checkInModel.PassportNr)" />
                             </div>
@@ -59,7 +59,7 @@
                         <!-- Reservation Information -->
                         <div class="row mt-5 mb-3">
                             <div class="col-md-6 d-flex flex-column">
-                                <p class="fw-bold m-0">Check-In</p>
+                                <p class="fw-bold m-0">@Localizer["CheckIn"]</p>
                                 <div class="mt-1">
                                     <div>
                                         @checkInModel.CheckInDate
@@ -70,7 +70,7 @@
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <p class="fw-bold m-0 mt-3 mt-md-0">Check-Out</p>
+                                <p class="fw-bold m-0 mt-3 mt-md-0">@Localizer["CheckOut"]</p>
                                 <div class="mt-1">
                                     <div>
                                         @checkInModel.CheckOutDate
@@ -83,16 +83,16 @@
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-6">
-                                <p class="fw-bold m-0">Details</p>
-                                <div>
-                                    @checkInModel.NumberOfNights nights
+                                <p class="fw-bold m-0">@Localizer["General.Details.Label"]</p>
+                                <div class="text-lowercase">
+                                    @checkInModel.NumberOfNights @Localizer["Nights"]
                                 </div>
                                 <div>
-                                    @checkInModel.NumberOfGuests adults
+                                    @checkInModel.NumberOfGuests @Localizer["Guest.Adults.Label"]
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <p class="fw-bold m-0 mt-3 mt-md-0">Apartment</p>
+                                <p class="fw-bold m-0 mt-3 mt-md-0">@Localizer["Apartment"]</p>
                                 @checkInModel.ApartmentName
                             </div>
                         </div>
@@ -100,21 +100,21 @@
                         <!-- Price Summary -->
                         <div class="mt-5 mb-3">
                             <div class="row">
-                                <p class="fw-bold col-md-6 m-0 mt-3 mt-md-0">Apartment Fee</p>
+                                <p class="fw-bold col-md-6 m-0 mt-3 mt-md-0">@Localizer["Fee.Apartment.Label"]</p>
                                 <div class="col-md-6">
                                     <InputNumber class="form-control" @bind-Value="checkInModel.ApartmentFee" @onchange="OnFeeChanged" />
                                     <ValidationMessage For="@(() => checkInModel.ApartmentFee)" />
                                 </div>
                             </div>
                             <div class="row">
-                                <p class="fw-bold col-md-6 m-0 mt-3 mt-md-0">Security Deposit</p>
+                                <p class="fw-bold col-md-6 m-0 mt-3 mt-md-0">@Localizer["SecurityDeposit.Label"]</p>
                                 <div class="col-md-6">
                                     <InputNumber class="form-control" @bind-Value="checkInModel.SecurityDeposit" @onchange="OnFeeChanged" />
                                     <ValidationMessage For="@(() => checkInModel.SecurityDeposit)" />
                                 </div>
                             </div>
                             <div class="row">
-                                <p class="fw-bold col-md-6 m-0 mt-3 mt-md-0">Total Price</p>
+                                <p class="fw-bold col-md-6 m-0 mt-3 mt-md-0">@Localizer["Price.Total.Label"]</p>
                                 <div class="col-md-6">
                                     <div class="form-control">@checkInModel.CurrencySymbol @checkInModel.TotalPrice</div>
                                 </div>
@@ -126,7 +126,7 @@
                         <div class="form-check mt-4 mb-2">
                             <InputCheckbox class="form-check-input disable-checkbox-only" @bind-Value="AgreeEnergyConsumption" disabled />
                             <label class="form-check-label">
-                                Energy consumption up to 30 kWh per day is included in the rental price! For additional use, $0.20 per kWh will be charged at check-out <br />  <div class="d-flex gap-2 align-items-center">
+                                @Localizer["Rental.EnergyConsumption.CheckBox"] <br />  <div class="d-flex gap-2 align-items-center">
                                     Meter <InputNumber class="form-control w-25" @bind-Value="checkInModel.KwhAtCheckIn" />
                                     <ValidationMessage For="@(() => checkInModel.KwhAtCheckIn)" /> kWh.
                                 </div>
@@ -135,13 +135,13 @@
                         <div class="form-check mb-2">
                             <InputCheckbox class="form-check-input disable-checkbox-only" @bind-Value="ReceivedKeys" disabled />
                             <label class="form-check-label">
-                                Received alarm remote control, remote control sliding gate, house key, gate key, and room keys.
+                                @Localizer["Rental.ReceivedKeys.Info"]
                             </label>
                         </div>
                         <div class="form-check mb-4">
                             <InputCheckbox class="form-check-input disable-checkbox-only" @bind-Value="AgreeTerms" disabled />
                             <label class="form-check-label">
-                                By signing this form, the tenant declares to agree with the (house) rules from the "IMPORTANT" handbook and the general terms and conditions of Snowy Lodge.
+                                @Localizer["Rental.Agreement.Signature.Info"]
                             </label>
                         </div>
 

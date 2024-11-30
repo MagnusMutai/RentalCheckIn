@@ -3,7 +3,6 @@
 @using Microsoft.Extensions.Localization
 @using RentalCheckIn.Components.Shared
 @using RentalCheckIn.Locales
-@inject IStringLocalizer<Resource> Localizer
 
 <PageTitle>Reservations</PageTitle>
 
@@ -104,7 +103,6 @@
 
             </div>
 
-
         </div>
 
 
@@ -115,16 +113,16 @@
                     <div class="modal-content">
                         <divk class="ms-md-3">
                             <div class="modal-header ms-3">
-                                <h3 class="modal-title fw-bold">@Localizer["Reservation"] #@selectedReservation.Id</h3>
+                                <h3 class="modal-title fw-bold">@Localizer["Reservation"] #@selectedReservation?.Id</h3>
                                 <button type="button" class="btn-close" @onclick="CloseModal"></button>
                             </div>
                             <div class="modal-body">
                                 <div class="header row"></div>
-                                <h4 class="fw-bold ms-3">Guest details</h4>
+                                <h4 class="fw-bold ms-3">@Localizer["Guest.Details.Label"]</h4>
                                 <ReservationDetail SelectedReservation="selectedReservation" />
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" @onclick="CloseModal">@Localizer["Close"]</button>
+                                <button type="button" class="btn btn-secondary" @onclick="CloseModal">@Localizer["Action.Close.Label"]</button>
                             </div>
                         </divk>
                     </div>

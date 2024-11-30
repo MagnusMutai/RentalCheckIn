@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Localization;
+using RentalCheckIn.Locales;
 using System.Globalization;
 namespace RentalCheckIn.Components.Pages;
 public class HomeBase : ComponentBase
@@ -21,13 +23,12 @@ public class HomeBase : ComponentBase
     private ProtectedLocalStorage LocalStorage { get; set; }
     [Inject]
     private IReservationService ReservationService { get; set; }
-    //[Inject]
-    //private IApartmentService ApartmentService { get; set; }
     [Inject]
     private ILocalizationUIService LocalizationUIService { get; set; }
     [Inject]
     private ILogger<HomeBase> Logger { get; set; }
-
+    [Inject]
+    protected IStringLocalizer<Resource> Localizer { get; set; }
     protected override async Task OnInitializedAsync()
     {
         try
@@ -82,11 +83,11 @@ public class HomeBase : ComponentBase
             ApartmentNames = Reservations.Select(r => r.ApartmentName).Distinct().ToList();
 
             // Add 'All' option to allow viewing all apartments
-            ApartmentNames.Insert(0, "All");
+            ApartmentNames.Insert(0, Localizer["All"]);
         }
         catch (Exception ex)
         {
-            Message = "Could not load resources.";
+            Message = Localizer["CouldNotLoadResources"];
             Logger.LogError(ex, "An unexpected error occurred while trying to load reservations or its dependencies in the Reservation Page.");
         }
     }
@@ -112,7 +113,7 @@ public class HomeBase : ComponentBase
         }
         catch (Exception ex)
         {
-            Message = "An unexpected error occurred.";
+            Message = Localizer["UnexpectedErrorOccurred"];
             Logger.LogError(ex, "An unexpected error occurred while trying to authenticate a user on Reservation page.");
         }
     }
