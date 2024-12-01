@@ -27,3 +27,10 @@
     background-color: #1BE299;
     color: #680979;
 }
+
+::deep button.btn-default {
+    background-color: #6B3E75;
+    color: white;
+    width: 160px;
+    margin-top: 10px;
+}

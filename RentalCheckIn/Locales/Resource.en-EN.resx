@@ -365,7 +365,7 @@
   <data name="FaceID.Registration.UnexpectedError" xml:space="preserve">
     <value>An unexpected error occurred during Face ID registration.</value>
   </data>
-  <data name="Signature.Required " xml:space="preserve">
+  <data name="Signature.Required" xml:space="preserve">
     <value> The signature is required.</value>
   </data>
   <data name="Quest.CheckIn.Success" xml:space="preserve">
@@ -415,5 +415,14 @@
   </data>
   <data name="Rental.Agreement.Signature.Info" xml:space="preserve">
     <value>By signing this form, the tenant declares to agree with the (house) rules from the "IMPORTANT" handbook and the general terms and conditions of Snowy Lodge.</value>
+  </data>
+  <data name="Label_Date" xml:space="preserve">
+    <value>Date</value>
+  </data>
+  <data name="Label_Place" xml:space="preserve">
+    <value>Place</value>
+  </data>
+  <data name="Label_GuestsSignature" xml:space="preserve">
+    <value>Guest's signature</value>
   </data>
 </root>
