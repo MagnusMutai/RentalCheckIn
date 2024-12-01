@@ -439,6 +439,33 @@ namespace RentalCheckIn.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Date.
+        /// </summary>
+        public static string Label_Date {
+            get {
+                return ResourceManager.GetString("Label_Date", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Guest&apos;s signature.
+        /// </summary>
+        public static string Label_GuestsSignature {
+            get {
+                return ResourceManager.GetString("Label_GuestsSignature", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Place.
+        /// </summary>
+        public static string Label_Place {
+            get {
+                return ResourceManager.GetString("Label_Place", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Last name.
         /// </summary>
         public static string LastName {
@@ -848,9 +875,9 @@ namespace RentalCheckIn.Locales {
         /// <summary>
         ///   Looks up a localized string similar to  The signature is required..
         /// </summary>
-        public static string Signature_Required_ {
+        public static string Signature_Required {
             get {
-                return ResourceManager.GetString("Signature.Required ", resourceCulture);
+                return ResourceManager.GetString("Signature.Required", resourceCulture);
             }
         }
         

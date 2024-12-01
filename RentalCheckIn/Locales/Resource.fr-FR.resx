@@ -366,7 +366,7 @@
   <data name="FaceID.Registration.UnexpectedError" xml:space="preserve">
     <value>Une erreur inattendue s'est produite lors de l'enregistrement Face ID.</value>
   </data>
-  <data name="Signature.Required " xml:space="preserve">
+  <data name="Signature.Required" xml:space="preserve">
     <value>La signature est requise.</value>
   </data>
   <data name="Quest.CheckIn.Success" xml:space="preserve">
@@ -416,5 +416,14 @@
   </data>
   <data name="Rental.Agreement.Signature.Info" xml:space="preserve">
     <value>En signant ce formulaire, le locataire déclare accepter le règlement intérieur du manuel "IMPORTANT" ainsi que les conditions générales de Snowy Lodge.</value>
+  </data>
+  <data name="Label_Date" xml:space="preserve">
+    <value>Date</value>
+  </data>
+  <data name="Label_Place" xml:space="preserve">
+    <value>Lieu</value>
+  </data>
+  <data name="Label_GuestsSignature" xml:space="preserve">
+    <value>Signature de l'invité</value>
   </data>
 </root>

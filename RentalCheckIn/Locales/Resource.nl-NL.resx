@@ -368,7 +368,7 @@ Uitchecken</value>
   <data name="FaceID.Registration.UnexpectedError" xml:space="preserve">
     <value>Er trad een onverwachte fout op tijdens de Face ID-registratie.</value>
   </data>
-  <data name="Signature.Required " xml:space="preserve">
+  <data name="Signature.Required" xml:space="preserve">
     <value>De handtekening is vereist.</value>
   </data>
   <data name="Quest.CheckIn.Success" xml:space="preserve">
@@ -418,5 +418,14 @@ Uitchecken</value>
   </data>
   <data name="Rental.Agreement.Signature.Info" xml:space="preserve">
     <value>Door dit formulier te ondertekenen, verklaart de huurder akkoord te gaan met de (huis)regels uit het "BELANGRIJK" handboek en de algemene voorwaarden van Snowy Lodge.</value>
+  </data>
+  <data name="Label_Date" xml:space="preserve">
+    <value>Datum</value>
+  </data>
+  <data name="Label_Place" xml:space="preserve">
+    <value>Plaats</value>
+  </data>
+  <data name="Label_GuestsSignature" xml:space="preserve">
+    <value>Handtekening gast</value>
   </data>
 </root>

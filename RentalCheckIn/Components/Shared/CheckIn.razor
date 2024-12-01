@@ -149,7 +149,7 @@
                             <div class="col-md-6">
                                 <div class="row">
                                     <div class="col-md-4">
-                                        <p class="fw-bold m-0 mt-3 mt-md-0">Date</p>
+                                        <p class="fw-bold m-0 mt-3 mt-md-0">@Localizer["Label_Date"]</p>
                                     </div>
                                     <div class="col-md-6">
                                         <InputDate class="form-control" @bind-Value="checkInModel.CheckInDate" />
@@ -159,7 +159,7 @@
                             <div class="col-md-6 d-flex align-items-center">
                                 <div class="row">
                                     <div class="col-md-3">
-                                        <p class="fw-bold m-0 mt-3 mt-md-0">Place</p>
+                                        <p class="fw-bold m-0 mt-3 mt-md-0">@Localizer["Label_Place"]</p>
                                     </div>
                                     <div class="col-md-9">
                                         <p class="ms-md-3">Paramaribo</p>
@@ -171,7 +171,7 @@
                         @if (displaySignaturePad)
                         {
                             <!-- Signature -->
-                            <h5 class="mt-4">Guest's signature</h5>
+                            <h5 class="mt-4">@Localizer["Label_GuestsSignature"]</h5>
                             <div class="mb-3">
                                 <SignaturePad Options="_options" @bind-Value="SignatureBytes" Width="160" Height="60" />
                                 @if (!string.IsNullOrEmpty(signatureValidationError))
