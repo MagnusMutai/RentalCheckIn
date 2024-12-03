@@ -13,6 +13,7 @@ public class CustomAuthStateProvider : AuthenticationStateProvider
         this.logger = logger;
     }
 
+    // We have repetition here
     public override Task<AuthenticationState> GetAuthenticationStateAsync()
     {
         var state = BuildAuthenticationState(Constants.JWTToken);

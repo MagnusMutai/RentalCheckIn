@@ -62,7 +62,6 @@ public class RefreshTokenService
         }
     }
 
-    // Implement a return type to give a meaningful feedback
     public async Task<TokenValidateResult> ValidateAndRefreshTokensAsync(string accessToken, string refreshToken)
     {
         try
@@ -115,6 +114,7 @@ public class RefreshTokenService
             // Retrieve the host associated with this refresh token
             var response = await accountService.GetLHostByIdAsync(returnedToken.HostId);
             var lHost = response?.Data; 
+
             if (lHost == null)
             {
                 return new TokenValidateResult
@@ -128,6 +128,7 @@ public class RefreshTokenService
             var newRefreshToken = await GenerateRefreshToken(lHost.HostId);
             Constants.JWTToken = newAccessToken;
             await authStateProvider.GetAuthenticationStateAsync();
+
             return new TokenValidateResult
             {
                 IsSuccess = true,

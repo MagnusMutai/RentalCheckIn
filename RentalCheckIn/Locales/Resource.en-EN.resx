@@ -425,4 +425,64 @@
   <data name="Label_GuestsSignature" xml:space="preserve">
     <value>Guest's signature</value>
   </data>
+  <data name="Error.TryAgainLater" xml:space="preserve">
+    <value> An error has occurred. Please try again later.</value>
+  </data>
+  <data name="Error.Login.Failed" xml:space="preserve">
+    <value> An error occurred while trying to log you in.</value>
+  </data>
+  <data name="Error.Authorization.NotAuthorized" xml:space="preserve">
+    <value> Not authorized.</value>
+  </data>
+  <data name="Action.Account.Create" xml:space="preserve">
+    <value>Create an account to proceed.</value>
+  </data>
+  <data name="Time.Format.MinutesSeconds" xml:space="preserve">
+    <value>{remainingTime.Minutes} minutes and {remainingTime.Seconds} seconds</value>
+  </data>
+  <data name="Action.Email.Verify" xml:space="preserve">
+    <value>Please verify your email address. A verification link was sent to your email.</value>
+  </data>
+  <data name="Error.Login.InvalidCredentials" xml:space="preserve">
+    <value>Invalid login credentials</value>
+  </data>
+  <data name="Error.User.AlreadyExists" xml:space="preserve">
+    <value>User already exists</value>
+  </data>
+  <data name="Action.Email.Confirm" xml:space="preserve">
+    <value>Confirm your email</value>
+  </data>
+  <data name="Action.Email.ConfirmLink" xml:space="preserve">
+    <value> Please confirm your email by clicking &lt;a href="{verificationLink}"&gt;here&lt;/a&gt;.</value>
+  </data>
+  <data name="Error.Request.Invalid" xml:space="preserve">
+    <value>Invalid request</value>
+  </data>
+  <data name="Error.Verification.LinkExpired" xml:space="preserve">
+    <value>The verification link has expired. Please request a new verification email.</value>
+  </data>
+  <data name="Success.Email.Confirmed" xml:space="preserve">
+    <value>Email confirmed successfully.</value>
+  </data>
+  <data name="Error.Token.RefreshNotFound" xml:space="preserve">
+    <value>Refresh token not found.</value>
+  </data>
+  <data name="Error.Host.NotFound" xml:space="preserve">
+    <value>Host not found.</value>
+  </data>
+  <data name="Success.PasswordReset.Request" xml:space="preserve">
+    <value>Password reset request successful, check your email to reset your password.</value>
+  </data>
+  <data name="Error.ResetLink.Invalid" xml:space="preserve">
+    <value>Invalid reset link</value>
+  </data>
+  <data name="Error.Password.OldNotAllowed" xml:space="preserve">
+    <value> You cannot use an old password, choose a new password instead.</value>
+  </data>
+  <data name="Error.Password.ResetFailed" xml:space="preserve">
+    <value>An error occurred while resetting your password.</value>
+  </data>
+  <data name="Success.Password.Changed" xml:space="preserve">
+    <value> Your password has been changed successfully.</value>
+  </data>
 </root>
