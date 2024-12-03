@@ -1,6 +1,8 @@
 ﻿using Fido2NetLib;
 using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Localization;
 using Microsoft.JSInterop;
+using RentalCheckIn.Locales;
 
 namespace RentalCheckIn.Services.UI;
 public class AuthService : IAuthService
@@ -14,8 +16,9 @@ public class AuthService : IAuthService
     private readonly IJWTService jWTService;
     private readonly ITOTPService tOTPService;
     private readonly ILogger<AuthService> logger;
+    private readonly IStringLocalizer<Resource> localizer;
 
-    public AuthService(HttpClient httpClient, ProtectedLocalStorage localStorage, IJSRuntime jSRuntime, NavigationManager navigationManager, AuthenticationStateProvider authStateProvider, RefreshTokenService refreshTokenService, IJWTService jWTService, ITOTPService tOTPService, ILogger<AuthService> logger)
+    public AuthService(HttpClient httpClient, ProtectedLocalStorage localStorage, IJSRuntime jSRuntime, NavigationManager navigationManager, AuthenticationStateProvider authStateProvider, RefreshTokenService refreshTokenService, IJWTService jWTService, ITOTPService tOTPService, ILogger<AuthService> logger, IStringLocalizer<Resource> localizer)
     {
         this.httpClient = httpClient;
         this.localStorage = localStorage;
@@ -26,6 +29,7 @@ public class AuthService : IAuthService
         this.jWTService = jWTService;
         this.tOTPService = tOTPService;
         this.logger = logger;
+        this.localizer = localizer;
     }
 
     public async Task<OperationResult<LHost>> LoginAsync(HostLoginDTO hostLoginDTO)
@@ -48,7 +52,7 @@ public class AuthService : IAuthService
                 return new OperationResult<LHost>
                 {
                     IsSuccess = false,
-                    Message = "An error has occurred. Please try again later."
+                    Message = localizer["Error.TryAgainLater"]
                 };
             }
         }
@@ -80,7 +84,7 @@ public class AuthService : IAuthService
                 return new OperationResult<LHost>
                 {
                     IsSuccess = false,
-                    Message = "An error has occurred. Please try again later."
+                    Message = localizer["Error.TryAgainLater"]
                 };
             }
         }
@@ -91,7 +95,7 @@ public class AuthService : IAuthService
             return new OperationResult<LHost>
             {
                 IsSuccess = false,
-                Message = "An unexpected error has occurred. Please try again later."
+                Message = localizer["UnexpectedErrorOccurred"]
             };
         }
 
@@ -110,7 +114,7 @@ public class AuthService : IAuthService
                 return new TokenValidateResult
                 {
                     IsSuccess = false,
-                    Message = "An error occurred while trying to log you in."
+                    Message = localizer["Error.Login.Failed"]
                 };
             }
 
@@ -131,7 +135,7 @@ public class AuthService : IAuthService
                     return new TokenValidateResult
                     {
                         IsSuccess = false,
-                        Message = "Not authorized."
+                        Message = localizer["Error.Authorization.NotAuthorized"]
                     };
                 }
                 return await response.Content.ReadFromJsonAsync<TokenValidateResult>();
@@ -141,7 +145,7 @@ public class AuthService : IAuthService
                 return new TokenValidateResult
                 {
                     IsSuccess = false,
-                    Message = "An error has occurred. Please try again later."
+                    Message = localizer["Error.TryAgainLater"]
                 };
             }
 
@@ -160,7 +164,7 @@ public class AuthService : IAuthService
             return new TokenValidateResult
             {
                 IsSuccess = false,
-                Message = "An unexpected error has occurred. Please try again later."
+                Message = localizer["UnexpectedErrorOccurred"]
             };
         }
 
@@ -188,7 +192,7 @@ public class AuthService : IAuthService
                 return new OperationResult()
                 {
                     IsSuccess = false,
-                    Message = "An error has occurred. Please try again later."
+                    Message = localizer["Error.TryAgainLater"]
                 };
             }
         }
@@ -199,7 +203,7 @@ public class AuthService : IAuthService
             return new OperationResult()
             {
                 IsSuccess = false,
-                Message = "An unexpected error has occurred. Please try again later."
+                Message = localizer["UnexpectedErrorOccurred"]
             };
         }
 
@@ -222,8 +226,11 @@ public class AuthService : IAuthService
             }
             else
             {
-                var message = await response.Content.ReadAsStringAsync();
-                throw new Exception(message);
+                return new EmailVerificationResponse
+                {
+                    IsSuccess = false,
+                    Message = localizer["Error.TryAgainLater"]
+                };
             }
         }
         catch (Exception ex)

@@ -1,5 +1,8 @@
-﻿using RentalCheckIn.Controllers;
+﻿using Microsoft.AspNetCore.Mvc.Localization;
+using Microsoft.Extensions.Localization;
+using RentalCheckIn.Controllers;
 using RentalCheckIn.DTOs;
+using RentalCheckIn.Locales;
 
 namespace RentalCheckIn.Services.Core;
 public class AccountService : IAccountService
@@ -10,8 +13,9 @@ public class AccountService : IAccountService
     private readonly IRefreshTokenRepository refreshTokenRepository;
     private readonly ITOTPService tOTPService;
     private readonly ILogger<AccountService> logger;
+    private readonly IStringLocalizer<Resource> localizer;
 
-    public AccountService(ILHostRepository lHostRepository, IConfiguration configuration, IEmailService emailService, IRefreshTokenRepository refreshTokenRepository, ITOTPService tOTPService, ILogger<AccountService> logger)
+    public AccountService(ILHostRepository lHostRepository, IConfiguration configuration, IEmailService emailService, IRefreshTokenRepository refreshTokenRepository, ITOTPService tOTPService, ILogger<AccountService> logger, IStringLocalizer<Resource> localizer)
     {
         this.lHostRepository = lHostRepository;
         this.configuration = configuration;
@@ -19,6 +23,7 @@ public class AccountService : IAccountService
         this.refreshTokenRepository = refreshTokenRepository;
         this.tOTPService = tOTPService;
         this.logger = logger;
+        this.localizer = localizer;
     }
     public async Task<OperationResult<LHost>> LoginAsync(HostLoginDTO hostLoginDTO)
     {
@@ -31,7 +36,7 @@ public class AccountService : IAccountService
                 return new OperationResult<LHost>
                 {
                     IsSuccess = false,
-                    Message = "Create an account to proceed."
+                    Message = localizer["Action.Account.Create"]
                 };
             }
 
@@ -45,12 +50,12 @@ public class AccountService : IAccountService
                 if (remainingTime > TimeSpan.Zero)
                 {
                     // User is still blocked
-                    string formattedRemainingTime = $"{remainingTime.Minutes} minutes and {remainingTime.Seconds} seconds";
+                    string formattedRemainingTime = $"{localizer["Time.Format.MinutesSeconds"]}";
 
                     return new OperationResult<LHost>
                     {
                         IsSuccess = false,
-                        Message = $"Your account is blocked. Please wait for {formattedRemainingTime} before trying again."
+                        Message = $"{localizer["Error.Account.Blocked"]}"
                     };
                 }
                 else
@@ -79,7 +84,7 @@ public class AccountService : IAccountService
                 return new OperationResult<LHost>
                 {
                     IsSuccess = false,
-                    Message = "Please verify your email address. A verification link was sent to your email."
+                    Message = localizer["Action.Email.Verify"]
                 };
             }
 
@@ -99,7 +104,7 @@ public class AccountService : IAccountService
                 return new OperationResult<LHost>
                 {
                     IsSuccess = false,
-                    Message = "Invalid login credentials"
+                    Message = localizer["Error.Login.InvalidCredentials"]
                 };
 
             }
@@ -123,7 +128,7 @@ public class AccountService : IAccountService
             return new OperationResult<LHost>
             {
                 IsSuccess = false,
-                Message = "An unexpected error has occurred."
+                Message = localizer["UnexpectedErrorOccurred"]
             };
         }
     }
@@ -144,7 +149,7 @@ public class AccountService : IAccountService
                 return new OperationResult<LHost>
                 {
                     IsSuccess = false,
-                    Message = "User already exists"
+                    Message = localizer["Error.User.AlreadyExists"]
                 };
             }
 
@@ -170,7 +175,7 @@ public class AccountService : IAccountService
             var encodedToken = HttpUtility.UrlEncode(lHost.EmailVerificationToken);
             // Send the new verification email
             var verificationLink = $"{configuration["ApplicationSettings:AppUrl"]}/email-confirmation?emailToken={encodedToken}";
-            await emailService.SendEmailAsync(lHost.MailAddress, "Confirm your email", $"Please confirm your email by clicking <a href=\"{verificationLink}\">here</a>.");
+            await emailService.SendEmailAsync(lHost.MailAddress, localizer["Action.Email.Confirm"], $"{localizer["Action.Email.ConfirmLink"]}");
 
             return new OperationResult<LHost>
             {
@@ -184,7 +189,7 @@ public class AccountService : IAccountService
             return new OperationResult<LHost>
             {
                 IsSuccess = false,
-                Message = "An unexpected error has occurred."
+                Message = localizer["UnexpectedErrorOccurred"]
             };
 
         }
@@ -205,7 +210,7 @@ public class AccountService : IAccountService
                 {
                     IsSuccess = false,
                     // Invalid request
-                    Message = "Invalid request"
+                    Message = localizer["Error.Request.Invalid"]
                 };
             }
 
@@ -216,7 +221,7 @@ public class AccountService : IAccountService
                 {
                     IsSuccess = false,
                     IsExpired = true,
-                    Message = "The verification link has expired. Please request a new verification email."
+                    Message = localizer["Error.Verification.LinkExpired"]
                 };
             }
 
@@ -234,7 +239,7 @@ public class AccountService : IAccountService
             return new EmailVerificationResponse
             {
                 IsSuccess = true,
-                Message = "Email confirmed successfully."
+                Message = localizer["Success.Email.Confirmed"]
             };
         }
         catch(Exception ex)
@@ -244,7 +249,7 @@ public class AccountService : IAccountService
             return new EmailVerificationResponse
             {
                 IsSuccess = false,
-                Message = "An unexpected error has occurred."
+                Message = localizer["UnexpectedErrorOccurred"]
             };
         }
     }
@@ -261,7 +266,7 @@ public class AccountService : IAccountService
                 return new OperationResult<RefreshToken>
                 {
                     IsSuccess = false,
-                    Message = "Refresh token not found."
+                    Message = localizer["Error.Token.RefreshNotFound"]
                 };
             }
 
@@ -278,7 +283,7 @@ public class AccountService : IAccountService
             return new OperationResult<RefreshToken>
             {
                 IsSuccess = false,
-                Message = "An unexpected error has occurred."
+                Message = localizer["UnexpectedErrorOccurred"]
             };
         }
     }
@@ -311,7 +316,7 @@ public class AccountService : IAccountService
                 return new OperationResult<LHost>
                 {
                     IsSuccess = false,
-                    Message = "Host not found."
+                    Message = localizer["Error.Host.NotFound"]
                 };
             }
 
@@ -328,7 +333,7 @@ public class AccountService : IAccountService
             return new OperationResult<LHost>
             {
                 IsSuccess = false,
-                Message = "An unexpected error occurred. Please try again later."
+                Message = localizer["UnexpectedErrorOccurred"]
             };
         }
     }
@@ -364,7 +369,7 @@ public class AccountService : IAccountService
                 return new OperationResult
                 {
                     IsSuccess = false,
-                    Message = "An error occurred."
+                    Message = localizer["Error.TryAgainLater"]
                 };
             }
 
@@ -376,7 +381,7 @@ public class AccountService : IAccountService
             return new OperationResult
             {
                 IsSuccess = true,
-                Message = "Password reset request successful, check your email to reset your password."
+                Message = localizer["Success.PasswordReset.Request"]
             };
         }
         catch (Exception ex)
@@ -386,7 +391,7 @@ public class AccountService : IAccountService
             return new OperationResult
             {
                 IsSuccess = false,
-                Message = "An unexpected error occurred. Please try again later."
+                Message = localizer["UnexpectedErrorOccurred"]
             };
         }
     }
@@ -402,7 +407,7 @@ public class AccountService : IAccountService
                 return new OperationResult<string>
                 {
                     IsSuccess = false,
-                    Message = "Invalid reset link"
+                    Message = localizer["Error.ResetLink.Invalid"]
                 };
             }
 
@@ -411,7 +416,7 @@ public class AccountService : IAccountService
                 return new OperationResult<string>
                 {
                     IsSuccess = false,
-                    Message = "You cannot use an old password, choose a new password instead."
+                    Message = localizer["Error.Password.OldNotAllowed"]
                 };
 
             }
@@ -428,14 +433,14 @@ public class AccountService : IAccountService
                 return new OperationResult<string>
                 {
                     IsSuccess = false,
-                    Message = "An error occurred while resetting your password."
+                    Message = localizer["Error.Password.ResetFailed"]
                 };
             }
 
             return new OperationResult<string>
             {
                 IsSuccess = true,
-                Message = "Your password has been changed successfully.",
+                Message = localizer["Success.Password.Changed"],
                 Data = lHost.MailAddress
             };
         }
@@ -446,7 +451,7 @@ public class AccountService : IAccountService
             return new OperationResult<string>
             {
                 IsSuccess = false,
-                Message = "An unexpected error has occurred. Please try again later."
+                Message = localizer["UnexpectedErrorOccurred"]
             };
         }
     }

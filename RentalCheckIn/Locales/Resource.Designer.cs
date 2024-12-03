@@ -70,11 +70,47 @@ namespace RentalCheckIn.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Create an account to proceed..
+        /// </summary>
+        public static string Action_Account_Create {
+            get {
+                return ResourceManager.GetString("Action.Account.Create", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Close.
         /// </summary>
         public static string Action_Close_Label {
             get {
                 return ResourceManager.GetString("Action.Close.Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Confirm your email.
+        /// </summary>
+        public static string Action_Email_Confirm {
+            get {
+                return ResourceManager.GetString("Action.Email.Confirm", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to  Please confirm your email by clicking &lt;a href=&quot;{verificationLink}&quot;&gt;here&lt;/a&gt;..
+        /// </summary>
+        public static string Action_Email_ConfirmLink {
+            get {
+                return ResourceManager.GetString("Action.Email.ConfirmLink", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please verify your email address. A verification link was sent to your email..
+        /// </summary>
+        public static string Action_Email_Verify {
+            get {
+                return ResourceManager.GetString("Action.Email.Verify", resourceCulture);
             }
         }
         
@@ -282,6 +318,114 @@ namespace RentalCheckIn.Locales {
         public static string EmailRequired {
             get {
                 return ResourceManager.GetString("EmailRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Not authorized..
+        /// </summary>
+        public static string Error_Authorization_NotAuthorized {
+            get {
+                return ResourceManager.GetString("Error.Authorization.NotAuthorized", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Host not found..
+        /// </summary>
+        public static string Error_Host_NotFound {
+            get {
+                return ResourceManager.GetString("Error.Host.NotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to  An error occurred while trying to log you in..
+        /// </summary>
+        public static string Error_Login_Failed {
+            get {
+                return ResourceManager.GetString("Error.Login.Failed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid login credentials.
+        /// </summary>
+        public static string Error_Login_InvalidCredentials {
+            get {
+                return ResourceManager.GetString("Error.Login.InvalidCredentials", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to  You cannot use an old password, choose a new password instead..
+        /// </summary>
+        public static string Error_Password_OldNotAllowed {
+            get {
+                return ResourceManager.GetString("Error.Password.OldNotAllowed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An error occurred while resetting your password..
+        /// </summary>
+        public static string Error_Password_ResetFailed {
+            get {
+                return ResourceManager.GetString("Error.Password.ResetFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid request.
+        /// </summary>
+        public static string Error_Request_Invalid {
+            get {
+                return ResourceManager.GetString("Error.Request.Invalid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid reset link.
+        /// </summary>
+        public static string Error_ResetLink_Invalid {
+            get {
+                return ResourceManager.GetString("Error.ResetLink.Invalid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Refresh token not found..
+        /// </summary>
+        public static string Error_Token_RefreshNotFound {
+            get {
+                return ResourceManager.GetString("Error.Token.RefreshNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to  An error has occurred. Please try again later..
+        /// </summary>
+        public static string Error_TryAgainLater {
+            get {
+                return ResourceManager.GetString("Error.TryAgainLater", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to User already exists.
+        /// </summary>
+        public static string Error_User_AlreadyExists {
+            get {
+                return ResourceManager.GetString("Error.User.AlreadyExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The verification link has expired. Please request a new verification email..
+        /// </summary>
+        public static string Error_Verification_LinkExpired {
+            get {
+                return ResourceManager.GetString("Error.Verification.LinkExpired", resourceCulture);
             }
         }
         
@@ -887,6 +1031,42 @@ namespace RentalCheckIn.Locales {
         public static string Status {
             get {
                 return ResourceManager.GetString("Status", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Email confirmed successfully..
+        /// </summary>
+        public static string Success_Email_Confirmed {
+            get {
+                return ResourceManager.GetString("Success.Email.Confirmed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Your password has been changed successfully..
+        /// </summary>
+        public static string Success_Password_Changed {
+            get {
+                return ResourceManager.GetString("Success.Password.Changed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Password reset request successful, check your email to reset your password..
+        /// </summary>
+        public static string Success_PasswordReset_Request {
+            get {
+                return ResourceManager.GetString("Success.PasswordReset.Request", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {remainingTime.Minutes} minutes and {remainingTime.Seconds} seconds.
+        /// </summary>
+        public static string Time_Format_MinutesSeconds {
+            get {
+                return ResourceManager.GetString("Time.Format.MinutesSeconds", resourceCulture);
             }
         }
         

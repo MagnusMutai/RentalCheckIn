@@ -7,7 +7,6 @@ public class RoutesBase : ComponentBase, IAsyncDisposable
 {
 
     private bool isTokenRefreshed;
-    private bool isFirstTokenRefreshed;
     private bool isDisposed;
     private bool isRefreshing = false;
     private PeriodicTimer? timer;
@@ -53,31 +52,25 @@ public class RoutesBase : ComponentBase, IAsyncDisposable
                     isTokenRefreshed = true;
                     await StartRefreshTokenAsync();
                 }
+            }
 
-                if (!isFirstTokenRefreshed)
+            var response = await AuthService.RefreshTokenAsync();
+
+            if (response.IsSuccess)
+            {
+                await LocalStorage.SetAsync("refreshToken", response.RefreshToken);
+                await LocalStorage.SetAsync("token", response.AccessToken);
+                Constants.JWTToken = response.AccessToken;
+
+                // Notify the authentication state provider
+                if (AuthStateProvider is CustomAuthStateProvider customAuthStateProvider)
                 {
-                    isFirstTokenRefreshed = true;
-
-                    var response = await AuthService.RefreshTokenAsync();
-
-                    if (response.IsSuccess)
-                    {
-                        await LocalStorage.SetAsync("refreshToken", response.RefreshToken);
-                        await LocalStorage.SetAsync("token", response.AccessToken);
-                        Constants.JWTToken = response.AccessToken;
-
-                        // Notify the authentication state provider
-                        if (AuthStateProvider is CustomAuthStateProvider customAuthStateProvider)
-                        {
-                            customAuthStateProvider.NotifyUserAuthentication(Constants.JWTToken);
-                        }
-                    }
-                    else
-                    {
-                        Console.WriteLine("Not authorized");
-                        StopRefreshToken();
-                    }
+                    customAuthStateProvider.NotifyUserAuthentication(Constants.JWTToken);
                 }
+            }
+            else
+            {
+                StopRefreshToken();
             }
         }
         catch(Exception ex)
@@ -136,15 +129,11 @@ public class RoutesBase : ComponentBase, IAsyncDisposable
                         customAuthStateProvider.NotifyUserAuthentication(Constants.JWTToken);
                     }
                 }
-                else
-                {
-                    Console.WriteLine($"Token refresh failed {response.Message}.");
-                }
             }
         }
         catch (OperationCanceledException)
         {
-            Logger.LogError("Token refresh loop was cancelled.");
+            Logger.LogInformation("Token refresh loop was cancelled in Routes component.");
         }
         catch (Exception ex)
         {
