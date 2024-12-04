@@ -8,10 +8,22 @@
     height: 100vh;
 }
 
+/* Fade-in and fade-out effect for the toast */
 .toast {
+    animation: fade-in 1s;
     position: fixed;
     top: 65px;
     right: 1px;
+}
+
+@keyframes fade-in {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
 }
 
 ::deep .fw-bold {
