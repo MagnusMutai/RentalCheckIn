@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
 using System.Globalization;
-
 namespace RentalCheckIn.Components;
 
 public class RoutesBase : ComponentBase, IAsyncDisposable
@@ -21,9 +20,10 @@ public class RoutesBase : ComponentBase, IAsyncDisposable
     private NavigationManager NavigationManager { get; set; }
     [Inject]
     private ILogger<RoutesBase> Logger { get; set; }
+
     protected override void OnInitialized()
     {
-        // Subscribe to authentication state changes
+        CultureUtility.CurCulture = CultureInfo.CurrentCulture;
         if (AuthStateProvider != null)
         {
             AuthStateProvider.AuthenticationStateChanged += async (task) =>

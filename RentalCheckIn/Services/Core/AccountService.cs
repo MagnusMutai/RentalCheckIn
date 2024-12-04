@@ -1,8 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc.Localization;
-using Microsoft.Extensions.Localization;
-using RentalCheckIn.Controllers;
-using RentalCheckIn.DTOs;
+﻿using Microsoft.Extensions.Localization;
 using RentalCheckIn.Locales;
+using System.Globalization;
 
 namespace RentalCheckIn.Services.Core;
 public class AccountService : IAccountService
@@ -15,7 +13,7 @@ public class AccountService : IAccountService
     private readonly ILogger<AccountService> logger;
     private readonly IStringLocalizer<Resource> localizer;
 
-    public AccountService(ILHostRepository lHostRepository, IConfiguration configuration, IEmailService emailService, IRefreshTokenRepository refreshTokenRepository, ITOTPService tOTPService, ILogger<AccountService> logger, IStringLocalizer<Resource> localizer)
+    public AccountService(ILHostRepository lHostRepository, IConfiguration configuration, IEmailService emailService, IRefreshTokenRepository refreshTokenRepository, ITOTPService tOTPService, ILogger<AccountService> logger, IStringLocalizer<Resource> localizer )
     {
         this.lHostRepository = lHostRepository;
         this.configuration = configuration;
@@ -25,10 +23,12 @@ public class AccountService : IAccountService
         this.logger = logger;
         this.localizer = localizer;
     }
+
     public async Task<OperationResult<LHost>> LoginAsync(HostLoginDTO hostLoginDTO)
     {
         try
         {
+            CultureUtility.SetCurrentCulture();
             var lHost = await lHostRepository.GetLHostByEmailAsync(hostLoginDTO.Email);
 
             if (lHost == null)
@@ -50,12 +50,12 @@ public class AccountService : IAccountService
                 if (remainingTime > TimeSpan.Zero)
                 {
                     // User is still blocked
-                    string formattedRemainingTime = $"{localizer["Time.Format.MinutesSeconds"]}";
+                    string formattedRemainingTime = string.Format(localizer["Time.Format.MinutesSeconds"], remainingTime.Minutes, remainingTime.Seconds);
 
                     return new OperationResult<LHost>
                     {
                         IsSuccess = false,
-                        Message = $"{localizer["Error.Account.Blocked"]}"
+                        Message = string.Format(localizer["Error.Account.Blocked"], formattedRemainingTime)
                     };
                 }
                 else
@@ -142,6 +142,7 @@ public class AccountService : IAccountService
     {
         try
         {
+            CultureUtility.SetCurrentCulture();
             var existingHost = await lHostRepository.GetLHostByEmailAsync(hostSignUpDTO.Email);
 
             if (existingHost != null)
