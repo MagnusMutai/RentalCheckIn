@@ -441,7 +441,7 @@ Uitchecken</value>
     <value>Maak een account aan om door te gaan.</value>
   </data>
   <data name="Time.Format.MinutesSeconds" xml:space="preserve">
-    <value>{remainingTime.Minutes} minuten en {remainingTime.Seconds} seconden</value>
+    <value>{0} minuten en {1} seconden</value>
   </data>
   <data name="Action.Email.Verify" xml:space="preserve">
     <value>Verifieer uw e-mailadres. Een verificatielink is naar uw e-mail verzonden.</value>
@@ -487,5 +487,8 @@ Uitchecken</value>
   </data>
   <data name="Success.Password.Changed" xml:space="preserve">
     <value>Uw wachtwoord is succesvol gewijzigd.</value>
+  </data>
+  <data name="Error.Account.Blocked" xml:space="preserve">
+    <value>Uw account is geblokkeerd. Wacht {0} voordat u het opnieuw probeert.</value>
   </data>
 </root>

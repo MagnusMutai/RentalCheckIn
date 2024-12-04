@@ -18,6 +18,7 @@ public class AuthService : IAuthService
     private readonly ILogger<AuthService> logger;
     private readonly IStringLocalizer<Resource> localizer;
 
+    // Too many injected services separate them into smaller services
     public AuthService(HttpClient httpClient, ProtectedLocalStorage localStorage, IJSRuntime jSRuntime, NavigationManager navigationManager, AuthenticationStateProvider authStateProvider, RefreshTokenService refreshTokenService, IJWTService jWTService, ITOTPService tOTPService, ILogger<AuthService> logger, IStringLocalizer<Resource> localizer)
     {
         this.httpClient = httpClient;

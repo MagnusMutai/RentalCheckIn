@@ -437,7 +437,7 @@
     <value>Create an account to proceed.</value>
   </data>
   <data name="Time.Format.MinutesSeconds" xml:space="preserve">
-    <value>{remainingTime.Minutes} minutes and {remainingTime.Seconds} seconds</value>
+    <value>{0} minutes and {1} seconds</value>
   </data>
   <data name="Action.Email.Verify" xml:space="preserve">
     <value>Please verify your email address. A verification link was sent to your email.</value>
@@ -483,5 +483,9 @@
   </data>
   <data name="Success.Password.Changed" xml:space="preserve">
     <value>Your password has been changed successfully.</value>
+  </data>
+  <data name="Error.Account.Blocked" xml:space="preserve">
+    <value>Your account is blocked. Please wait for {0} before trying again.
+</value>
   </data>
 </root>
