@@ -127,7 +127,7 @@ public class HomeBase : ComponentBase
     {
         get
         {
-            if (SelectedApartment == "All")
+            if (SelectedApartment == Localizer["All"])
             {
                 return Reservations;
             }
@@ -171,7 +171,7 @@ public class HomeBase : ComponentBase
     // Resets the current page to 1 and triggers a UI update.
     protected void OnApartmentFilterChanged(ChangeEventArgs e)
     {
-        SelectedApartment = e.Value?.ToString() ?? "All";
+        SelectedApartment = e.Value?.ToString() ?? Localizer["All"];
         currentPage = 1;
     }
 
