@@ -322,6 +322,16 @@ namespace RentalCheckIn.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Your account is blocked. Please wait for {0} before trying again.
+        ///.
+        /// </summary>
+        public static string Error_Account_Blocked {
+            get {
+                return ResourceManager.GetString("Error.Account.Blocked", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Not authorized..
         /// </summary>
         public static string Error_Authorization_NotAuthorized {
@@ -1062,7 +1072,7 @@ namespace RentalCheckIn.Locales {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {remainingTime.Minutes} minutes and {remainingTime.Seconds} seconds.
+        ///   Looks up a localized string similar to {0} minutes and {1} seconds.
         /// </summary>
         public static string Time_Format_MinutesSeconds {
             get {
