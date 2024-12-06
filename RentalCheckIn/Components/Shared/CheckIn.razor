@@ -16,6 +16,21 @@
         }
         else
         {
+            @if (!string.IsNullOrEmpty(Message))
+            {
+                <div class="toast align-items-center p-2 text-white @BackGroundColor position-fixed top-1 end-0 @DisplayToast" role="alert" aria-live="assertive" aria-atomic="true">
+                    <div class="d-flex">
+                        <div class="toast-body">
+                            @if (BackGroundColor == "bg-success")
+                            {
+                                <strong>Success! </strong>
+                            }
+                            @Message
+                        </div>
+                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close" @onclick="HandleCloseToast"></button>
+                    </div>
+                </div>
+            }
 
             <EditForm Model="@checkInModel" Context="editFormContext" OnValidSubmit="HandleValidSubmit">
                 <DataAnnotationsValidator />
@@ -60,24 +75,24 @@
                         <div class="row mt-5 mb-3">
                             <div class="col-md-6 d-flex flex-column">
                                 <p class="fw-bold m-0">@Localizer["CheckIn"]</p>
-                                <div class="mt-1">
-                                    <div>
+                                <div class="mt-1 row">
+                                    <div class="col-12 col-md-4 col-lg-3">
                                         @checkInModel.CheckInDate
                                     </div>
-                                    <div>
+                                    <div class="col">
                                         @checkInModel.CheckInTime
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <p class="fw-bold m-0 mt-3 mt-md-0">@Localizer["CheckOut"]</p>
-                                <div class="mt-1">
-                                    <div>
+                                <div class="mt-1 row">
+                                    <div class="col-12 col-md-4 col-lg-3">
                                         @checkInModel.CheckOutDate
                                     </div>
-                                    <di>
+                                    <div class="col">
                                         @checkInModel.CheckOutTime
-                                    </di>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -101,22 +116,37 @@
                         <div class="mt-5 mb-3">
                             <div class="row">
                                 <p class="fw-bold col-md-6 m-0 mt-3 mt-md-0">@Localizer["Fee.Apartment.Label"]</p>
-                                <div class="col-md-6">
-                                    <InputNumber class="form-control" @bind-Value="checkInModel.ApartmentFee" @onchange="OnFeeChanged" />
-                                    <ValidationMessage For="@(() => checkInModel.ApartmentFee)" />
+                                <div class="col-md-6 mb-1">
+                                    <div class="d-flex gap-1">
+                                        <span class="mt-2">@checkInModel.CurrencySymbol</span>
+                                        <InputNumber class="form-control" @bind-Value="checkInModel.ApartmentFee" @oninput="@(e => {
+                                            var strVal = e.Value?.ToString();
+                                            var val = decimal.TryParse(strVal, out var parsedVal) ? parsedVal : 0m;
+                                            OnFeeChanged(val);})" />
+                                    </div>
+                                    <ValidationMessage class="ms-3 text-danger" For="@(() => checkInModel.ApartmentFee)" />
                                 </div>
                             </div>
                             <div class="row">
                                 <p class="fw-bold col-md-6 m-0 mt-3 mt-md-0">@Localizer["SecurityDeposit.Label"]</p>
-                                <div class="col-md-6">
-                                    <InputNumber class="form-control" @bind-Value="checkInModel.SecurityDeposit" @onchange="OnFeeChanged" />
-                                    <ValidationMessage For="@(() => checkInModel.SecurityDeposit)" />
+                                <div class="col-md-6 mb-1">
+                                    <div class="d-flex gap-1">
+                                        <span class="mt-2">@checkInModel.CurrencySymbol</span>
+                                        <InputNumber class="form-control" @bind-Value="checkInModel.SecurityDeposit" @oninput="@(e => {
+                                            var strVal = e.Value?.ToString();
+                                            var val = decimal.TryParse(strVal, out var parsedVal) ? parsedVal : 0m;
+                                            OnDepositChanged(val);})" />
+                                    </div>
+                                    <ValidationMessage class="ms-3 text-danger" For="@(() => checkInModel.SecurityDeposit)" />
                                 </div>
                             </div>
                             <div class="row">
                                 <p class="fw-bold col-md-6 m-0 mt-3 mt-md-0">@Localizer["Price.Total.Label"]</p>
-                                <div class="col-md-6">
-                                    <div class="form-control">@checkInModel.CurrencySymbol @checkInModel.TotalPrice</div>
+                                <div class="col-md-6 mb-1">
+                                    <div class="d-flex gap-1">
+                                        <span class="mt-2">@checkInModel.CurrencySymbol</span>
+                                        <div class="form-control">@checkInModel.TotalPrice</div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -124,22 +154,22 @@
 
                         <!-- Agreements -->
                         <div class="form-check mt-4 mb-2">
-                            <InputCheckbox class="form-check-input disable-checkbox-only" @bind-Value="AgreeEnergyConsumption" disabled />
+                            <InputCheckbox class="form-check-input disable-checkbox-only" @bind-Value="checkInModel.AgreeEnergyConsumption" />
                             <label class="form-check-label">
-                                @Localizer["Rental.EnergyConsumption.CheckBox"] <br />  <div class="d-flex gap-2 align-items-center">
+                                @{var formattedEnergyConsumptionText= string.Format(Localizer["Rental.EnergyConsumption.CheckBox"], checkInModel.KWhPerNightIncluded, checkInModel.CostsPerXtraKWh, checkInModel.CurrencySymbol); } @formattedEnergyConsumptionText <br />  <div class="d-flex gap-2 align-items-center">
                                     Meter <InputNumber class="form-control w-25" @bind-Value="checkInModel.KwhAtCheckIn" />
                                     <ValidationMessage For="@(() => checkInModel.KwhAtCheckIn)" /> kWh.
                                 </div>
                             </label>
                         </div>
                         <div class="form-check mb-2">
-                            <InputCheckbox class="form-check-input disable-checkbox-only" @bind-Value="ReceivedKeys" disabled />
+                            <InputCheckbox class="form-check-input disable-checkbox-only" @bind-Value="checkInModel.ReceivedKeys" />
                             <label class="form-check-label">
                                 @Localizer["Rental.ReceivedKeys.Info"]
                             </label>
                         </div>
                         <div class="form-check mb-4">
-                            <InputCheckbox class="form-check-input disable-checkbox-only" @bind-Value="AgreeTerms" disabled />
+                            <InputCheckbox class="form-check-input disable-checkbox-only" @bind-Value="checkInModel.AgreeTerms" />
                             <label class="form-check-label">
                                 @Localizer["Rental.Agreement.Signature.Info"]
                             </label>
@@ -186,7 +216,7 @@
                             </div>
                         </div>
 
-                        <button type="submit" class="btn btn-success border-0 rounded-3">Save and Share</button>
+                        <button type="submit" class="btn btn-success border-0 rounded-3">Save and Share With Email</button>
                     </div>
                 </div>
             </EditForm>

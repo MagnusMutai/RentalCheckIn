@@ -16,12 +16,31 @@
     -webkit-mask-image: linear-gradient(black 90%, transparent);
 }
 
+/* Fade-in effect for the toast */
+.toast {
+    animation: fade-in 1s;
+    position: fixed;
+    top: 65px;
+    right: 1px;
+    z-index: 999;
+}
+
+@keyframes fade-in {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+/* Makes the checkbox text visible on-disabled */
+/* Not in use */
 .disable-checkbox-only + .form-check-label {
-    
     opacity: 1;
     cursor: default;
 }
-
 
 .btn-success {
     background-color: #1BE299;
