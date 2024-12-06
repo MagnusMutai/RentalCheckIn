@@ -7,9 +7,10 @@ public class ConfirmEmailBase : ComponentBase
 {
     protected bool isLoading = true;
     protected bool isSuccess = false;
-    protected string? errorMessage;
     protected string? Message;
     protected EmailVerificationResponse verificationResult;
+    public string? DisplayToast { get; set; } = "d-block";
+    public string BackGroundColor { get; set; } = "bg-success";
     [Inject]
     private NavigationManager NavigationManager { get; set; }
     [Inject]
@@ -18,7 +19,9 @@ public class ConfirmEmailBase : ComponentBase
     private ILogger<ConfirmEmailBase> Logger { get; set; }
     [Inject]
     protected IStringLocalizer<Resource> Localizer { get; set; }
-    protected async Task HandleVerifyEmail()
+
+
+    protected override async Task OnInitializedAsync()
     {
         try
         {
@@ -38,28 +41,47 @@ public class ConfirmEmailBase : ComponentBase
                 if (verificationResult.IsSuccess)
                 {
                     isSuccess = true;
+                    BackGroundColor = "bg-success";
                     Message = verificationResult.Message;
+                    DisplayToast = "d-block";
                 }
                 else
                 {
-                    errorMessage = verificationResult.Message;
+                    BackGroundColor = "bg-danger";
+                    Message = verificationResult.Message;
+                    DisplayToast = "d-block";
                 }
             }
             else
             {
                 // No verification token was provided in the URL.
-                errorMessage = Localizer["VerificationInvalid"];
+                BackGroundColor = "bg-danger";
+                Message = Localizer["VerificationInvalid"];
+                DisplayToast = "d-block";
             }
+            DisplayToast = DisplayToast ?? "d-block";
 
         }
         catch(Exception ex)
         {
-            errorMessage = Localizer["UnexpectedErrorOccurred"];
+            BackGroundColor = "bg-danger";
+            Message = Localizer["UnexpectedErrorOccurred"];
+            DisplayToast = "d-block";
             Logger.LogError(ex, "An unexpected occured during email verification in Email confirmation page");
         }
         finally
         {
             isLoading = false;
         }
+    }
+
+    protected void HandleLogin()
+    {
+        NavigationManager.NavigateTo("login");
+    }
+
+    protected void HandleCloseToast()
+    {
+        DisplayToast = null;
     }
 }

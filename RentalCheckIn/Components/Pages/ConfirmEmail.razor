@@ -11,17 +11,23 @@
         <div class="col-12 col-md-6 full-height">
             <div class="mx-auto col-10 col-sm-8 col-md-8 col-lg-8 mt-5 mt-md-3 pt-2">
 
-                <p class="fs-3">@Localizer["ConfirmEmailPrimaryMessage"]</p>
-                @if (isSuccess)
+                @if (!string.IsNullOrEmpty(Message))
                 {
-                    <p class="text-success">@Message</p>
-                }
-                else if (!string.IsNullOrEmpty(errorMessage))
-                {
-                    <p class="text-danger">Error verifying your email: @errorMessage</p>
+                    <div class="toast align-items-center p-2 @BackGroundColor position-fixed top-1 end-0 @DisplayToast" role="alert" aria-live="assertive" aria-atomic="true">
+                        <div class="d-flex">
+                            <div class="toast-body">
+                                @if (BackGroundColor == "bg-success")
+                                {
+                                    <strong>Success! </strong>
+                                }
+                                @Message
+                            </div>
+                            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close" @onclick="HandleCloseToast"></button>
+                        </div>
+                    </div>
                 }
 
-                <button class="btn btn-success" onclick="@(() => HandleVerifyEmail())">@Localizer["ConfirmEmailButtonText"]</button>
+                <button class="btn btn-success" onclick="@(() => HandleLogin())">@Localizer["Login"]</button>
             </div>
         </div>
     </div>
