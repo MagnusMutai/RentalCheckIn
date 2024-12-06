@@ -73,6 +73,11 @@ public class ReservationBusinessService : IReservationBusinessService
             await reservationRepository.UpdateCheckInReservationPartialAsync(reservation, res =>
             {
                 // Update only the modified properties
+                if (checkInReservation.LHostId != null && checkInReservation.LHostId != reservation.HostId )
+                {
+                    reservation.HostId = checkInReservation.LHostId;
+                }
+
                 if (checkInReservation.PassportNr != null && checkInReservation.PassportNr != reservation.Quest.PassportNr)
                 {
                     reservation.Quest.PassportNr= checkInReservation.PassportNr;
@@ -127,6 +132,9 @@ public class ReservationBusinessService : IReservationBusinessService
                 {
                     reservation.SignatureQuest = checkInReservation.SignatureDataUrl;
                 }
+                reservation.ModifiedDate = DateTime.UtcNow;
+                reservation.StatusId = (uint)ReservationStatus.Staying;
+
             });
 
             return new OperationResult

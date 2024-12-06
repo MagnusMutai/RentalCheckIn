@@ -19,9 +19,9 @@ public partial class Reservation
     public int? KwhAtCheckOut { get; set; }
     public int KwhPerNightIncluded { get; set; }
     public decimal? CostsPerXtraKwh { get; set; }
-    public bool? AgreeEnergyConsumption { get; set; } //CheckBoxes
-    public bool? ReceivedKeys { get; set; }
-    public bool? AgreeTerms { get; set; }
+    public bool AgreeEnergyConsumption { get; set; } //CheckBoxes
+    public bool ReceivedKeys { get; set; }
+    public bool AgreeTerms { get; set; }
     public uint CurrencyId { get; set; }
     public string? SignatureQuest { get; set; }
     public uint? HostId { get; set; }

@@ -1,5 +1,5 @@
 ﻿namespace RentalCheckIn.Services.Core;
 public interface IPDFService
 {
-    string FillCheckInFormAsync(CheckInReservationDTO model, string culture);
+    MemoryStream FillCheckInFormAsync(CheckInReservationDTO model, string culture);
 }

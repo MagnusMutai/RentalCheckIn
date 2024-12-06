@@ -1,4 +1,6 @@
 ﻿
+using RentalCheckIn.Services.Core;
+
 namespace RentalCheckIn.Controllers;
 
 [Route("api/[controller]")]
@@ -6,14 +8,14 @@ namespace RentalCheckIn.Controllers;
 public class DocumentController : ControllerBase
 {
     private readonly IPDFService pdfService;
-    private readonly IWhatsAppService whatsAppService;
     private readonly ILogger<DocumentController> logger;
+    private readonly IEmailService emailService;
 
-    public DocumentController(IPDFService pdfService, IWhatsAppService whatsAppService, ILogger<DocumentController> logger)
+    public DocumentController(IPDFService pdfService, ILogger<DocumentController> logger, IEmailService emailService)
     {
         this.pdfService = pdfService;
-        this.whatsAppService = whatsAppService;
         this.logger = logger;
+        this.emailService = emailService;
     }
 
     [HttpPost("GenerateAndSendCheckInForm")]
@@ -21,14 +23,18 @@ public class DocumentController : ControllerBase
     {
         try
         {
-            // Generate the document
-            string uniqueFileName = pdfService.FillCheckInFormAsync(request.Model, request.Culture);
-            // Construct the document URL
-            string documentUrl = $"{Request.Scheme}://{Request.Host}/output/{uniqueFileName}";
-            // Send the document via WhatsApp
-            await whatsAppService.SendDocumentAsync(request.Model.Mobile, documentUrl, "Your check-in form");
+            // Generate the PDF in memory
+            using var pdfStream = pdfService.FillCheckInFormAsync(request.Model, request.Culture);
 
-            return Ok("Document sent via WhatsApp.");
+            string subject = "Your Check-In Form";
+            string body = $"Dear {request.Model.GuestFirstName},<br/><br/>" +
+                          "Please find your check-in form attached.<br/><br/>" +
+                          "Thank you for choosing Snowy.";
+
+            // Send the PDF as an attachment directly from memory
+            await emailService.SendEmailAsync(request.Model.MailAddress, subject, body, pdfStream, "CheckInForm.pdf");
+
+            return Ok("Document sent via Email.");
         }
         catch (Exception ex)
         {

@@ -15,7 +15,7 @@ public class PDFService : IPDFService
         this.logger = logger;
     }
 
-    public string FillCheckInFormAsync(CheckInReservationDTO model, string culture)
+    public MemoryStream FillCheckInFormAsync(CheckInReservationDTO model, string culture)
     {
         var template = "CheckInForm-English.docx";
 
@@ -134,10 +134,15 @@ public class PDFService : IPDFService
 
             // Perform the mail merge
             doc.MailMerge.Execute(fieldNames, fieldValues);
+
         }
-        // Save the generated document
-        doc.SaveToFile(outputPath, FileFormat.Docx);
-        return uniqueFileName;
+
+        // Save to a MemoryStream as PDF
+        var pdfStream = new MemoryStream();
+        doc.SaveToStream(pdfStream, FileFormat.PDF);
+        pdfStream.Position = 0;
+
+        return pdfStream;
     }
 
     private void ChooseApartment(Document document, string targetAlias)

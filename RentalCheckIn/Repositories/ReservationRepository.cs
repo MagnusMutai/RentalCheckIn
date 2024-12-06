@@ -21,7 +21,7 @@ public class ReservationRepository : IReservationRepository
             .Include(r => r.Quest)
             .Include(r => r.Status)
              .ThenInclude(s => s.StatusTranslations.Where(st => st.LanguageId == languageId))
-            .Where(r => r.StatusId < 3)
+            .Where(r => r.StatusId < (uint)ReservationStatus.NoShow)
             .OrderBy(r => r.CheckInDate)
                 .Select(r => new ReservationDTO
                 {
@@ -84,6 +84,8 @@ public class ReservationRepository : IReservationRepository
                     SecurityDeposit = r.SecurityDeposit,
                     TotalPrice = r.TotalPrice,
                     KwhAtCheckIn = r.KwhAtCheckIn,
+                    KWhPerNightIncluded = r.KwhPerNightIncluded,
+                    CostsPerXtraKWh = r.CostsPerXtraKwh,
                     AgreeEnergyConsumption = r.AgreeEnergyConsumption,
                     ReceivedKeys = r.ReceivedKeys,
                     AgreeTerms = r.AgreeTerms,

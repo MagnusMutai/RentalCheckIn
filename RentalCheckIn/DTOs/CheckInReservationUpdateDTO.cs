@@ -2,6 +2,7 @@
 public class CheckInReservationUpdateDTO
 {
     public uint Id { get; set; }
+    public uint LHostId { get; set; }
     public string? PassportNr { get; set; }
     public string? MailAddress { get; set; }
     public string? Mobile { get; set; }
@@ -11,9 +12,9 @@ public class CheckInReservationUpdateDTO
     public decimal? TotalPrice { get; set; }
     public int KwhAtCheckIn { get; set; }
     // Checkboxes
-    public bool? AgreeEnergyConsumption { get; set; }
-    public bool? ReceivedKeys { get; set; }
-    public bool? AgreeTerms { get; set; }
+    public bool AgreeEnergyConsumption { get; set; } = true;
+    public bool ReceivedKeys { get; set; } = true;
+    public bool AgreeTerms { get; set; } = true;
     // Editable (guest's signature)
     public string? SignatureDataUrl { get; set; }
 }

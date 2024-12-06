@@ -232,9 +232,6 @@ Uitchecken</value>
   <data name="ConfirmEmailPrimaryMessage" xml:space="preserve">
     <value>E-mailverificatie</value>
   </data>
-  <data name="ConfirmEmailButtonText" xml:space="preserve">
-    <value>E-mail verifiëren</value>
-  </data>
   <data name="PasswordResetPrimaryMessage" xml:space="preserve">
     <value>Wachtwoord wijzigen</value>
   </data>
@@ -411,7 +408,7 @@ Uitchecken</value>
     <value>Totale Prijs</value>
   </data>
   <data name="Rental.EnergyConsumption.CheckBox" xml:space="preserve">
-    <value>Energieverbruik tot 30 kWh per dag is inbegrepen in de huurprijs! Voor extra verbruik wordt $0,20 per kWh in rekening gebracht bij het uitchecken</value>
+    <value>Energieverbruik tot {0} kWh per dag is inbegrepen in de huurprijs! Voor extra verbruik wordt {2}{1} per kWh in rekening gebracht bij het uitchecken</value>
   </data>
   <data name="Rental.ReceivedKeys.Info" xml:space="preserve">
     <value>Ontvangen: alarm afstandsbediening, afstandsbediening schuifpoort, huissleutel, poortsleutel en kamersleutels.</value>
@@ -456,7 +453,7 @@ Uitchecken</value>
     <value>Bevestig uw e-mail</value>
   </data>
   <data name="Action.Email.ConfirmLink" xml:space="preserve">
-    <value>Bevestig uw e-mail door &lt;a href="{verificationLink}"&gt;hier&lt;/a&gt; te klikken.</value>
+    <value>Bevestig uw e-mail door {0}.</value>
   </data>
   <data name="Error.Request.Invalid" xml:space="preserve">
     <value>Ongeldig verzoek</value>
@@ -490,5 +487,11 @@ Uitchecken</value>
   </data>
   <data name="Error.Account.Blocked" xml:space="preserve">
     <value>Uw account is geblokkeerd. Wacht {0} voordat u het opnieuw probeert.</value>
+  </data>
+  <data name="Here" xml:space="preserve">
+    <value>hier</value>
+  </data>
+  <data name="Action.Authorization.Prompt" xml:space="preserve">
+    <value>Hoe wilt u geautoriseerd worden?</value>
   </data>
 </root>

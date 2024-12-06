@@ -65,6 +65,7 @@ public class ReservationService : IReservationService
             var updateModel = new CheckInReservationUpdateDTO
             {
                 Id = checkInModel.Id,
+                LHostId = checkInModel.LHostId,
                 PassportNr = checkInModel.PassportNr,
                 MailAddress = checkInModel.MailAddress,
                 Mobile = checkInModel.Mobile,

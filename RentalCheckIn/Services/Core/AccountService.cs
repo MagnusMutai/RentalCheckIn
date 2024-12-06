@@ -176,7 +176,8 @@ public class AccountService : IAccountService
             var encodedToken = HttpUtility.UrlEncode(lHost.EmailVerificationToken);
             // Send the new verification email
             var verificationLink = $"{configuration["ApplicationSettings:AppUrl"]}/email-confirmation?emailToken={encodedToken}";
-            await emailService.SendEmailAsync(lHost.MailAddress, localizer["Action.Email.Confirm"], $"{localizer["Action.Email.ConfirmLink"]}");
+            string formattedVerificationLink = string.Format(localizer["Action.Email.ConfirmLink"], $"<a href=\"{verificationLink}\">{localizer["Here"]}</a>");
+            await emailService.SendEmailAsync(lHost.MailAddress, localizer["Action.Email.Confirm"], formattedVerificationLink);
 
             return new OperationResult<LHost>
             {

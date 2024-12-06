@@ -81,6 +81,7 @@ public class ReservationController : ControllerBase
         }
     }
 
+    // Patch?
     [HttpPut("{id}")]
     public async Task<IActionResult> UpdateReservation(uint id, [FromBody] CheckInReservationUpdateDTO checkInModel)
     {

@@ -1,7 +1,6 @@
 using Fido2NetLib;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Localization;
-using RentalCheckIn.Configuration.WhatsApp;
 using Serilog;
 using Serilog.Formatting.Compact;
 using System.Globalization;
@@ -76,6 +75,7 @@ Log.Logger = new LoggerConfiguration()
     .Enrich.WithMachineName()
     .Enrich.WithThreadId()
     .MinimumLevel.Information()
+    .WriteTo.Console()
     .WriteTo.File(
         path: @"C:\Logs\log-.txt",
         rollingInterval: RollingInterval.Day,
@@ -113,7 +113,6 @@ builder.Services.AddScoped<IJWTService, JWTService>();
 builder.Services.AddScoped<ITOTPService, TOTPService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IPDFService, PDFService>();
-builder.Services.AddScoped<IWhatsAppService, WhatsAppService>();
 builder.Services.AddScoped<IDocumentService, DocumentService>();
 builder.Services.AddScoped<ILanguageRepository, LanguageRepository>();
 builder.Services.AddScoped<IApartmentTranslationRepository, ApartmentTranslationRepository>();
@@ -123,7 +122,6 @@ builder.Services.AddScoped<ILocalizationUIService, LocalizationUIService>();
 builder.Services.AddScoped<RefreshTokenService>();
 builder.Services.AddScoped<ProtectedLocalStorage>();
 builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
-builder.Services.Configure<WhatsAppSettings>(builder.Configuration.GetSection("WhatsAppSettings"));
 
 var app = builder.Build();
 

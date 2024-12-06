@@ -1,5 +1,4 @@
 ﻿using RentalCheckIn.Locales;
-using System.ComponentModel.DataAnnotations;
 
 namespace RentalCheckIn.DTOs;
 
@@ -7,6 +6,7 @@ public class CheckInReservationDTO : IValidatableObject
 {
     // Guest Information
     public uint Id { get; set; }
+    public uint LHostId { get; set; }
     public string GuestFullName { get; set; }
     public string GuestFirstName { get; set; }
 
@@ -53,11 +53,13 @@ public class CheckInReservationDTO : IValidatableObject
     [Required(ErrorMessageResourceName = "KwhAtCheckInRequired", ErrorMessageResourceType = typeof(Resource))]
     [Range(1, int.MaxValue, ErrorMessageResourceName = "KwhAtCheckInRange", ErrorMessageResourceType = typeof(Resource))]
     public int KwhAtCheckIn { get; set; }
+    public int KWhPerNightIncluded { get; set; }
+    public decimal? CostsPerXtraKWh { get; set; }
 
     // Checkboxes
-    public bool? AgreeEnergyConsumption { get; set; }
-    public bool? ReceivedKeys { get; set; }
-    public bool? AgreeTerms { get; set; }
+    public bool AgreeEnergyConsumption { get; set; }
+    public bool ReceivedKeys { get; set; } 
+    public bool AgreeTerms { get; set; }
 
     public string CountryISO2 { get; set; }
     public string LanguageName { get; set; }
