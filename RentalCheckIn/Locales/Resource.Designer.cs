@@ -79,6 +79,15 @@ namespace RentalCheckIn.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to How would you like to be authorized?.
+        /// </summary>
+        public static string Action_Authorization_Prompt {
+            get {
+                return ResourceManager.GetString("Action.Authorization.Prompt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Close.
         /// </summary>
         public static string Action_Close_Label {
@@ -97,7 +106,7 @@ namespace RentalCheckIn.Locales {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to  Please confirm your email by clicking &lt;a href=&quot;{verificationLink}&quot;&gt;here&lt;/a&gt;..
+        ///   Looks up a localized string similar to  Please confirm your email by clicking {0}..
         /// </summary>
         public static string Action_Email_ConfirmLink {
             get {
@@ -228,15 +237,6 @@ namespace RentalCheckIn.Locales {
         public static string CheckOutTimeRequired {
             get {
                 return ResourceManager.GetString("CheckOutTimeRequired", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Verify Email.
-        /// </summary>
-        public static string ConfirmEmailButtonText {
-            get {
-                return ResourceManager.GetString("ConfirmEmailButtonText", resourceCulture);
             }
         }
         
@@ -562,6 +562,15 @@ namespace RentalCheckIn.Locales {
         public static string Hello {
             get {
                 return ResourceManager.GetString("Hello", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to here.
+        /// </summary>
+        public static string Here {
+            get {
+                return ResourceManager.GetString("Here", resourceCulture);
             }
         }
         
@@ -955,7 +964,7 @@ namespace RentalCheckIn.Locales {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Energy consumption up to 30 kWh per day is included in the rental price! For additional use, $0.20 per kWh will be charged at check-out.
+        ///   Looks up a localized string similar to Energy consumption up to {0} kWh per day is included in the rental price! For additional use, {2} {1} per kWh will be charged at check-out.
         /// </summary>
         public static string Rental_EnergyConsumption_CheckBox {
             get {

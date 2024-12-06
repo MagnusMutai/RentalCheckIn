@@ -230,9 +230,6 @@
   <data name="ConfirmEmailPrimaryMessage" xml:space="preserve">
     <value>Email Verification</value>
   </data>
-  <data name="ConfirmEmailButtonText" xml:space="preserve">
-    <value>Verify Email</value>
-  </data>
   <data name="PasswordResetPrimaryMessage" xml:space="preserve">
     <value>Change password</value>
   </data>
@@ -408,7 +405,7 @@
     <value>Total Price</value>
   </data>
   <data name="Rental.EnergyConsumption.CheckBox" xml:space="preserve">
-    <value>Energy consumption up to 30 kWh per day is included in the rental price! For additional use, $0.20 per kWh will be charged at check-out</value>
+    <value>Energy consumption up to {0} kWh per day is included in the rental price! For additional use, {2} {1} per kWh will be charged at check-out</value>
   </data>
   <data name="Rental.ReceivedKeys.Info" xml:space="preserve">
     <value>Received alarm remote control, remote control sliding gate, house key, gate key, and room keys.</value>
@@ -453,7 +450,7 @@
     <value>Confirm your email</value>
   </data>
   <data name="Action.Email.ConfirmLink" xml:space="preserve">
-    <value> Please confirm your email by clicking &lt;a href="{verificationLink}"&gt;here&lt;/a&gt;.</value>
+    <value> Please confirm your email by clicking {0}.</value>
   </data>
   <data name="Error.Request.Invalid" xml:space="preserve">
     <value>Invalid request</value>
@@ -488,5 +485,11 @@
   <data name="Error.Account.Blocked" xml:space="preserve">
     <value>Your account is blocked. Please wait for {0} before trying again.
 </value>
+  </data>
+  <data name="Here" xml:space="preserve">
+    <value>here</value>
+  </data>
+  <data name="Action.Authorization.Prompt" xml:space="preserve">
+    <value>How would you like to be authorized?</value>
   </data>
 </root>

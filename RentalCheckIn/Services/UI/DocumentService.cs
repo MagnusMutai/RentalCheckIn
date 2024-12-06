@@ -8,7 +8,7 @@ public class DocumentService : IDocumentService
         this.httpClient = httpClient;
     }
 
-    public async Task<string> GenerateAndSendCheckInFormAsync(CheckInReservationDTO model, string culture)
+    public async Task<bool> GenerateAndSendCheckInFormAsync(CheckInReservationDTO model, string culture)
     {
         try
         {
@@ -22,7 +22,7 @@ public class DocumentService : IDocumentService
 
             if (response.IsSuccessStatusCode)
             {
-                return "Document sent successfully via WhatsApp.";
+                return true;
             }
 
             var errorMessage = await response.Content.ReadAsStringAsync();
@@ -30,7 +30,8 @@ public class DocumentService : IDocumentService
         }
         catch (Exception ex)
         {
-            throw;
+            // Log
+            return false;
         }
     }
 

@@ -20,15 +20,16 @@ public class JWTService : IJWTService
             {
                 return string.Empty;
             }
+
             var key = Encoding.ASCII.GetBytes(secretKey);
 
             var claims = new[]
             {
-            new Claim(ClaimTypes.NameIdentifier, lHost.HostId.ToString()),
-            new Claim(ClaimTypes.Email, lHost.MailAddress),
-            new Claim(ClaimTypes.Name, lHost.FirstName),
-            new Claim(ClaimTypes.Role, "Host")
-        };
+                new Claim(ClaimTypes.NameIdentifier, lHost.HostId.ToString()),
+                new Claim(ClaimTypes.Email, lHost.MailAddress),
+                new Claim(ClaimTypes.Name, lHost.FirstName),
+                new Claim(ClaimTypes.Role, "Host")
+            };
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {

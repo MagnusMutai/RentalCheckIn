@@ -230,9 +230,6 @@
   <data name="ConfirmEmailPrimaryMessage" xml:space="preserve">
     <value>Vérification de l'email</value>
   </data>
-  <data name="ConfirmEmailButtonText" xml:space="preserve">
-    <value>Vérifier l'email</value>
-  </data>
   <data name="PasswordResetPrimaryMessage" xml:space="preserve">
     <value>Changer le mot de passe</value>
   </data>
@@ -409,7 +406,7 @@
     <value>Prix Total</value>
   </data>
   <data name="Rental.EnergyConsumption.CheckBox" xml:space="preserve">
-    <value>La consommation d'énergie jusqu'à 30 kWh par jour est incluse dans le prix de location ! Pour une utilisation supplémentaire, 0,20 $ par kWh sera facturé lors du départ</value>
+    <value>La consommation d'énergie jusqu'à {0} kWh par jour est incluse dans le prix de location ! Pour une utilisation supplémentaire, {1} {2} par kWh sera facturé lors du départ</value>
   </data>
   <data name="Rental.ReceivedKeys.Info" xml:space="preserve">
     <value>Reçu : télécommande d'alarme, télécommande de portail coulissant, clé de maison, clé de portail et clés de chambre.</value>
@@ -454,7 +451,7 @@
     <value>Confirmez votre e-mail</value>
   </data>
   <data name="Action.Email.ConfirmLink" xml:space="preserve">
-    <value>Veuillez confirmer votre e-mail en cliquant &lt;a href="{verificationLink}"&gt;ici&lt;/a&gt;.</value>
+    <value>Veuillez confirmer votre e-mail en cliquant {0}.</value>
   </data>
   <data name="Error.Request.Invalid" xml:space="preserve">
     <value>Requête invalide</value>
@@ -488,5 +485,11 @@
   </data>
   <data name="Error.Account.Blocked" xml:space="preserve">
     <value>Votre compte est bloqué. Veuillez attendre {0} avant de réessayer.</value>
+  </data>
+  <data name="Here" xml:space="preserve">
+    <value>ici</value>
+  </data>
+  <data name="Action.Authorization.Prompt" xml:space="preserve">
+    <value>Comment souhaitez-vous être autorisé ?</value>
   </data>
 </root>

@@ -79,7 +79,7 @@
             </div>
         </div>
 
-        <button class="btn btn-success border-0 rounded-3 mt-4" @onclick="NavigateToCheckIn">@Localizer["CheckIn"]</button>
+        <button class="btn btn-success border-0 rounded-3 mt-4" @onclick="NavigateToCheckIn" disabled="@(SelectedReservation.StatusId != (uint)ReservationStatus.Okay)">@Localizer["CheckIn"]</button>
     </div>
 }
 else
