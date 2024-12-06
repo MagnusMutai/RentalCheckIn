@@ -10,9 +10,12 @@ public class CheckInBase : ComponentBase
 {
     protected bool displaySignaturePad;
 
-    private string? Message;
+    protected string? Message;
 
     protected string? signatureValidationError;
+    protected string BackGroundColor { get; set; } = "bg-success";
+    public string? DisplayToast { get; set; } = "d-block";
+    protected bool IsSuccessToast { get; set; } = false;
 
     [Parameter]
     public int Id { get; set; }
@@ -34,12 +37,6 @@ public class CheckInBase : ComponentBase
     private ILogger<CheckInBase> Logger { get; set; }
     [Inject]
     protected IStringLocalizer<Resource> Localizer { get; set; }
-
-    protected bool AgreeEnergyConsumption = true;
-
-    protected bool ReceivedKeys = true;
-
-    protected bool AgreeTerms = true;
 
     public byte[]? SignatureBytes
     {
@@ -85,7 +82,18 @@ public class CheckInBase : ComponentBase
             {
                 var authState = customAuthStateProvider.NotifyUserAuthentication(Constants.JWTToken);
 
-                if (authState.User.Identity is { IsAuthenticated: false })
+                if (authState.User.Identity is { IsAuthenticated: true })
+                {
+                    // User is authenticated, retrieve claims
+                    var hostIdClaim = authState.User.FindFirst("nameid");
+                  
+                    if (hostIdClaim != null && uint.TryParse(hostIdClaim.Value, out uint hostId))
+                    {
+                        // Assign the HostId to your model
+                        checkInModel.LHostId = hostId;
+                    }
+                }
+                else
                 {
                     // User is not authenticated; redirect to login
                     NavigationManager.NavigateTo("/login", forceLoad: false);
@@ -98,7 +106,9 @@ public class CheckInBase : ComponentBase
         }
         catch (Exception ex)
         {
+            BackGroundColor = "bg-danger";
             Message = Localizer["UnexpectedErrorOccurred"];
+            DisplayToast = DisplayToast ?? "d-block";
             Logger.LogError(ex, "An unexpected error occurred while trying to authenticate user on OnAfterRenderAsync on CheckIn component.");
         }
     }
@@ -140,6 +150,7 @@ public class CheckInBase : ComponentBase
     private void CalculateTotalPrice()
     {
         checkInModel.TotalPrice = checkInModel.ApartmentFee + checkInModel.SecurityDeposit;
+        StateHasChanged();
     }
 
     protected void OnDateChanged(ChangeEventArgs e)
@@ -153,8 +164,14 @@ public class CheckInBase : ComponentBase
         }
     }
 
-    protected void OnFeeChanged(ChangeEventArgs e)
+    protected void OnFeeChanged(decimal newValue)
     {
+        checkInModel.ApartmentFee = newValue;
+        CalculateTotalPrice();
+    }
+    protected void OnDepositChanged(decimal newValue)
+    {
+        checkInModel.SecurityDeposit = newValue;
         CalculateTotalPrice();
     }
 
@@ -164,10 +181,11 @@ public class CheckInBase : ComponentBase
         {
            var isSaved = await ReservationService.UpdateCheckInFormReservationAsync(checkInModel);
 
-            if (isSaved) 
-            {
-                Message = Localizer["Quest.CheckIn.Success"];
-            }
+            //if (isSaved) 
+            //{
+            //    BackGroundColor = "bg-success";
+            //    Message = Localizer["Quest.CheckIn.Success"];
+            //}
             // Implement Result pattern to get more relevant and specific responses from the server.
         }
         catch (Exception ex) 
@@ -180,10 +198,24 @@ public class CheckInBase : ComponentBase
     {
         var culture = CultureInfo.CurrentCulture.Name;
 
-        // Implement PDF generation and sharing
+        // PDF generation and sharing
         try
         {
-            Message = await DocumentService.GenerateAndSendCheckInFormAsync(checkInModel, culture);
+            bool sharedDocToEmail= await DocumentService.GenerateAndSendCheckInFormAsync(checkInModel, culture);
+            if (sharedDocToEmail)
+            {
+                BackGroundColor = "bg-success";
+                Message = "Check-In form succesfully sent to customer by email.";
+                DisplayToast = DisplayToast ?? "d-block";
+                IsSuccessToast = true;
+            }
+            else
+            {
+                BackGroundColor = "bg-danger";
+                Message = "Unable to send check-In form to guest's email. Please try again later";
+                DisplayToast = DisplayToast ?? "d-block";
+                IsSuccessToast = false;
+            }
         }
         catch (Exception ex)
         {
@@ -198,4 +230,13 @@ public class CheckInBase : ComponentBase
         LineWidth = 2,
         StrokeStyle = strokeColor
     };
+
+    protected void HandleCloseToast()
+    {
+        DisplayToast = null;
+        if (IsSuccessToast)
+        {
+            NavigationManager.NavigateTo("/");
+        }
+    }
 }
