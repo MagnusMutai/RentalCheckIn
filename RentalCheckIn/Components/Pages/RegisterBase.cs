@@ -13,7 +13,7 @@ public class RegisterBase : ComponentBase
     protected string FaceID = "FaceID";
     protected bool IsRegistering;
     protected bool isRegistrationComplete;
-    public string DisplayToast { get; set; } = "d-block";
+    public string? DisplayToast { get; set; } = "d-block";
     public string BackGroundColor { get; set; } = "bg-success";
     protected bool IsFaceIdSelected => registerModel.Selected2FA == "FaceID";
     protected uint RegisteredUserId { get; set; } // To store the user ID after registration

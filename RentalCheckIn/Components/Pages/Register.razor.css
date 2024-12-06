@@ -70,6 +70,34 @@
     animation: fadeDropDown 1.8s ease forwards;
 }
 
+.form-check {
+    height: 7rem;
+    width: 7rem;
+}
+ 
+::deep .form-check input[type="radio"] {
+    cursor: pointer;
+    z-index: 2;
+}
+
+.form-check .radio-tile {
+    transition: all 300ms ease;
+}
+
+input:checked + .radio-tile {
+    background-color: white;
+    box-shadow: 0 0 12px #FFC857;
+}
+
+input:hover + .radio-tile {
+    box-shadow: 0 0 12px #FFC857;
+}
+
+input:checked + .radio-tile span,
+input:checked + .radio-tile label {
+    color: black;
+}
+
 @media (max-width: 768px) {
     .full-height {
         height: auto;
