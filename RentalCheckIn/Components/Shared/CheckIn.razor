@@ -116,7 +116,7 @@
                         <div class="mt-5 mb-3">
                             <div class="row">
                                 <p class="fw-bold col-md-6 m-0 mt-3 mt-md-0">@Localizer["Fee.Apartment.Label"]</p>
-                                <div class="col-md-6 mb-1">
+                                <div class="col-md-2 mb-1">
                                     <div class="d-flex gap-1">
                                         <span class="mt-2">@checkInModel.CurrencySymbol</span>
                                         <InputNumber class="form-control" @bind-Value="checkInModel.ApartmentFee" @oninput="@(e => {
@@ -129,7 +129,7 @@
                             </div>
                             <div class="row">
                                 <p class="fw-bold col-md-6 m-0 mt-3 mt-md-0">@Localizer["SecurityDeposit.Label"]</p>
-                                <div class="col-md-6 mb-1">
+                                <div class="col-md-2 mb-1">
                                     <div class="d-flex gap-1">
                                         <span class="mt-2">@checkInModel.CurrencySymbol</span>
                                         <InputNumber class="form-control" @bind-Value="checkInModel.SecurityDeposit" @oninput="@(e => {
@@ -142,7 +142,7 @@
                             </div>
                             <div class="row">
                                 <p class="fw-bold col-md-6 m-0 mt-3 mt-md-0">@Localizer["Price.Total.Label"]</p>
-                                <div class="col-md-6 mb-1">
+                                <div class="col-md-2 mb-1">
                                     <div class="d-flex gap-1">
                                         <span class="mt-2">@checkInModel.CurrencySymbol</span>
                                         <div class="form-control">@checkInModel.TotalPrice</div>
@@ -161,18 +161,22 @@
                                     <ValidationMessage For="@(() => checkInModel.KwhAtCheckIn)" /> kWh.
                                 </div>
                             </label>
+                            <ValidationMessage For="@(() => checkInModel.AgreeEnergyConsumption)" /> kWh.
+
                         </div>
                         <div class="form-check mb-2">
                             <InputCheckbox class="form-check-input disable-checkbox-only" @bind-Value="checkInModel.ReceivedKeys" />
                             <label class="form-check-label">
                                 @Localizer["Rental.ReceivedKeys.Info"]
                             </label>
+                            <ValidationMessage For="@(() => checkInModel.ReceivedKeys)" /> kWh.
                         </div>
                         <div class="form-check mb-4">
                             <InputCheckbox class="form-check-input disable-checkbox-only" @bind-Value="checkInModel.AgreeTerms" />
                             <label class="form-check-label">
                                 @Localizer["Rental.Agreement.Signature.Info"]
                             </label>
+                            <ValidationMessage For="@(() => checkInModel.AgreeTerms)" /> kWh.
                         </div>
 
                         <div class="row mt-5 mb-3">
