@@ -27,7 +27,7 @@ public class LogoutBase : ComponentBase
             // Notify the authentication state provider
             if (AuthStateProvider is CustomAuthStateProvider customAuthStateProvider)
             {
-                await customAuthStateProvider.NotifyUserLogout();
+                customAuthStateProvider.NotifyUserLogout();
             }
 
             // Redirect to login page
