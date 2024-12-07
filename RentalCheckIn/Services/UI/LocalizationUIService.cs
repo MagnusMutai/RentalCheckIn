@@ -1,5 +1,4 @@
-﻿using System.Net.Http;
-using static RentalCheckIn.DTOs.CustomRequests;
+﻿using System.Globalization;
 
 namespace RentalCheckIn.Services.UI;
 public class LocalizationUIService : ILocalizationUIService
