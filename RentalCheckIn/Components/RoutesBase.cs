@@ -23,7 +23,9 @@ public class RoutesBase : ComponentBase, IAsyncDisposable
 
     protected override void OnInitialized()
     {
+        // Set the culture for use in the service classes
         CultureUtility.CurCulture = CultureInfo.CurrentCulture;
+
         if (AuthStateProvider != null)
         {
             AuthStateProvider.AuthenticationStateChanged += async (task) =>
