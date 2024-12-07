@@ -28,7 +28,7 @@ public class CustomAuthStateProvider : AuthenticationStateProvider
         return state;
     }
 
-    public async Task NotifyUserLogout()
+    public void NotifyUserLogout()
     {
         var anonymousUser = new ClaimsPrincipal(new ClaimsIdentity());
         NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(anonymousUser)));
