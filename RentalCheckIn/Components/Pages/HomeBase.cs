@@ -60,6 +60,52 @@ public class HomeBase : ComponentBase
                 itemsPerPage = 10;
             }
 
+            await LoadLocalizedDataAsync();
+        }
+        catch (Exception ex)
+        {
+            Message = Localizer["CouldNotLoadResources"];
+            Logger.LogError(ex, "An unexpected error occurred while trying to load reservations or its dependencies in the Reservation Page.");
+        }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        try
+        {
+            // Get the accessToken if it exists
+            var response = await LocalStorage.GetAsync<string>("token");
+            Constants.JWTToken = response.Success ? response.Value : "";
+
+            if (AuthStateProvider is CustomAuthStateProvider customAuthStateProvider)
+            {
+                var authState = customAuthStateProvider.NotifyUserAuthentication(Constants.JWTToken);
+
+                if (authState.User.Identity is { IsAuthenticated: false })
+                {
+                    // User is not authenticated; redirect to login
+                    NavigationManager.NavigateTo("/login", forceLoad: false);
+                }
+            }
+
+            // Update default value with localized text
+            if (SelectedApartment == "All" && Localizer != null)
+            {
+                SelectedApartment = Localizer["All"];
+                ApartmentNames[0] = Localizer["All"];
+            }
+        }
+        catch (Exception ex)
+        {
+            Message = Localizer["UnexpectedErrorOccurred"];
+            Logger.LogError(ex, "An unexpected error occurred while trying to authenticate a user on Reservation page.");
+        }
+    }
+
+    private async Task LoadLocalizedDataAsync()
+    {
+        try
+        {
             // Fetch localized apartment names and status labels
             var apartmentIds = Reservations.Select(r => r.ApartmentId).Distinct();
             var statusIds = Reservations.Select(r => r.StatusId).Distinct();
@@ -88,36 +134,9 @@ public class HomeBase : ComponentBase
         catch (Exception ex)
         {
             Message = Localizer["CouldNotLoadResources"];
-            Logger.LogError(ex, "An unexpected error occurred while trying to load reservations or its dependencies in the Reservation Page.");
+            Logger.LogError(ex, "An error occurred while loading localized data.");
         }
     }
-
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        try
-        {
-            // Get the accessToken if it exists
-            var response = await LocalStorage.GetAsync<string>("token");
-            Constants.JWTToken = response.Success ? response.Value : "";
-
-            if (AuthStateProvider is CustomAuthStateProvider customAuthStateProvider)
-            {
-                var authState = customAuthStateProvider.NotifyUserAuthentication(Constants.JWTToken);
-
-                if (authState.User.Identity is { IsAuthenticated: false })
-                {
-                    // User is not authenticated; redirect to login
-                    NavigationManager.NavigateTo("/login", forceLoad: false);
-                }
-            }
-        }
-        catch (Exception ex)
-        {
-            Message = Localizer["UnexpectedErrorOccurred"];
-            Logger.LogError(ex, "An unexpected error occurred while trying to authenticate a user on Reservation page.");
-        }
-    }
-
 
     // Computes the total number of pages based on filtered reservations.
     protected uint totalPages => (uint)Math.Ceiling((double)FilteredReservations.Count() / itemsPerPage);

@@ -28,7 +28,7 @@
                 </div>
                 @if (PaginatedReservations != null)
                 {
-                    <div class="table-responsive d-none d-md-block">
+                    <div class="table-responsive d-none d-lg-block">
 
                         <table class="table table-responsive custom-table .table-sm">
                             <thead class="text-nowrap">
@@ -70,7 +70,7 @@
                         </table>
                     </div>
 
-                    <div class="d-md-none">
+                    <div class="d-lg-none">
                         <StackedReservationView PaginatedReservations="PaginatedReservations" OnOpenModal="OpenModal" />
                     </div>
 
@@ -108,21 +108,18 @@
 
         @if (showModal)
         {
-            <div class="modal fade show right-align-modal" style="display:block;" tabindex="-1" role="dialog">
+            <div class="modal fade show right-align-modal" tabindex="-1" role="dialog">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <divk class="ms-md-3">
                             <div class="modal-header ms-3">
-                                <h3 class="modal-title fw-bold">@Localizer["Reservation"] #@selectedReservation?.Id</h3>
+                                <h5 class="modal-title">@selectedReservation?.CheckInDate.ToString("dd MM") - @selectedReservation?.CheckOutDate.ToString("dd MM") &nbsp; &nbsp; @selectedReservation?.ApartmentName</h5>
                                 <button type="button" class="btn-close" @onclick="CloseModal"></button>
                             </div>
                             <div class="modal-body">
                                 <div class="header row"></div>
                                 <h4 class="fw-bold ms-3">@Localizer["Guest.Details.Label"]</h4>
                                 <ReservationDetail SelectedReservation="selectedReservation" />
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" @onclick="CloseModal">@Localizer["Action.Close.Label"]</button>
                             </div>
                         </divk>
                     </div>

@@ -73,8 +73,13 @@
     background-position: center;
     min-height: 150px;
     max-width: 200px;
-    margin-left: auto;
+    margin-left: 16px;
+    margin-bottom: 16px;
     box-shadow: 0 0 8px 8px white inset;
+}
+
+.modal {
+    display: block;
 }
 
 /* Reservation details css */
