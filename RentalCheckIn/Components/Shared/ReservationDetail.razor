@@ -18,30 +18,34 @@
         </div>
 
         <div>
-            <h5 class="m-0 fs-5">@Localizer["CheckIn"]:</h5>
-            <p class="m-0 text-black-50">@SelectedReservation.CheckInDate</p>
-            <p class="text-black-50">@SelectedReservation.CheckInTime</p>
+            <h5 class="m-0 fs-5">@Localizer["CheckIn"]</h5>
+            <div class="d-flex gap-3">
+                <p class="m-0 text-black-50">@SelectedReservation.CheckInDate</p>
+                <p class="text-black-50">@SelectedReservation.CheckInTime</p>
+            </div>
         </div>
 
         <div>
-            <h5 class="m-0 fs-5">@Localizer["CheckOut"]:</h5>
-            <p class="m-0 text-black-50">@SelectedReservation.CheckOutDate</p>
-            <p class="text-black-50">@SelectedReservation.CheckOutTime</p>
+            <h5 class="m-0 fs-5">@Localizer["CheckOut"]</h5>
+            <div class="d-flex gap-3">
+                <p class="m-0 text-black-50">@SelectedReservation.CheckOutDate</p>
+                <p class="text-black-50">@SelectedReservation.CheckOutTime</p>
+            </div>
         </div>
 
 
         <div>
-            <h5 class="m-0 fs-5">@Localizer["Guests"]:</h5>
+            <h5 class="m-0 fs-5">@Localizer["Guests"]</h5>
             <p class="text-black-50">@SelectedReservation.NumberOfQuests @Localizer["Guest.Adults.Label"]</p>
         </div>
 
         <div>
-            <h5 class="m-0 fs-5">@Localizer["Nights"]:</h5>
+            <h5 class="m-0 fs-5">@Localizer["Nights"]</h5>
             <p class="text-black-50">@SelectedReservation.NumberOfNights @Localizer["Nights"]</p>
         </div>
 
         <div>
-            <h5 class="m-0 fs-5">@Localizer["Apartment"]:</h5>
+            <h5 class="m-0 fs-5">@Localizer["Apartment"]</h5>
             <p class="text-black-50"> @SelectedReservation.ApartmentName</p>
         </div>
 
@@ -50,30 +54,30 @@
 
             <div class="text-nowrap">
                 <div class="row mb-2 mb-md-0">
-                    <div class="col-md-3">
-                        <p class="text-black-50 m-0">@Localizer["Price"]</p>
+                    <div class="col-md-5">
+                        <p class="text-black-50 m-0">@Localizer["Price"] (@SelectedReservation.CurrencySymbol) </p>
                     </div>
-                    <div class="col-md-9">
-                        <p class="fw-bold ms-md-5 m-0">@SelectedReservation.CurrencySymbol @SelectedReservation.Price</p>
+                    <div class="col-md">
+                        <p class="fw-bold ms-md-5 m-0 text-md-end">@SelectedReservation.Price</p>
                     </div>
                 </div>
 
-                <div class="row mb-2 mb-md-0">
-                    <div class="col-md-3">
-                        <p class="text-black-50 m-0">@Localizer["SecurityDeposit.Label"]</p>
+                <div class="row mb-3 mb-md-2">
+                    <div class="col-md-5">
+                        <p class="text-black-50 m-0">@Localizer["SecurityDeposit.Label"] (@SelectedReservation.CurrencySymbol)</p>
                     </div>
 
-                    <div class="col-md-9">
-                        <p class="fw-bold ms-md-5 m-0">@SelectedReservation.CurrencySymbol @SelectedReservation.SecurityDeposit</p>
+                    <div class="col-md">
+                        <p class="fw-bold ms-md-5 m-0 text-md-end">@SelectedReservation.SecurityDeposit</p>
                     </div>
                 </div>
 
                 <div class="row">
-                    <div class="col-md-3">
-                        <p class="text-black-50 m-0">@Localizer["Payment.Total.Label"]</p>
+                    <div class="col-md-5">
+                        <p class="text-black-50 m-0">@Localizer["Payment.Total.Label"] (@SelectedReservation.CurrencySymbol)</p>
                     </div>
-                    <div class="col-md-9">
-                        <p class="fw-bold ms-md-5">@SelectedReservation.CurrencySymbol @SelectedReservation.TotalPrice</p>
+                    <div class="col-md">
+                        <p class="fw-bold ms-md-5 text-md-end">@SelectedReservation.TotalPrice</p>
                     </div>
                 </div>
             </div>
