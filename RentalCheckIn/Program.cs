@@ -71,9 +71,6 @@ builder.Services.AddAuthentication(options =>
 
 // Configure Serilog
 Log.Logger = new LoggerConfiguration()
-    .Enrich.FromLogContext()
-    .Enrich.WithMachineName()
-    .Enrich.WithThreadId()
     .MinimumLevel.Information()
     .WriteTo.Console()
     .WriteTo.File(
