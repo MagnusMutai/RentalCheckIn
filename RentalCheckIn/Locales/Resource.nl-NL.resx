@@ -494,4 +494,13 @@ Uitchecken</value>
   <data name="Action.Authorization.Prompt" xml:space="preserve">
     <value>Hoe wilt u geautoriseerd worden?</value>
   </data>
+  <data name="AgreeEnergyConsumption" xml:space="preserve">
+    <value>U moet akkoord gaan met de energieverbruikvoorwaarden.</value>
+  </data>
+  <data name="ReceivedKeys" xml:space="preserve">
+    <value> U moet bevestigen dat u de sleutels hebt ontvangen.</value>
+  </data>
+  <data name="AgreeTerms" xml:space="preserve">
+    <value> U moet akkoord gaan met de algemene voorwaarden.</value>
+  </data>
 </root>
