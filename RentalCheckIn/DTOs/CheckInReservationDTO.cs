@@ -55,10 +55,18 @@ public class CheckInReservationDTO : IValidatableObject
     public int KwhAtCheckIn { get; set; }
     public int KWhPerNightIncluded { get; set; }
     public decimal? CostsPerXtraKWh { get; set; }
-
+    
     // Checkboxes
+    [Required(ErrorMessageResourceName = "AgreeEnergyConsumption", ErrorMessageResourceType = typeof(Resource))]
+    [Range(typeof(bool), "true", "true", ErrorMessageResourceName = "AgreeEnergyConsumption", ErrorMessageResourceType = typeof(Resource))]
     public bool AgreeEnergyConsumption { get; set; }
-    public bool ReceivedKeys { get; set; } 
+
+    [Required(ErrorMessageResourceName = "ReceivedKeys", ErrorMessageResourceType = typeof(Resource))]
+    [Range(typeof(bool), "true", "true", ErrorMessageResourceName = "ReceivedKeys", ErrorMessageResourceType = typeof(Resource))]
+    public bool ReceivedKeys { get; set; }
+
+    [Required(ErrorMessageResourceName = "AgreeTerms", ErrorMessageResourceType = typeof(Resource))]
+    [Range(typeof(bool), "true", "true", ErrorMessageResourceName = "AgreeTerms", ErrorMessageResourceType = typeof(Resource))]
     public bool AgreeTerms { get; set; }
 
     public string CountryISO2 { get; set; }

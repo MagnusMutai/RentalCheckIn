@@ -492,4 +492,13 @@
   <data name="Action.Authorization.Prompt" xml:space="preserve">
     <value>Comment souhaitez-vous être autorisé ?</value>
   </data>
+  <data name="AgreeEnergyConsumption" xml:space="preserve">
+    <value>Vous devez accepter les termes de consommation d'énergie.</value>
+  </data>
+  <data name="ReceivedKeys" xml:space="preserve">
+    <value>Vous devez confirmer que vous avez reçu les clés.</value>
+  </data>
+  <data name="AgreeTerms" xml:space="preserve">
+    <value>Vous devez accepter les termes et conditions.</value>
+  </data>
 </root>

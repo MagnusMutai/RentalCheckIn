@@ -124,6 +124,24 @@ namespace RentalCheckIn.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to You must agree to energy consumption terms..
+        /// </summary>
+        public static string AgreeEnergyConsumption {
+            get {
+                return ResourceManager.GetString("AgreeEnergyConsumption", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You must agree to the terms and conditions..
+        /// </summary>
+        public static string AgreeTerms {
+            get {
+                return ResourceManager.GetString("AgreeTerms", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to All.
         /// </summary>
         public static string All {
@@ -904,6 +922,15 @@ namespace RentalCheckIn.Locales {
         public static string Quest_CheckIn_Success {
             get {
                 return ResourceManager.GetString("Quest.CheckIn.Success", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You must confirm that you have received the keys..
+        /// </summary>
+        public static string ReceivedKeys {
+            get {
+                return ResourceManager.GetString("ReceivedKeys", resourceCulture);
             }
         }
         
