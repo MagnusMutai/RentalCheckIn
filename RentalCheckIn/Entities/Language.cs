@@ -7,7 +7,7 @@ public partial class Language
     public string LanguageName { get; set; } = null!;
     public string Culture { get; set; } = null!;
     public bool IsEnabled { get; set; }
-    public string? Svg { get; set; }
+    public string Svg { get; set; } = default!;
     public DateTime CreationDate { get; set; }
 
     public virtual ICollection<Quest> Quests { get; set; } = new List<Quest>();
