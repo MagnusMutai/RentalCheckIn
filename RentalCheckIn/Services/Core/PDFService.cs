@@ -17,15 +17,12 @@ public class PDFService : IPDFService
 
     public MemoryStream FillCheckInFormAsync(CheckInReservationDTO model, string culture)
     {
-        var template = "CheckInForm-English.docx";
-
-        if (culture != null) 
-        { 
-            if (culture == "nl-NL")
-            {
-                template = "CheckInForm-Dutch.docx";
-            }
-        }
+        var template = culture switch
+        {
+            "nl-NL" => "CheckInForm-Dutch.docx",
+            "fr-FR" => "CheckInForm-French.docx",
+            _ => "CheckInForm-English.docx"
+        };
 
         string templatePath = Path.Combine(environment.WebRootPath, "templates", template);
         string outputDir = Path.Combine(environment.WebRootPath, "output");
