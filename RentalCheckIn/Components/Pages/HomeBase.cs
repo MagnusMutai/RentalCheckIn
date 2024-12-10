@@ -92,13 +92,12 @@ public class HomeBase : ComponentBase
             if (SelectedApartment == "All" && Localizer != null)
             {
                 SelectedApartment = Localizer["All"];
-                ApartmentNames[0] = Localizer["All"];
             }
         }
         catch (Exception ex)
         {
             Message = Localizer["UnexpectedErrorOccurred"];
-            Logger.LogError(ex, "An unexpected error occurred while trying to authenticate a user on Reservation page.");
+            Logger.LogError(ex, "An unexpected error occurred either while trying to authenticate a user or assigning localized apartment names on Reservation page.");
         }
     }
 
