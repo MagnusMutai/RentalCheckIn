@@ -1,6 +1,4 @@
-﻿using static RentalCheckIn.DTOs.CustomRequests;
-
-namespace RentalCheckIn.Controllers;
+﻿namespace RentalCheckIn.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
@@ -13,6 +11,28 @@ public class LocalizationController : ControllerBase
     {
         this.localizationService = localizationService;
         this.logger = logger;
+    }
+
+    [HttpGet("languages/flags")]
+    public async Task<IActionResult> GetAllLanguageFlags()
+    {
+        try
+        {
+            var languageFlags = await localizationService.GetAllLanguageFlagsAsync();
+            
+            if (languageFlags == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(languageFlags);
+        }
+        catch (Exception ex) 
+        {
+            logger.LogError(ex, "An unexpected error occurred in LocalizationController while trying to get language flags.");
+            return StatusCode(StatusCodes.Status500InternalServerError,
+                      "Error retrieving Data from Database");
+        }
     }
 
     [HttpPost("apartments/names")]
@@ -31,7 +51,7 @@ public class LocalizationController : ControllerBase
         }
         catch (Exception ex)       
         {
-            logger.LogError(ex, "An unexpected error occurred in LocalizationController while trying to register a user.");
+            logger.LogError(ex, "An unexpected error occurred in LocalizationController while trying to get language-specific apartment names.");
             return StatusCode(StatusCodes.Status500InternalServerError,
                       "Error retrieving Data from Database");
         }
