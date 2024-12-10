@@ -374,7 +374,7 @@ public class AuthService : IAuthService
                 return new OperationResult
                 {
                     IsSuccess = true,
-                    Message = "Registration successful! Proceed to login."
+                    Message = "Registration successful! An account confirmation link has been sent to your email click it and Proceed to login."
                 };
             }
             else
