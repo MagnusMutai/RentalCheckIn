@@ -1,10 +1,26 @@
 ﻿@using System.Globalization
 @inherits CultureSelectorBase
 
-<div>
-    <select @bind="Culture" class="form-select-sm bg-transparent text-white">
-        <option class="text-black" value="en-EN">EN</option>
-        <option class="text-black" value="fr-FR">FR</option>
-        <option class="text-black" value="nl-NL">NL</option>
-    </select>
+<div class="dropdown">
+    <button class="btn dropdown-toggle form-select-sm bg-transparent text-white" type="button" data-bs-toggle="dropdown">
+        @CurrentFlag
+    </button>
+    <ul class="dropdown-menu bg-dark">
+        <li>
+            <a class="dropdown-item" href="#" @onclick="@(() => SetCulture("en-EN"))">
+                <span @key="1">@((MarkupString)englishFlag)</span>
+            </a>
+        </li>
+        <li>
+            <a class="dropdown-item" href="#" @onclick="@(() => SetCulture("fr-FR"))">
+                <span @key="2">@((MarkupString)frenchFlag)</span>
+            </a>
+        </li>
+        <li>
+            <a class="dropdown-item" href="#" @onclick="@(() => SetCulture("nl-NL"))">
+                <span @key="3">@((MarkupString)dutchFlag)</span>
+            </a>
+        </li>
+    </ul>
 </div>
+
