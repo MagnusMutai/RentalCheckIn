@@ -501,4 +501,10 @@
   <data name="AgreeTerms" xml:space="preserve">
     <value>You must agree to the terms and conditions.</value>
   </data>
+  <data name="Error.Email.Verification" xml:space="preserve">
+    <value>"Failed to confirm your email address. Please try again later."</value>
+  </data>
+  <data name="Save.Share.Reservation" xml:space="preserve">
+    <value>Save and share with email</value>
+  </data>
 </root>

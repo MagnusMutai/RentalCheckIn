@@ -1,4 +1,5 @@
-﻿namespace RentalCheckIn.Repositories;
+﻿
+namespace RentalCheckIn.Repositories;
 public class LanguageRepository : ILanguageRepository
 {
     private readonly AppDbContext context;
@@ -17,5 +18,16 @@ public class LanguageRepository : ILanguageRepository
     public async Task<Language?> GetDefaultLanguageAsync()
     {
         return await GetLanguageByCultureAsync(defaultLanguageCode);
+    }
+
+    public async Task<List<CultureFlagDTO>> GetAllLanguageFlagsAsync()
+    {
+        return await context.Languages
+            .Select(l => new CultureFlagDTO
+            {
+                Id = l.LanguageId,
+                FlagSvg = l.Svg
+            }).ToListAsync();
+            
     }
 }
