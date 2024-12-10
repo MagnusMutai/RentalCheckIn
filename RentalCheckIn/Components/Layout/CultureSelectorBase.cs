@@ -5,11 +5,11 @@ namespace RentalCheckIn.Components.Layout;
 
 public class CultureSelectorBase : ComponentBase
 {
-    private Dictionary<uint, CultureFlagDTO> flagGroups;
 
     protected string englishFlag = string.Empty;
     protected string dutchFlag = string.Empty;
     protected string frenchFlag = string.Empty;
+    private Dictionary<uint, CultureFlagDTO> flagGroups;
     [Inject]
     private NavigationManager Navigation { get; set; } = default!;
     [Inject]
@@ -63,6 +63,7 @@ public class CultureSelectorBase : ComponentBase
         try
         {
             var allFlags = await LocalizationUIService.GetAllLanguageFlagsAsync();
+         
             if (allFlags is null || !allFlags.Any())
             {
                 Logger.LogWarning("No language flags were retrieved.");
