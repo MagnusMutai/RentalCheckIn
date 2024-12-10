@@ -503,4 +503,10 @@ Uitchecken</value>
   <data name="AgreeTerms" xml:space="preserve">
     <value> U moet akkoord gaan met de algemene voorwaarden.</value>
   </data>
+  <data name="Error.Email.Verification" xml:space="preserve">
+    <value>Het bevestigen van uw e-mailadres is mislukt. Probeer het later opnieuw.</value>
+  </data>
+  <data name="Save.Share.Reservation" xml:space="preserve">
+    <value>Opslaan en delen via e-mail</value>
+  </data>
 </root>

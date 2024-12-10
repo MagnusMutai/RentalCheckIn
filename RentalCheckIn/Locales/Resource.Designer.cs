@@ -359,6 +359,15 @@ namespace RentalCheckIn.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to &quot;Failed to confirm your email address. Please try again later.&quot;.
+        /// </summary>
+        public static string Error_Email_Verification {
+            get {
+                return ResourceManager.GetString("Error.Email.Verification", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Host not found..
         /// </summary>
         public static string Error_Host_NotFound {
@@ -1014,6 +1023,15 @@ namespace RentalCheckIn.Locales {
         public static string Reservation {
             get {
                 return ResourceManager.GetString("Reservation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Save and share with email.
+        /// </summary>
+        public static string Save_Share_Reservation {
+            get {
+                return ResourceManager.GetString("Save.Share.Reservation", resourceCulture);
             }
         }
         
