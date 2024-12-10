@@ -13,19 +13,19 @@ public class LHostService : ILHostService
         try
         {
             var response = await httpClient.GetAsync($"api/LHost/email/{mailAddress}");
+           
             if (response.IsSuccessStatusCode)
             {
                 if (response.StatusCode == HttpStatusCode.NoContent)
                 {
                     return default(LHost);
                 }
+
                 return await response.Content.ReadFromJsonAsync<LHost>();
             }
-            else
-            {
-                var message = await response.Content.ReadAsStringAsync();
-                throw new Exception(message);
-            }
+
+            var message = await response.Content.ReadAsStringAsync();
+            throw new Exception(message);
         }
 
         catch (Exception)
@@ -41,19 +41,20 @@ public class LHostService : ILHostService
         try
         {
             var response = await httpClient.GetAsync($"api/LHost/id/{lHostId}");
+           
             if (response.IsSuccessStatusCode)
             {
                 if (response.StatusCode == HttpStatusCode.NoContent)
                 {
                     return default(LHost);
                 }
+
                 return await response.Content.ReadFromJsonAsync<LHost>();
             }
-            else
-            {
-                var message = await response.Content.ReadAsStringAsync();
-                throw new Exception(message);
-            }
+
+            var message = await response.Content.ReadAsStringAsync();
+            // Log the exception message instead.
+            throw new Exception(message);
         }
 
         catch (Exception)
