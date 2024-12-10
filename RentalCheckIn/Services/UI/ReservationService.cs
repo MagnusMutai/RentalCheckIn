@@ -80,6 +80,7 @@ public class ReservationService : IReservationService
             };
 
             var response = await httpClient.PutAsJsonAsync($"api/Reservation/{updateModel.Id}", updateModel);
+            
             return response.IsSuccessStatusCode;
         }
         catch (Exception ex)
@@ -100,6 +101,7 @@ public class ReservationService : IReservationService
                 {
                     return new List<Setting>();
                 }
+               
                 return await response.Content.ReadFromJsonAsync<IEnumerable<Setting>>();
             }
             else
