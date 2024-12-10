@@ -227,8 +227,7 @@ public class AccountService : IAccountService
                 };
             }
 
-            // Determine what to do with the bool return type
-            await lHostRepository.UpdateLHostPartialAsync(lHost, host =>
+           bool result = await lHostRepository.UpdateLHostPartialAsync(lHost, host =>
             {
                 // Confirm the email and clear the token
                 host.EmailConfirmed = true;
@@ -237,6 +236,15 @@ public class AccountService : IAccountService
                 // There's no token stored in the db
                 host.EmailVTokenExpiresAt = default;
             });
+
+            if (!result)
+            {
+                return new EmailVerificationResponse
+                {
+                    IsSuccess = false,
+                    Message = localizer["Error.Email.Verification"]
+                };
+            }
 
             return new EmailVerificationResponse
             {
