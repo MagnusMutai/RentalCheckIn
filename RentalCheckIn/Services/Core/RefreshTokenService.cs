@@ -123,6 +123,7 @@ public class RefreshTokenService
                     Message = "Associated host not found."
                 };
             }
+
             // Generate new tokens
             var newAccessToken = jWTService.GenerateToken(lHost);
             var newRefreshToken = await GenerateRefreshToken(lHost.HostId);
