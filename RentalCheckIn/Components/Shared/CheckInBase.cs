@@ -9,12 +9,12 @@ namespace RentalCheckIn.Components.Shared;
 public class CheckInBase : ComponentBase
 {
     protected bool displaySignaturePad;
-
-    protected string? Message;
-
+    protected string? message;
     protected string? signatureValidationError;
-    protected string BackGroundColor { get; set; } = "bg-success";
-    public string? DisplayToast { get; set; } = "d-block";
+    protected string? displaySecretDepositValue;
+    protected bool IsCheckingIn;
+    protected bool checkAll;
+    public string? DisplayModal { get; set; } = "d-block";
     protected bool IsSuccessToast { get; set; } = false;
 
     [Parameter]
@@ -59,10 +59,12 @@ public class CheckInBase : ComponentBase
         try
         {
             var reservationData = await ReservationService.GetCheckInReservationByIdAsync((uint)Id);
+            
             if (reservationData != null)
             {
                 checkInModel = reservationData;
             }
+
         }
         catch (Exception ex) 
         {
@@ -106,15 +108,15 @@ public class CheckInBase : ComponentBase
         }
         catch (Exception ex)
         {
-            BackGroundColor = "bg-danger";
-            Message = Localizer["UnexpectedErrorOccurred"];
-            DisplayToast = DisplayToast ?? "d-block";
+            message = Localizer["UnexpectedErrorOccurred"];
+            DisplayModal = DisplayModal ?? "d-block";
             Logger.LogError(ex, "An unexpected error occurred while trying to authenticate user on OnAfterRenderAsync on CheckIn component.");
         }
     }
 
     protected async Task HandleValidSubmit()
     {
+        IsCheckingIn = true; 
         try
         {
             bool isValid = CheckSignatureValidation();
@@ -129,6 +131,10 @@ public class CheckInBase : ComponentBase
         catch (Exception ex)
         {
             Logger.LogError(ex, "An unexpected error occurred while updating check-In data to the db and sharing it via WhatsApp in CheckIn component HandleValidSubmit method.");
+        }
+        finally
+        {
+            IsCheckingIn = false;
         }
     }
 
@@ -164,6 +170,7 @@ public class CheckInBase : ComponentBase
         }
     }
 
+    // Keep it DRY by passing a string literal for identification
     protected void OnFeeChanged(decimal newValue)
     {
         checkInModel.ApartmentFee = newValue;
@@ -180,12 +187,6 @@ public class CheckInBase : ComponentBase
         try
         {
            var isSaved = await ReservationService.UpdateCheckInFormReservationAsync(checkInModel);
-
-            //if (isSaved) 
-            //{
-            //    BackGroundColor = "bg-success";
-            //    Message = Localizer["Quest.CheckIn.Success"];
-            //}
             // Implement Result pattern to get more relevant and specific responses from the server.
         }
         catch (Exception ex) 
@@ -204,16 +205,14 @@ public class CheckInBase : ComponentBase
             bool sharedDocToEmail= await DocumentService.GenerateAndSendCheckInFormAsync(checkInModel, culture);
             if (sharedDocToEmail)
             {
-                BackGroundColor = "bg-success";
-                Message = "Check-In form succesfully sent to customer by email.";
-                DisplayToast = DisplayToast ?? "d-block";
+                message = "Check-In form succesfully sent to customer by email.";
+                DisplayModal = DisplayModal ?? "d-block";
                 IsSuccessToast = true;
             }
             else
             {
-                BackGroundColor = "bg-danger";
-                Message = "Unable to send check-In form to guest's email. Please try again later";
-                DisplayToast = DisplayToast ?? "d-block";
+                message = "Unable to send check-In form to guest's email. Please try again later";
+                DisplayModal = DisplayModal ?? "d-block";
                 IsSuccessToast = false;
             }
         }
@@ -231,12 +230,19 @@ public class CheckInBase : ComponentBase
         StrokeStyle = strokeColor
     };
 
-    protected void HandleCloseToast()
+    protected void HandleCloseModal()
     {
-        DisplayToast = null;
+        DisplayModal = null;
+        message = null;
+
         if (IsSuccessToast)
         {
             NavigationManager.NavigateTo("/");
         }
+    }
+
+    protected void HandleBackButton()
+    {
+        NavigationManager.NavigateTo("/");
     }
 }
