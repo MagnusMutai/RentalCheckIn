@@ -25,6 +25,19 @@ public class LocalizationService : ILocalizationService
         this.logger = logger;
     }
 
+    public async Task<List<CultureFlagDTO>> GetAllLanguageFlagsAsync()
+    {
+        try
+        {
+            return await languageRepository.GetAllLanguageFlagsAsync();
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "An unexpected error occurred in LocalizationService while trying to fetch language flags.");
+            return new List<CultureFlagDTO>();
+        }
+    }
+
     public async Task<Dictionary<uint, string>> GetApartmentNamesAsync(IEnumerable<uint> apartmentIds, string culture)
     {
         try
@@ -150,5 +163,7 @@ public class LocalizationService : ILocalizationService
 
         return result;
     }
+
+
 
 }
