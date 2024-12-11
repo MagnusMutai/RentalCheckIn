@@ -28,11 +28,11 @@
                                     <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 130.2 130.2">
                                         <circle class="path circle" fill="none" stroke="#db3646" stroke-width="6" stroke-miterlimit="10" cx="65.1" cy="65.1" r="62.1" />
                                         <line class="path line" fill="none" stroke="#db3646" stroke-width="6" stroke-linecap="round" stroke-miterlimit="10" x1="34.4" y1="37.9" x2="95.8" y2="92.3" />
-                                        <line class="path line" fill="none" stroke="#db3646" stroke-width="6" stroke-linecap="round" stroke-miterlimit="10" x1="95.8" y1="38" X2="34.4" y2="92.2" />
+                                        <line class="path line" fill="none" stroke="#db3646" stroke-width="6" stroke-linecap="round" stroke-miterlimit="10" x1="95.8" y1="38" x2="34.4" y2="92.2" />
                                     </svg>
                                     <h4 class="text-danger mt-3">Unable to Email document!</h4>
                                     <p class="mt-3">@message</p>
-                                    <button type="button" class="btn btn-sm mt-3 btn-danger" @onclick="HandleCloseModal">Ok</button>
+                                    <button type="button" class="btn btn-sm mt-3 btn-danger" @onclick="HandleCloseModal">Close</button>
                                 </div>
                             </div>
                         </div>
@@ -50,7 +50,7 @@
                                     </svg>
                                     <h4 class="text-success mt-3">Success!</h4>
                                     <p class="mt-3">@message</p>
-                                    <button type="button" class="btn btn-sm mt-3 btn-success" @onclick="HandleCloseModal">Ok</button>
+                                    <button type="button" class="btn btn-sm mt-3 btn-success" @onclick="HandleCloseModal">Close</button>
                                 </div>
                             </div>
                         </div>
@@ -145,36 +145,33 @@
                         <!-- Price Summary -->
                         <div class="mt-5 mb-3">
                             <div class="row">
-                                <p class="fw-bold col-md-6 m-0 mt-3 mt-md-0">@Localizer["Fee.Apartment.Label"]</p>
+                                <p class="fw-bold col-md-6 m-0 mt-3 mt-md-0">@Localizer["Fee.Apartment.Label"] (@checkInModel.CurrencySymbol)</p>
                                 <div class="col-md-2 mb-1">
-                                    <div class="d-flex gap-1">
-                                        <span class="mt-2">@checkInModel.CurrencySymbol</span>
+                                    <div>
                                         <InputNumber class="form-control" @bind-Value="checkInModel.ApartmentFee" @oninput="@(e => {
                                             var strVal = e.Value?.ToString();
                                             var val = decimal.TryParse(strVal, out var parsedVal) ? parsedVal : 0m;
-                                            })" />
+                                            OnFeeChanged(val);})" />
                                     </div>
                                     <ValidationMessage class="ms-3 text-danger" For="@(() => checkInModel.ApartmentFee)" />
                                 </div>
                             </div>
                             <div class="row">
-                                <p class="fw-bold col-md-6 m-0 mt-3 mt-md-0">@Localizer["SecurityDeposit.Label"]</p>
+                                <p class="fw-bold col-md-6 m-0 mt-3 mt-md-0">@Localizer["SecurityDeposit.Label"] (@checkInModel.CurrencySymbol)</p>
                                 <div class="col-md-2 mb-1">
-                                    <div class="d-flex gap-1">
-                                        <span class="mt-2">@checkInModel.CurrencySymbol</span>
+                                    <div>
                                         <InputNumber class="form-control" @bind-Value="checkInModel.SecurityDeposit" @bind-Value:format="C" @oninput="@(e => {
                                             var strVal = e.Value?.ToString();
                                             var val = decimal.TryParse(strVal, out var parsedVal) ? parsedVal : 0m;
-                                            })" />
+                                            OnDepositChanged(val);})" />
                                     </div>
                                     <ValidationMessage class="ms-3 text-danger" For="@(() => checkInModel.SecurityDeposit)" />
                                 </div>
                             </div>
                             <div class="row">
-                                <p class="fw-bold col-md-6 m-0 mt-3 mt-md-0">@Localizer["Price.Total.Label"]</p>
+                                <p class="fw-bold col-md-6 m-0 mt-3 mt-md-0">@Localizer["Price.Total.Label"] (@checkInModel.CurrencySymbol)</p>
                                 <div class="col-md-2 mb-1">
-                                    <div class="d-flex gap-1">
-                                        <span class="mt-2">@checkInModel.CurrencySymbol</span>
+                                    <div>
                                         <div class="form-control">@checkInModel.TotalPrice</div>
                                     </div>
                                 </div>
