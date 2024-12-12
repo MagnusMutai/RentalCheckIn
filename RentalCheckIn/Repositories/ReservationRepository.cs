@@ -91,6 +91,8 @@ public class ReservationRepository : IReservationRepository
                     AgreeTerms = r.AgreeTerms,
                     CountryISO2 = r.Quest.Country.CountryIso2,
                     LanguageName = r.Quest.Language.LanguageName,
+                    CheckedInAt = r.CheckedInAt,
+                    CheckedOutAt = r.CheckedOutAt,
                     SignatureDataUrl = r.SignatureQuest,
                     CurrencySymbol = r.Currency.CurrencySymbol
                 }).FirstOrDefaultAsync();

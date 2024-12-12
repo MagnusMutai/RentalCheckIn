@@ -16,13 +16,11 @@ public class CheckInBase : ComponentBase
     protected bool checkAll;
     public string? DisplayModal { get; set; } = "d-block";
     protected bool IsSuccessToast { get; set; } = false;
+    private static Color strokeColor = Color.FromArgb(0, 77, 230);
+    protected CheckInReservationDTO checkInModel = new CheckInReservationDTO();
 
     [Parameter]
     public int Id { get; set; }
-
-    private static Color strokeColor = Color.FromArgb(0, 77, 230);
-
-    protected CheckInReservationDTO checkInModel = new CheckInReservationDTO();
     [Inject]
     private NavigationManager NavigationManager { get; set; }
     [Inject]
@@ -38,7 +36,7 @@ public class CheckInBase : ComponentBase
     [Inject]
     protected IStringLocalizer<Resource> Localizer { get; set; }
 
-    public byte[]? SignatureBytes
+    protected byte[]? SignatureBytes
     {
         get
         {
@@ -53,6 +51,19 @@ public class CheckInBase : ComponentBase
                 : "data:image/png;base64," + Convert.ToBase64String(value);
         }
     }
+
+    protected DateTime CheckedInAt 
+    {
+        get; 
+        //{
+        //    return checkInModel.CheckedInAt
+        //}
+        set; 
+        //{ 
+        
+        //}
+    }
+
 
     protected override async Task OnInitializedAsync()
     {
@@ -153,12 +164,6 @@ public class CheckInBase : ComponentBase
         }
     }
 
-    private void CalculateTotalPrice()
-    {
-        checkInModel.TotalPrice = checkInModel.ApartmentFee + checkInModel.SecurityDeposit;
-        StateHasChanged();
-    }
-
     protected void OnDateChanged(ChangeEventArgs e)
     {
         if (checkInModel.CheckInDate != default && checkInModel.CheckOutDate != default)
@@ -180,6 +185,12 @@ public class CheckInBase : ComponentBase
     {
         checkInModel.SecurityDeposit = newValue;
         CalculateTotalPrice();
+    }
+
+    private void CalculateTotalPrice()
+    {
+        checkInModel.TotalPrice = checkInModel.ApartmentFee + checkInModel.SecurityDeposit;
+        StateHasChanged();
     }
 
     private async Task SaveData()

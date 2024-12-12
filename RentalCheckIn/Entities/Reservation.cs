@@ -23,12 +23,13 @@ public partial class Reservation
     public bool ReceivedKeys { get; set; }
     public bool AgreeTerms { get; set; }
     public uint CurrencyId { get; set; }
+    public DateTime? CheckedInAt { get; set; }
+    public DateTime? CheckedOutAt { get; set; }
     public string? SignatureQuest { get; set; }
     public uint? HostId { get; set; }
     public uint StatusId { get; set; }
     public DateTime? ModifiedDate { get; set; }
     public DateTime? CreationDate { get; set; }
-
     public virtual Apartment Apartment { get; set; } = null!;
     public virtual Channel Channel { get; set; } = null!;
     public virtual Currency Currency { get; set; } = null!;
