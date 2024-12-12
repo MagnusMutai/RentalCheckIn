@@ -32,7 +32,6 @@ public class CheckInReservationDTO : IValidatableObject
 
     [Required(ErrorMessageResourceName = "CheckOutTimeRequired", ErrorMessageResourceType = typeof(Resource))]
     public string CheckOutTime { get; set; }
-
     public int NumberOfNights { get; set; }
     public int NumberOfGuests { get; set; }
 
@@ -40,37 +39,31 @@ public class CheckInReservationDTO : IValidatableObject
     public string ApartmentName { get; set; }
 
     [Required(ErrorMessageResourceName = "ApartmentFeeRequired", ErrorMessageResourceType = typeof(Resource))]
-    [Range(0.01, double.MaxValue, ErrorMessageResourceName = "ApartmentFeeRange", ErrorMessageResourceType = typeof(Resource))]
     public decimal ApartmentFee { get; set; }
 
     [Required(ErrorMessageResourceName = "SecurityDepositRequired", ErrorMessageResourceType = typeof(Resource))]
-    [Range(0.01, double.MaxValue, ErrorMessageResourceName = "SecurityDepositRange", ErrorMessageResourceType = typeof(Resource))]
     public decimal SecurityDeposit { get; set; }
-
     public decimal? TotalPrice { get; set; }
-
     // Meter kWh
     [Required(ErrorMessageResourceName = "KwhAtCheckInRequired", ErrorMessageResourceType = typeof(Resource))]
     [Range(1, int.MaxValue, ErrorMessageResourceName = "KwhAtCheckInRange", ErrorMessageResourceType = typeof(Resource))]
     public int KwhAtCheckIn { get; set; }
     public int KWhPerNightIncluded { get; set; }
     public decimal? CostsPerXtraKWh { get; set; }
-    
     // Checkboxes
     [Required(ErrorMessageResourceName = "AgreeEnergyConsumption", ErrorMessageResourceType = typeof(Resource))]
     [Range(typeof(bool), "true", "true", ErrorMessageResourceName = "AgreeEnergyConsumption", ErrorMessageResourceType = typeof(Resource))]
     public bool AgreeEnergyConsumption { get; set; }
-
     [Required(ErrorMessageResourceName = "ReceivedKeys", ErrorMessageResourceType = typeof(Resource))]
     [Range(typeof(bool), "true", "true", ErrorMessageResourceName = "ReceivedKeys", ErrorMessageResourceType = typeof(Resource))]
     public bool ReceivedKeys { get; set; }
-
     [Required(ErrorMessageResourceName = "AgreeTerms", ErrorMessageResourceType = typeof(Resource))]
     [Range(typeof(bool), "true", "true", ErrorMessageResourceName = "AgreeTerms", ErrorMessageResourceType = typeof(Resource))]
     public bool AgreeTerms { get; set; }
-
     public string CountryISO2 { get; set; }
     public string LanguageName { get; set; }
+    public DateTime? CheckedInAt { get; set; }
+    public DateTime? CheckedOutAt { get; set; }
     public string SignatureDataUrl { get; set; }
     public string CurrencySymbol { get; set; }
 
