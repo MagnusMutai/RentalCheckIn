@@ -2,13 +2,13 @@
 @inherits CultureSelectorBase
 
 <div class="dropdown">
-    <button class="btn dropdown-toggle form-select-sm bg-transparent text-white" type="button" data-bs-toggle="dropdown">
+    <button class="btn dropdown-toggle form-select-sm bg-transparent text-white ps-1 py-0" type="button" data-bs-toggle="dropdown">
         @CurrentFlag
     </button>
     <ul class="dropdown-menu bg-dark">
         <li>
             <a class="dropdown-item" href="#" @onclick="@(() => SetCulture("en-EN"))">
-                <span @key="1">@((MarkupString)englishFlag)</span>
+                <span class="m-0" @key="1">@((MarkupString)englishFlag)</span>
             </a>
         </li>
         <li>

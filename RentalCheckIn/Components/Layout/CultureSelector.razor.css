@@ -1,3 +1,8 @@
-﻿.dropdown-menu {
-    min-width: 70px;
+﻿@media( min-width: 768px ){
+    
+    .dropdown-menu {
+        min-width: 65px;
+        max-width: 65px;
+    }
+
 }
