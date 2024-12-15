@@ -40,6 +40,15 @@ public class AccountService : IAccountService
                 };
             }
 
+            if (lHost.IsDisabled == (sbyte)ByteChecker.True)
+            {
+                return new OperationResult<LHost>
+                {
+                    IsSuccess = false,
+                    Message = localizer["Error.Account.Disabled"]
+                };
+            }
+
             // Check if user is blocked
             if (lHost.IsBlockedSince.HasValue)
             {
