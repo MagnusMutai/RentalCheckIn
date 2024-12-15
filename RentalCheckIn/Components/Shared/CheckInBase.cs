@@ -9,13 +9,13 @@ namespace RentalCheckIn.Components.Shared;
 public class CheckInBase : ComponentBase
 {
     protected bool displaySignaturePad;
-    protected string? message;
     protected string? signatureValidationError;
     protected string? displaySecretDepositValue;
     protected bool IsCheckingIn;
     protected bool checkAll;
-    public string? DisplayModal { get; set; } = "d-block";
-    protected bool IsSuccessToast { get; set; } = false;
+    protected string? ModalMessage { get; set; }
+    protected bool IsSuccessModal { get; set; }
+    protected bool IsModalOpen { get; set; } 
     private static Color strokeColor = Color.FromArgb(0, 77, 230);
     protected CheckInReservationDTO checkInModel = new CheckInReservationDTO();
 
@@ -54,14 +54,10 @@ public class CheckInBase : ComponentBase
 
     protected DateTime CheckedInAt 
     {
-        get; 
-        //{
-        //    return checkInModel.CheckedInAt
-        //}
-        set; 
-        //{ 
-        
-        //}
+        get
+        {
+            return checkInModel.CheckedInAt ?? DateTime.UtcNow;
+        }
     }
 
 
@@ -119,8 +115,9 @@ public class CheckInBase : ComponentBase
         }
         catch (Exception ex)
         {
-            message = Localizer["UnexpectedErrorOccurred"];
-            DisplayModal = DisplayModal ?? "d-block";
+            ModalMessage = Localizer["UnexpectedErrorOccurred"];
+            IsSuccessModal = false;
+            IsModalOpen = true;
             Logger.LogError(ex, "An unexpected error occurred while trying to authenticate user on OnAfterRenderAsync on CheckIn component.");
         }
     }
@@ -128,6 +125,7 @@ public class CheckInBase : ComponentBase
     protected async Task HandleValidSubmit()
     {
         IsCheckingIn = true; 
+
         try
         {
             bool isValid = CheckSignatureValidation();
@@ -213,22 +211,26 @@ public class CheckInBase : ComponentBase
         // PDF generation and sharing
         try
         {
-            bool sharedDocToEmail= await DocumentService.GenerateAndSendCheckInFormAsync(checkInModel, culture);
-            if (sharedDocToEmail)
+            var result = await DocumentService.GenerateAndSendCheckInFormAsync(checkInModel, culture);
+          
+            if (result.IsSuccess)
             {
-                message = "Check-In form succesfully sent to customer by email.";
-                DisplayModal = DisplayModal ?? "d-block";
-                IsSuccessToast = true;
+                ModalMessage = "Check-In form succesfully sent to customer by email.";
+                IsSuccessModal = true;
+                IsModalOpen = true;
             }
             else
             {
-                message = "Unable to send check-In form to guest's email. Please try again later";
-                DisplayModal = DisplayModal ?? "d-block";
-                IsSuccessToast = false;
+                ModalMessage = result.Message;
+                IsSuccessModal = false;
+                IsModalOpen = true;
             }
         }
         catch (Exception ex)
         {
+            ModalMessage = "Uexpected error has occurred. Unable to send check-In form to guest's email. Please try again later";
+            IsSuccessModal = false;
+            IsModalOpen = true;
             Logger.LogError(ex, "An unexpected error occurred while trying to merge form data to the document template in CheckIn component.");
         }
     }
@@ -241,12 +243,12 @@ public class CheckInBase : ComponentBase
         StrokeStyle = strokeColor
     };
 
-    protected void HandleCloseModal()
+    protected void HandleModalClose()
     {
-        DisplayModal = null;
-        message = null;
+        IsModalOpen = false;
+        ModalMessage = null;
 
-        if (IsSuccessToast)
+        if (IsSuccessModal)
         {
             NavigationManager.NavigateTo("/");
         }
