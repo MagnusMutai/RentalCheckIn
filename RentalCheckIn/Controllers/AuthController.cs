@@ -128,17 +128,28 @@ public class AuthController : ControllerBase
         try
         {
             var lHost = await accountService.GetLHostByEmailAsync(email);
-
+            // In other endpoints like this pass custom response along with the data.
             if (lHost == null)
             {
-                return NotFound();
+                var response = new OperationResult
+                {
+                    IsSuccess = false,
+                    Message = "The provided email is not registered."
+                };
+
+                return NotFound(response);
             }
 
             var result = await accountService.ForgotPasswordAsync(lHost);
 
             if (result == null)
             {
-                return BadRequest();
+                var response = new OperationResult
+                {
+                    IsSuccess = false,
+                    Message = "An unexpected error has occurred. Please try again later"
+                };
+                return BadRequest(response);
             }
 
             return Ok(result);
@@ -146,7 +157,13 @@ public class AuthController : ControllerBase
         catch (Exception ex)
         {
             logger.LogError(ex, "An unexpected error occurred in AuthController while trying to send a password reset request.");
-            return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while processing your request. Please try again later.");
+
+            var response = new OperationResult
+            {
+                IsSuccess = false,
+                Message = "An unexpected error has occurred. Please try again later"
+            };
+            return StatusCode(StatusCodes.Status500InternalServerError, response);
         }
     }
 
@@ -220,6 +237,7 @@ public class AuthController : ControllerBase
                 SignCount = result.Result.Counter,
                 HostId = uint.Parse(result.Result.User.Id)
             };
+            // Create a repository method instead.
             context.LHostCredentials.Add(newCredential);
             await context.SaveChangesAsync();
 
@@ -329,6 +347,7 @@ public class AuthController : ControllerBase
             {
                 var userHandle = userHandleParams.UserHandle;
                 var credentialId = userHandleParams.CredentialId;
+                // Use a repository class instead.
                 var user = await context.LHostCredentials.FirstOrDefaultAsync(c =>
                     c.CredentialId == Convert.ToBase64String(credentialId) &&
                     c.Host.UserHandle.SequenceEqual(userHandle), cancellationToken);
