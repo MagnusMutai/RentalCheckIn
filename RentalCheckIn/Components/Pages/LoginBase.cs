@@ -77,7 +77,7 @@ public class LoginBase : ComponentBase
             }
             else
             {
-                ErrorMessage = result.Message;
+                ErrorMessage = result.Message ?? Localizer["Error.Unexpected.Response"];
                 DisplayToast = DisplayToast ?? "d-block";
             }
         }

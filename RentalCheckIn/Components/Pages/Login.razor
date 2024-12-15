@@ -12,7 +12,7 @@
         <div class="col-12 col-md-6 full-height">
             @if (!string.IsNullOrEmpty(ErrorMessage))
             {
-                <div class="toast @DisplayToast bg-danger z-3">
+                <div class="toast position-fixed top-0 end-0 @DisplayToast bg-danger z-2">
                     <div class="d-flex">
                         <div class="toast-body">
                             <p>@ErrorMessage</p>
@@ -22,10 +22,12 @@
                 </div>
             }
             <div class="mx-auto col-10 col-sm-8 col-md-8 col-lg-8 mt-md-5 pt-md-2">
-                <p class="fs-3 mt-5 pt-3">@Localizer["LoginWelcome"]!</p>
+                <p class="fs-3 mt-5 pt-3">@Localizer["Welcome"]!</p>
+                <p class="fs-5">@Localizer["LoginWelcome"]</p>
                 <p class="mb-5">
                     @Localizer["LoginSecMessage"]? <a class="ms-2" href="register">@Localizer["LoginSignUpLink"].</a>
                 </p>
+
                 <EditForm Model="loginModel" OnValidSubmit="HandleLogin">
                     <DataAnnotationsValidator />
                     <div class="mb-4">
@@ -49,6 +51,7 @@
                         </button>
                     </div>
                 </EditForm>
+
             </div>
         </div>
     </div>
