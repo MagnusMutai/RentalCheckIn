@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Localization;
+using RentalCheckIn.Locales;
 
 namespace RentalCheckIn.Components.Pages;
 public class LogoutBase : ComponentBase
@@ -10,6 +12,8 @@ public class LogoutBase : ComponentBase
 
     [Inject]
     private ProtectedLocalStorage LocalStorage { get; set; }
+    [Inject]
+    protected IStringLocalizer<Resource> Localizer { get; set; }
     [Inject]
     private ILogger<LogoutBase> Logger { get; set; }
 
