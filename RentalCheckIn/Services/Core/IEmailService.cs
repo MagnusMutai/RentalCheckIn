@@ -3,5 +3,5 @@
 public interface IEmailService
 {
     Task SendEmailAsync(string toEmail, string subject, string body);
-    Task SendEmailAsync(string toEmail, string subject, string body, Stream attachment, string attachmentName);
+    Task<OperationResult> SendEmailAsync(string toEmail, string subject, string body, Stream attachment, string attachmentName);
 }
