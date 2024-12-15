@@ -61,12 +61,22 @@ public class ReservationBusinessService : IReservationBusinessService
         try
         {
             var reservation = await reservationRepository.GetReservationByIdAsync(checkInReservation.Id);
+            
             if (reservation == null)
             {
                 return new OperationResult
                 {
                     IsSuccess = false,
                     Message = "Could not find the reservation."
+                };
+            }
+            
+            if (reservation.Quest == null)
+            {
+                return new OperationResult 
+                {
+                    IsSuccess = false,
+                    Message = "Reservation Data is incomplete (missing Quest)."
                 };
             }
 
@@ -128,10 +138,16 @@ public class ReservationBusinessService : IReservationBusinessService
                     reservation.AgreeTerms = checkInReservation.AgreeTerms;
                 }
 
+                if (reservation.CheckedInAt == null)
+                {
+                    reservation.CheckedInAt = DateTime.UtcNow;
+                }
+
                 if (checkInReservation.SignatureDataUrl != null && checkInReservation.SignatureDataUrl != reservation.SignatureQuest)
                 {
                     reservation.SignatureQuest = checkInReservation.SignatureDataUrl;
                 }
+
                 reservation.ModifiedDate = DateTime.UtcNow;
                 reservation.StatusId = (uint)ReservationStatus.Staying;
 
