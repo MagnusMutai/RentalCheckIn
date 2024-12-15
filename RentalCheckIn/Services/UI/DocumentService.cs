@@ -8,7 +8,7 @@ public class DocumentService : IDocumentService
         this.httpClient = httpClient;
     }
 
-    public async Task<bool> GenerateAndSendCheckInFormAsync(CheckInReservationDTO model, string culture)
+    public async Task<OperationResult> GenerateAndSendCheckInFormAsync(CheckInReservationDTO model, string culture)
     {
         try
         {
@@ -22,16 +22,29 @@ public class DocumentService : IDocumentService
 
             if (response.IsSuccessStatusCode)
             {
-                return true;
+                if (response.StatusCode == HttpStatusCode.NoContent)
+                {
+                    return default;
+                }
+
+                return await response.Content.ReadFromJsonAsync<OperationResult>();
             }
 
-            var errorMessage = await response.Content.ReadAsStringAsync();
-            throw new HttpRequestException($"Failed to send document: {errorMessage}");
+            return new OperationResult
+            { 
+                IsSuccess = false,
+                Message = "An error has occurred. Please try again later."
+            };
+            
         }
         catch (Exception ex)
         {
             // Log
-            return false;
+            return new OperationResult
+            {
+                IsSuccess = false,
+                Message = "An unexpected error has occurred. Please try again later."
+            };
         }
     }
 
