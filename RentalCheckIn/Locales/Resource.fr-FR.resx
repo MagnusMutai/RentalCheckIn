@@ -507,4 +507,17 @@
   <data name="Save.Share.Reservation" xml:space="preserve">
     <value>Enregistrer et partager par e-mail</value>
   </data>
+  <data name="Error.Account.Disabled" xml:space="preserve">
+    <value>Désolé, votre compte est désactivé.</value>
+  </data>
+  <data name="Welcome" xml:space="preserve">
+    <value>Bienvenue</value>
+  </data>
+  <data name="Log.Out.Status" xml:space="preserve">
+    <value>Déconnexion en cours</value>
+  </data>
+  <data name="Error.Unexpected.Response" xml:space="preserve">
+    <value>Le serveur n'a pas répondu comme prévu. Veuillez réessayer plus tard.
+</value>
+  </data>
 </root>
