@@ -2,12 +2,12 @@
 
 public class EmailService : IEmailService
 {
-    private readonly EmailSettings _emailSettings;
+    private readonly EmailSettings emailSettings;
     private readonly ILogger<EmailService> logger;
 
     public EmailService(IOptions<EmailSettings> emailSettings, ILogger<EmailService> logger)
     {
-        _emailSettings = emailSettings.Value;
+        this.emailSettings = emailSettings.Value;
         this.logger = logger;
     }
 
@@ -16,7 +16,7 @@ public class EmailService : IEmailService
         if (string.IsNullOrWhiteSpace(toEmail)) return;
         var mail = new MailMessage
         {
-            From = new MailAddress(_emailSettings.SenderEmail, _emailSettings.SenderName),
+            From = new MailAddress(emailSettings.SenderEmail, emailSettings.SenderName),
             Subject = subject,
             Body = body,
             IsBodyHtml = true
@@ -26,12 +26,19 @@ public class EmailService : IEmailService
         await SendMailMessageAsync(mail);
     }
 
-    public async Task SendEmailAsync(string toEmail, string subject, string body, Stream attachment, string attachmentName)
+    public async Task<OperationResult> SendEmailAsync(string toEmail, string subject, string body, Stream attachment, string attachmentName)
     {
-        if (string.IsNullOrWhiteSpace(toEmail)) return;
+        if (string.IsNullOrWhiteSpace(toEmail))
+        {
+            return new OperationResult
+            {
+                IsSuccess = false,
+                Message = "The email does not contain the recipient."
+            };
+        }
         var mail = new MailMessage
         {
-            From = new MailAddress(_emailSettings.SenderEmail, _emailSettings.SenderName),
+            From = new MailAddress(emailSettings.SenderEmail, emailSettings.SenderName),
             Subject = subject,
             Body = body,
             IsBodyHtml = true
@@ -41,31 +48,48 @@ public class EmailService : IEmailService
         attachment.Position = 0;
         mail.Attachments.Add(new Attachment(attachment, "application/pdf") { Name = attachmentName });
 
-        await SendMailMessageAsync(mail);
+       return await SendMailMessageAsync(mail);
     }
 
 
-    private async Task SendMailMessageAsync(MailMessage mail)
+    private async Task<OperationResult> SendMailMessageAsync(MailMessage mail)
     {
-        using var smtp = new SmtpClient(_emailSettings.SmtpServer, _emailSettings.Port)
+        using var smtp = new SmtpClient(emailSettings.SmtpServer, emailSettings.Port)
         {
-            Credentials = new NetworkCredential(_emailSettings.Username, _emailSettings.Password),
+            Credentials = new NetworkCredential(emailSettings.Username, emailSettings.Password),
             EnableSsl = true
         };
 
         try
         {
             await smtp.SendMailAsync(mail);
+
+            return new OperationResult
+            {
+                IsSuccess = true
+            };
         }
         catch (SmtpException ex)
         {
             logger.LogError(ex, "An SMTP error occurred while sending an email to {Recipients}. Subject: {Subject}",
                 string.Join(", ", mail.To.Select(x => x.Address)), mail.Subject);
+            
+            return new OperationResult
+            {
+                IsSuccess = false,
+                Message = "Unable send Email. Check your newtwork connection and try again."
+            };
         }
         catch (Exception ex)
         {
             logger.LogError(ex, "An unexpected error occurred while sending an email to {Recipients}. Subject: {Subject}",
                 string.Join(", ", mail.To.Select(x => x.Address)), mail.Subject);
+            
+            return new OperationResult
+            {
+                IsSuccess = false,
+                Message = "An unexpected error occurred while trying to send the email. Please try again later."
+            };
         }
 
     }
