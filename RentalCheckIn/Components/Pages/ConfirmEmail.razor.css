@@ -8,6 +8,21 @@
     height: 100vh;
 }
 
+/* Fade-in and fade-out effect for the toast */
+.toast {
+    animation: fade-in 1s;
+}
+
+@keyframes fade-in {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
 @media (max-width: 768px) {
     .full-height {
         height: auto;
