@@ -1,8 +1,7 @@
 ﻿using RentalCheckIn.Locales;
-
 namespace RentalCheckIn.DTOs;
 
-// Finally there are properties like emails which are repeated everywhere, chop unnecessary code
+// There are properties like Email which are repeated everywhere. Consolidate duplicate code.
 public class ResetRequestDTO
 {
     [Required(ErrorMessageResourceName = "EmailRequired", ErrorMessageResourceType = typeof(Resource))]

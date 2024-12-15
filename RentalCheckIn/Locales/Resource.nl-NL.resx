@@ -471,7 +471,7 @@ Uitchecken</value>
     <value>Host niet gevonden.</value>
   </data>
   <data name="Success.PasswordReset.Request" xml:space="preserve">
-    <value>Wachtwoord reset aanvraag succesvol, controleer uw e-mail om uw wachtwoord te resetten.</value>
+    <value>Wachtwoordherstelverzoek succesvol. Controleer je e-mail voor een link om je wachtwoord opnieuw in te stellen.</value>
   </data>
   <data name="Error.ResetLink.Invalid" xml:space="preserve">
     <value>Ongeldige resetlink</value>
@@ -508,5 +508,18 @@ Uitchecken</value>
   </data>
   <data name="Save.Share.Reservation" xml:space="preserve">
     <value>Opslaan en delen via e-mail</value>
+  </data>
+  <data name="Error.Account.Disabled" xml:space="preserve">
+    <value>Sorry, uw account is uitgeschakeld.</value>
+  </data>
+  <data name="Welcome" xml:space="preserve">
+    <value>Welkom</value>
+  </data>
+  <data name="Log.Out.Status" xml:space="preserve">
+    <value>Bezig met uitloggen</value>
+  </data>
+  <data name="Error.Unexpected.Response" xml:space="preserve">
+    <value>De server reageerde niet zoals verwacht. Probeer het later opnieuw.
+</value>
   </data>
 </root>

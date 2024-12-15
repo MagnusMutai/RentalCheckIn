@@ -350,6 +350,15 @@ namespace RentalCheckIn.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Sorry your account is disabled..
+        /// </summary>
+        public static string Error_Account_Disabled {
+            get {
+                return ResourceManager.GetString("Error.Account.Disabled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Not authorized..
         /// </summary>
         public static string Error_Authorization_NotAuthorized {
@@ -445,6 +454,15 @@ namespace RentalCheckIn.Locales {
         public static string Error_TryAgainLater {
             get {
                 return ResourceManager.GetString("Error.TryAgainLater", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The server did not respond as expected. Please try again later..
+        /// </summary>
+        public static string Error_Unexpected_Response {
+            get {
+                return ResourceManager.GetString("Error.Unexpected.Response", resourceCulture);
             }
         }
         
@@ -670,6 +688,15 @@ namespace RentalCheckIn.Locales {
         public static string LastNameRequired {
             get {
                 return ResourceManager.GetString("LastNameRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Logging out.
+        /// </summary>
+        public static string Log_Out_Status {
+            get {
+                return ResourceManager.GetString("Log.Out.Status", resourceCulture);
             }
         }
         
@@ -1117,7 +1144,7 @@ namespace RentalCheckIn.Locales {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Password reset request successful, check your email to reset your password..
+        ///   Looks up a localized string similar to Password reset request successful. Check your email for a link to reset your password..
         /// </summary>
         public static string Success_PasswordReset_Request {
             get {
@@ -1196,6 +1223,15 @@ namespace RentalCheckIn.Locales {
         public static string View {
             get {
                 return ResourceManager.GetString("View", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Welcome.
+        /// </summary>
+        public static string Welcome {
+            get {
+                return ResourceManager.GetString("Welcome", resourceCulture);
             }
         }
         

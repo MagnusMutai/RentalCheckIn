@@ -467,7 +467,7 @@
     <value>Host not found.</value>
   </data>
   <data name="Success.PasswordReset.Request" xml:space="preserve">
-    <value>Password reset request successful, check your email to reset your password.</value>
+    <value>Password reset request successful. Check your email for a link to reset your password.</value>
   </data>
   <data name="Error.ResetLink.Invalid" xml:space="preserve">
     <value>Invalid reset link</value>
@@ -505,5 +505,17 @@
   </data>
   <data name="Save.Share.Reservation" xml:space="preserve">
     <value>Save and share with email</value>
+  </data>
+  <data name="Error.Account.Disabled" xml:space="preserve">
+    <value>Sorry your account is disabled.</value>
+  </data>
+  <data name="Welcome" xml:space="preserve">
+    <value>Welcome</value>
+  </data>
+  <data name="Log.Out.Status" xml:space="preserve">
+    <value>Logging out</value>
+  </data>
+  <data name="Error.Unexpected.Response" xml:space="preserve">
+    <value>The server did not respond as expected. Please try again later.</value>
   </data>
 </root>
