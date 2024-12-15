@@ -9,6 +9,8 @@ public class RequestPasswordResetBase : ComponentBase
     protected bool isEmailSent = false;
     protected string? Message;
     protected bool IsRegistering;
+    public string? DisplayToast { get; set; } = "d-block";
+    public string BackGroundColor { get; set; } = "bg-success";
 
     [Inject]
     protected IAuthService AuthService { get; set; }
@@ -24,19 +26,38 @@ public class RequestPasswordResetBase : ComponentBase
         {
             IsRegistering = true;
             var result = await AuthService.ForgotPasswordAsync(resetModel);
+
             // In other similar pages remember to go back and check null first.
-           
             if (result != null)
             {
-                Message = result.Message;
+                if (result.IsSuccess)
+                {
+                    BackGroundColor = "bg-success";
+                    Message = result.Message;
+                }
+                else
+                {
+                    BackGroundColor = "bg-danger";
+                    Message = result.Message;
+                }
             }
 
             IsRegistering = false;
         }
         catch (Exception ex) 
         {
+            BackGroundColor = "bg-danger";
             Message = Localizer["UnexpectedErrorOccurred"];
             Logger.LogError(ex, "An unexpected error occurred while requeting password reset in RequestPasswordReset component");
         }
+        finally
+        {
+            DisplayToast = DisplayToast ?? "d-block";
+        }
+    }
+
+    protected void HandleCloseToast()
+    {
+        DisplayToast = null;
     }
 }
