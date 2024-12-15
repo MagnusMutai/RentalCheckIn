@@ -85,16 +85,19 @@ public class RegisterBase : ComponentBase
                 BackGroundColor = "bg-danger";
                 Message = result.Message;
             }
-            DisplayToast = DisplayToast ?? "d-block";
+
             IsRegistering = false;
         }
         catch (Exception ex)
         {
             BackGroundColor = "bg-danger";
             Message = Localizer["UnexpectedErrorOccurred"];
-            DisplayToast = "d-block";
             IsRegistering = false;
             Logger.LogError(ex, "An unexpected error occurred while trying to register a user.");
+        }
+        finally
+        {
+            DisplayToast = DisplayToast ?? "d-block";
         }
     }
 
@@ -111,7 +114,8 @@ public class RegisterBase : ComponentBase
             Message = $"{Localizer["FaceID.Registration.Failed"]}: {result.Message}";
             BackGroundColor = "bg-danger";
         }
-        DisplayToast = "d-block";
+
+        DisplayToast = DisplayToast ?? "d-block";
     }
     protected void HandleCloseToast()
     {
