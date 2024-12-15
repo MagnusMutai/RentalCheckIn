@@ -48,14 +48,13 @@ public class AuthService : IAuthService
 
                 return await response.Content.ReadFromJsonAsync<OperationResult<LHost>>();
             }
-            else
+
+            return new OperationResult<LHost>
             {
-                return new OperationResult<LHost>
-                {
-                    IsSuccess = false,
-                    Message = localizer["Error.TryAgainLater"]
-                };
-            }
+                IsSuccess = false,
+                Message = localizer["Error.TryAgainLater"]
+            };
+
         }
         catch (Exception ex)
         {
@@ -80,14 +79,13 @@ public class AuthService : IAuthService
 
                 return await response.Content.ReadFromJsonAsync<OperationResult<LHost>>();
             }
-            else
+
+            return new OperationResult<LHost>
             {
-                return new OperationResult<LHost>
-                {
-                    IsSuccess = false,
-                    Message = localizer["Error.TryAgainLater"]
-                };
-            }
+                IsSuccess = false,
+                Message = localizer["Error.TryAgainLater"]
+            };
+
         }
         catch (Exception ex)
         {
@@ -141,14 +139,12 @@ public class AuthService : IAuthService
                 }
                 return await response.Content.ReadFromJsonAsync<TokenValidateResult>();
             }
-            else
+
+            return new TokenValidateResult
             {
-                return new TokenValidateResult
-                {
-                    IsSuccess = false,
-                    Message = localizer["Error.TryAgainLater"]
-                };
-            }
+                IsSuccess = false,
+                Message = localizer["Error.TryAgainLater"]
+            };
 
             // Put it outside for single responsibility
             async Task<string> RetrieveToken(string key)
@@ -179,23 +175,8 @@ public class AuthService : IAuthService
             var content = new StringContent(json, Encoding.UTF8, "application/json");
             var response = await httpClient.PostAsync("api/auth/forgot-password", content);
 
-            if (response.IsSuccessStatusCode)
-            {
-                if (response.StatusCode == HttpStatusCode.NoContent)
-                {
-                    return default;
-                }
+            return await response.Content.ReadFromJsonAsync<OperationResult>();
 
-                return await response.Content.ReadFromJsonAsync<OperationResult>();
-            }
-            else
-            {
-                return new OperationResult()
-                {
-                    IsSuccess = false,
-                    Message = localizer["Error.TryAgainLater"]
-                };
-            }
         }
         catch (Exception ex)
         {
@@ -221,23 +202,29 @@ public class AuthService : IAuthService
             {
                 if (response.StatusCode == HttpStatusCode.NoContent)
                 {
-                    return default;
+                    return new EmailVerificationResponse
+                    {
+                        IsSuccess = false,
+                        Message = localizer["Error.TryAgainLater"]
+                    };
                 }
                 return await response.Content.ReadFromJsonAsync<EmailVerificationResponse>();
             }
-            else
+
+            return new EmailVerificationResponse
             {
-                return new EmailVerificationResponse
-                {
-                    IsSuccess = false,
-                    Message = localizer["Error.TryAgainLater"]
-                };
-            }
+                IsSuccess = false,
+                Message = localizer["Error.TryAgainLater"]
+            };
+
         }
         catch (Exception ex)
         {
-            Console.WriteLine(ex.Message);
-            return new EmailVerificationResponse();
+            return new EmailVerificationResponse
+            {
+                IsSuccess = false,
+                Message = localizer["UnexpectedErrorOccurred"]
+            };
         }
     }
     public async Task<OperationResult<string>> ResetPasswordAsync(string token, PasswordResetDTO passwordResetDTO)
@@ -257,20 +244,27 @@ public class AuthService : IAuthService
             {
                 if (response.StatusCode == HttpStatusCode.NoContent)
                 {
-                    return default;
+                    return new OperationResult<string>
+                    {
+                        IsSuccess = false,
+                        Message = localizer["Error.TryAgainLater"]
+                    };
                 }
+
                 return await response.Content.ReadFromJsonAsync<OperationResult<string>>();
             }
-            else
-            {
-                var message = await response.Content.ReadAsStringAsync();
-                throw new Exception($"{message}");
-            }
+
+            var message = await response.Content.ReadAsStringAsync();
+            throw new Exception($"{message}");
+
         }
         catch (Exception ex)
         {
-            Console.WriteLine(ex.Message);
-            return new OperationResult<string>();
+            return new OperationResult<string>
+            {
+                IsSuccess = false,
+                Message = localizer["UnexpectedErrorOccurred"]
+            };
         }
     }
 
@@ -282,6 +276,7 @@ public class AuthService : IAuthService
             LHost lHost = new LHost();
             // Retrieve the authenticated user
             var lHostResponseEntity = await httpClient.GetAsync($"api/LHost/email/{oTPModel.Email}");
+           
             if (lHostResponseEntity.IsSuccessStatusCode)
             {
                 if (lHostResponseEntity.StatusCode == HttpStatusCode.NoContent)
@@ -379,6 +374,7 @@ public class AuthService : IAuthService
             }
             else
             {
+                // Log the error
                 var error = await response.Content.ReadAsStringAsync();
  
                 return new OperationResult
