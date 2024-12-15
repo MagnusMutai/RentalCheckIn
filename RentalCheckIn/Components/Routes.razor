@@ -1,4 +1,5 @@
-﻿@inherits RoutesBase
+﻿@rendermode @(new InteractiveServerRenderMode(prerender:false))
+@inherits RoutesBase
 
 <CascadingAuthenticationState>
     <Router AppAssembly="typeof(Program).Assembly">

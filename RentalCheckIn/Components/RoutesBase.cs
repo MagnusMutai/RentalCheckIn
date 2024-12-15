@@ -4,7 +4,6 @@ namespace RentalCheckIn.Components;
 
 public class RoutesBase : ComponentBase, IAsyncDisposable
 {
-
     private bool isTokenRefreshed;
     private bool isDisposed;
     private bool isRefreshing = false;
@@ -147,7 +146,7 @@ public class RoutesBase : ComponentBase, IAsyncDisposable
         }
         catch (OperationCanceledException ex)
         {
-            Logger.LogInformation(ex, "Token refresh loop was cancelled in Routes component.");
+            Logger.LogDebug(ex, "Token refresh loop was cancelled in Routes component.");
         }
         catch (Exception ex)
         {
