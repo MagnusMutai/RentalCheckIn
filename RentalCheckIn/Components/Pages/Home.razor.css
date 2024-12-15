@@ -66,6 +66,18 @@
     color: #680979;
 }
 
+.pagination-controls .btn-primary {
+    width: 85px;
+    background-color: #4f1f59;
+    border: 1px solid #1B1833;
+}
+
+.pagination-controls .btn-secondary {
+    width: 35px;
+    background-color: #221E40;
+    color: #2BD496;
+}
+
 .header {
     background-image: url(../images/snowylodge.jpg);
     background-size: cover;
