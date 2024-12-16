@@ -1,5 +1,7 @@
 ﻿namespace RentalCheckIn.Utilities;
-public static class Extensions
+
+// For the sake of creating mocks we make them non-static so it be used in dependency injection.
+public static class JWTUtils
 {
     public static bool IsTokenExpired(string token)
     {
@@ -7,14 +9,11 @@ public static class Extensions
         return jwt.ValidTo < DateTime.UtcNow;
     }
 
-    public static bool IsTokenAlmostExpired(string token)
+    public static bool IsTokenAlmostExpired(string token, TimeSpan bufferTime)
     {
-        TimeSpan bufferTime = TimeSpan.FromMinutes(15);
-
         var jwtHandler = new JwtSecurityTokenHandler();
         if (!jwtHandler.CanReadToken(token))
         {
-            Console.WriteLine("Invalid JWT token parsed");
             throw new ArgumentException("Invalid JWT token", nameof(token));
         }
 

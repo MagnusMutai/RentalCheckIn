@@ -1,6 +1,6 @@
 ﻿using System.Globalization;
 namespace RentalCheckIn.Utilities;
-public static class CultureUtility
+public static class CultureUtils
 {
     public static CultureInfo CurCulture { get; set; } = CultureInfo.InvariantCulture;
     public static void SetCurrentCulture()
