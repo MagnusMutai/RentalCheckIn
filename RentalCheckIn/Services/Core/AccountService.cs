@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Localization;
+using RentalCheckIn.Enums;
 using RentalCheckIn.Locales;
 using System.Globalization;
 
@@ -13,7 +14,7 @@ public class AccountService : IAccountService
     private readonly ILogger<AccountService> logger;
     private readonly IStringLocalizer<Resource> localizer;
 
-    public AccountService(ILHostRepository lHostRepository, IConfiguration configuration, IEmailService emailService, IRefreshTokenRepository refreshTokenRepository, ITOTPService tOTPService, ILogger<AccountService> logger, IStringLocalizer<Resource> localizer )
+    public AccountService(ILHostRepository lHostRepository, IConfiguration configuration, IEmailService emailService, IRefreshTokenRepository refreshTokenRepository, ITOTPService tOTPService, ILogger<AccountService> logger, IStringLocalizer<Resource> localizer)
     {
         this.lHostRepository = lHostRepository;
         this.configuration = configuration;
@@ -24,16 +25,16 @@ public class AccountService : IAccountService
         this.localizer = localizer;
     }
 
-    public async Task<OperationResult<LHost>> LoginAsync(HostLoginDTO hostLoginDTO)
+    public async Task<OperationResult<HostLoginResponseDTO>> LoginAsync(HostLoginDTO hostLoginDTO)
     {
         try
         {
-            CultureUtility.SetCurrentCulture();
+            CultureUtils.SetCurrentCulture();
             var lHost = await lHostRepository.GetLHostByEmailAsync(hostLoginDTO.Email);
 
             if (lHost == null)
             {
-                return new OperationResult<LHost>
+                return new OperationResult<HostLoginResponseDTO>
                 {
                     IsSuccess = false,
                     Message = localizer["Action.Account.Create"]
@@ -42,7 +43,7 @@ public class AccountService : IAccountService
 
             if (lHost.IsDisabled == (sbyte)ByteChecker.True)
             {
-                return new OperationResult<LHost>
+                return new OperationResult<HostLoginResponseDTO>
                 {
                     IsSuccess = false,
                     Message = localizer["Error.Account.Disabled"]
@@ -61,7 +62,7 @@ public class AccountService : IAccountService
                     // User is still blocked
                     string formattedRemainingTime = string.Format(localizer["Time.Format.MinutesSeconds"], remainingTime.Minutes, remainingTime.Seconds);
 
-                    return new OperationResult<LHost>
+                    return new OperationResult<HostLoginResponseDTO>
                     {
                         IsSuccess = false,
                         Message = string.Format(localizer["Error.Account.Blocked"], formattedRemainingTime)
@@ -90,7 +91,7 @@ public class AccountService : IAccountService
                     }
                 });
 
-                return new OperationResult<LHost>
+                return new OperationResult<HostLoginResponseDTO>
                 {
                     IsSuccess = false,
                     Message = localizer["Action.Email.Verify"]
@@ -110,7 +111,7 @@ public class AccountService : IAccountService
                     }
                 });
 
-                return new OperationResult<LHost>
+                return new OperationResult<HostLoginResponseDTO>
                 {
                     IsSuccess = false,
                     Message = localizer["Error.Login.InvalidCredentials"]
@@ -125,23 +126,30 @@ public class AccountService : IAccountService
                 host.LoginAttempts = 0;
             });
 
-            return new OperationResult<LHost>
+            var loginLHostResponse = new HostLoginResponseDTO
+            {
+                HostId = lHost.HostId,
+                AuthenticatorId = lHost.AuthenticatorId,
+                MailAddress = lHost.MailAddress
+            };
+
+            return new OperationResult<HostLoginResponseDTO>
             {
                 IsSuccess = true,
-                Data = lHost,
+                Data = loginLHostResponse,
             };
         }
         catch (Exception ex)
         {
             logger.LogError(ex, "An unexpected error occurred in AccountService while trying to login LHost.");
-            return new OperationResult<LHost>
+            return new OperationResult<HostLoginResponseDTO>
             {
                 IsSuccess = false,
                 Message = localizer["UnexpectedErrorOccurred"]
             };
         }
     }
-
+    // Move to Utilities
     public string HashPassword(string password)
     {
         return BCrypt.Net.BCrypt.HashPassword(password);
@@ -151,7 +159,7 @@ public class AccountService : IAccountService
     {
         try
         {
-            CultureUtility.SetCurrentCulture();
+            CultureUtils.SetCurrentCulture();
             var existingHost = await lHostRepository.GetLHostByEmailAsync(hostSignUpDTO.Email);
 
             if (existingHost != null)
@@ -170,18 +178,18 @@ public class AccountService : IAccountService
                 FirstName = hostSignUpDTO.FirstName,
                 LastName = hostSignUpDTO.LastName,
                 PasswordHash = HashPassword(hostSignUpDTO.Password),
-                TotpSecret = totpSecret,
+                TOTPSecret = totpSecret,
                 Username = hostSignUpDTO.Email,
                 MailAddress = hostSignUpDTO.Email,
                 EmailVerificationToken = GenerateRandomToken(),
                 EmailVTokenExpiresAt = DateTime.UtcNow.AddHours(24),
-                Selected2FA = hostSignUpDTO.Selected2FA
+                AuthenticatorId = (uint)hostSignUpDTO.AuthenticatorId
             };
 
             await lHostRepository.AddLHostAsync(lHost);
 
             // Return the TOTP secret to the caller to display to the user
-            lHost.TotpSecret = totpSecret;
+            lHost.TOTPSecret = totpSecret;
             var encodedToken = HttpUtility.UrlEncode(lHost.EmailVerificationToken);
             // Send the new verification email
             var verificationLink = $"{configuration["ApplicationSettings:AppUrl"]}/email-confirmation?emailToken={encodedToken}";
@@ -194,7 +202,7 @@ public class AccountService : IAccountService
                 Data = lHost,
             };
         }
-        catch (Exception ex) 
+        catch (Exception ex)
         {
             logger.LogError(ex, "An unexpected error occurred in AccountService while trying to Register LHost.");
             return new OperationResult<LHost>
@@ -236,15 +244,15 @@ public class AccountService : IAccountService
                 };
             }
 
-           bool result = await lHostRepository.UpdateLHostPartialAsync(lHost, host =>
-            {
-                // Confirm the email and clear the token
-                host.EmailConfirmed = true;
-                // Invalidate the token after use
-                host.EmailVerificationToken = null;
-                // There's no token stored in the db
-                host.EmailVTokenExpiresAt = default;
-            });
+            bool result = await lHostRepository.UpdateLHostPartialAsync(lHost, host =>
+             {
+                 // Confirm the email and clear the token
+                 host.EmailConfirmed = true;
+                 // Invalidate the token after use
+                 host.EmailVerificationToken = null;
+                 // There's no token stored in the db
+                 host.EmailVTokenExpiresAt = default;
+             });
 
             if (!result)
             {
@@ -261,7 +269,7 @@ public class AccountService : IAccountService
                 Message = localizer["Success.Email.Confirmed"]
             };
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
             logger.LogError(ex, "An unexpected error occurred in AccountService while trying to verify LHost's email.");
 
@@ -295,7 +303,7 @@ public class AccountService : IAccountService
                 Data = tokenEntity
             };
         }
-        catch (Exception ex) 
+        catch (Exception ex)
         {
             logger.LogError(ex, "An unexpected error occurred in AccountService while trying to fetch refresh token from the database.");
 
@@ -345,7 +353,7 @@ public class AccountService : IAccountService
                 Data = lHost
             };
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
             logger.LogError(ex, "An unexpected error occurred in AccountService while trying to fetch LHost by Id.");
 
@@ -363,7 +371,7 @@ public class AccountService : IAccountService
         {
             return await lHostRepository.GetLHostByEmailAsync(email);
         }
-        catch (Exception ex) 
+        catch (Exception ex)
         {
             logger.LogError(ex, "An unexpected error occurred in AccountService while trying to fetch LHost by Email.");
 
@@ -442,9 +450,9 @@ public class AccountService : IAccountService
 
             bool result = await lHostRepository.UpdateLHostPartialAsync(lHost, host =>
             {
-                 host.PasswordHash = HashPassword(request.NewPassword);
-                 host.PasswordResetToken = null;
-                 host.ResetTokenExpires = null;
+                host.PasswordHash = HashPassword(request.NewPassword);
+                host.PasswordResetToken = null;
+                host.ResetTokenExpires = null;
             });
 
             if (!result)

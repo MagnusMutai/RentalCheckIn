@@ -1,6 +1,4 @@
-﻿using RentalCheckIn.Entities;
-
-namespace RentalCheckIn.Repositories;
+﻿namespace RentalCheckIn.Repositories;
 
 public class ReservationRepository : IReservationRepository
 {
@@ -10,6 +8,7 @@ public class ReservationRepository : IReservationRepository
     {
         this.context = context;
     }
+
     public async Task<IEnumerable<ReservationDTO>> GetAllTableReservationsAsync(uint languageId, uint defaultLanguageId)
     {
         return await context.Reservations
