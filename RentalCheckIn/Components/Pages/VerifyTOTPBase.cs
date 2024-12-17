@@ -15,16 +15,12 @@ public class VerifyTOTPBase : ComponentBase
     [Inject]
     protected IJWTService JWTService { get; set; }
     [Inject]
-    protected ITOTPService TotpService { get; set; }
-    [Inject]
     protected NavigationManager NavigationManager { get; set; }
 
     [Inject]
     protected ProtectedLocalStorage LocalStorage { get; set; }
     [Inject]
-    protected ILHostService LHostService { get; set; }
-    [Inject]
-    protected AuthenticationStateProvider AuthStateProvider { get; set; }
+    protected ILHostUIService LHostService { get; set; }
     [Inject]
     private IAuthService AuthService { get; set; }
     [Inject]
@@ -60,6 +56,7 @@ public class VerifyTOTPBase : ComponentBase
         try
         {
             var result = await AuthService.VerifyTOTPAsync(oTPModel);
+           
             if (result.IsSuccess)
             {
                 await LocalStorage.DeleteAsync("emailForTOTP");
