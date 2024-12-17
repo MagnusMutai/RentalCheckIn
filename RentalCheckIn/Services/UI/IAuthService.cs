@@ -2,7 +2,7 @@
 public interface IAuthService
 {
     Task<OperationResult<LHost>> RegisterAsync(HostSignUpDTO hostSignUpDTO);
-    Task<OperationResult<LHost>> LoginAsync(HostLoginDTO hostLoginDTO);
+    Task<OperationResult<HostLoginResponseDTO>> LoginAsync(HostLoginDTO hostLoginDTO);
     Task<EmailVerificationResponse> VerifyEmailAsync(string eVerificationToken);
     Task<TokenValidateResult> RefreshTokenAsync();
     Task<OperationResult> ForgotPasswordAsync(ResetRequestDTO resetRequestDTO);

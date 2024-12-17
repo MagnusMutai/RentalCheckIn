@@ -33,7 +33,7 @@ public class AuthService : IAuthService
         this.localizer = localizer;
     }
 
-    public async Task<OperationResult<LHost>> LoginAsync(HostLoginDTO hostLoginDTO)
+    public async Task<OperationResult<HostLoginResponseDTO>> LoginAsync(HostLoginDTO hostLoginDTO)
     {
         try
         {
@@ -46,10 +46,10 @@ public class AuthService : IAuthService
                     return default;
                 }
 
-                return await response.Content.ReadFromJsonAsync<OperationResult<LHost>>();
+                return await response.Content.ReadFromJsonAsync<OperationResult<HostLoginResponseDTO>>();
             }
 
-            return new OperationResult<LHost>
+            return new OperationResult<HostLoginResponseDTO>
             {
                 IsSuccess = false,
                 Message = localizer["Error.TryAgainLater"]
@@ -59,7 +59,7 @@ public class AuthService : IAuthService
         catch (Exception ex)
         {
             logger.LogError(ex, "An unexpected error occurred in AuthService while trying to login a LHost.");
-            return new OperationResult<LHost>();
+            return new OperationResult<HostLoginResponseDTO>();
         }
 
     }
@@ -300,7 +300,9 @@ public class AuthService : IAuthService
                 };
             }
 
-            if (!tOTPService.VerifyCode(lHost.TotpSecret, oTPModel.Code))
+            // We don't need the entire lHost.
+
+            if (!tOTPService.VerifyCode(lHost.TOTPSecret, oTPModel.Code))
                 return new OperationResult { IsSuccess = false, Message = "Invalid OTP code." };
             // Add null checks before assignments.
             var refreshToken = await refreshTokenService.GenerateRefreshToken(lHost.HostId);
@@ -318,9 +320,8 @@ public class AuthService : IAuthService
                 await localStorage.SetAsync("token", accessToken);
             }
 
-            await authStateProvider.GetAuthenticationStateAsync();
-
             navigationManager.NavigateTo("/");
+
             return new OperationResult { IsSuccess = true };
         }
         catch (Exception ex)
@@ -457,6 +458,7 @@ public class AuthService : IAuthService
 
                     lHost = await lHostResponseEntity.Content.ReadFromJsonAsync<LHost>();
                 }
+              
                 if (lHost == null)
                 {
                     return new OperationResult
@@ -473,8 +475,6 @@ public class AuthService : IAuthService
                 var accessToken = jWTService.GenerateToken(lHost);
                 Constants.JWTToken = accessToken; // Consider removing global constants for JWT
                 await localStorage.SetAsync("token", accessToken);
-                // Update Authentication State
-                await authStateProvider.GetAuthenticationStateAsync();
                 // Navigate to the home page or dashboard
                 navigationManager.NavigateTo("/");
 
