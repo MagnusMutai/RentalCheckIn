@@ -7,7 +7,7 @@ public partial class LHost
     public string LastName { get; set; }
     public string Username { get; set; } = null!;
     public string PasswordHash { get; set; } = null!;
-    public string TotpSecret { get; set; }
+    public string TOTPSecret { get; set; }
     public string MailAddress { get; set; } = null!;
     public string? EmailVerificationToken { get; set; }
     public DateTime EmailVTokenExpiresAt { get; set; }
@@ -20,11 +20,12 @@ public partial class LHost
     public sbyte IsDisabled { get; set; }
     public DateTime? ModifiedDate { get; set; }
     public DateTime CreationDate { get; set; }
-    public string Selected2FA { get; set; }
     // Add UserHandle for FIDO2
     public byte[]? UserHandle { get; set; }
-
+    public uint AuthenticatorId { get; set; }
+    public virtual Authenticator Authenticator { get; set; } = null!;
     public virtual ICollection<Reservation> Reservations { get; set; } = new List<Reservation>();
-    public ICollection<RefreshToken> RefreshTokens { get; set; }
+    public virtual ICollection<RefreshToken> RefreshTokens { get; set; } = new List<RefreshToken>();
+    // A LHost having multiple credentials ???
     public virtual ICollection<LHostCredential> Credentials { get; set; } = new List<LHostCredential>();
 }

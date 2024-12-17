@@ -3,15 +3,12 @@
 public partial class Reservation
 {
     public uint ReservationId { get; set; }
-    public uint ApartmentId { get; set; }
     public DateOnly CheckInDate { get; set; }
     public string? CheckInTime { get; set; }
     public DateOnly CheckOutDate { get; set; }
     public string? CheckOutTime { get; set; }
     public int NumberOfQuests { get; set; }
     public int NumberOfNights { get; set; }
-    public uint QuestId { get; set; }
-    public uint ChannelId { get; set; }
     public decimal ApartmentFee { get; set; }
     public decimal SecurityDeposit { get; set; }
     public decimal? TotalPrice { get; set; }
@@ -26,6 +23,9 @@ public partial class Reservation
     public DateTime? CheckedInAt { get; set; }
     public DateTime? CheckedOutAt { get; set; }
     public string? SignatureQuest { get; set; }
+    public uint ApartmentId { get; set; }
+    public uint QuestId { get; set; }
+    public uint ChannelId { get; set; }
     public uint? HostId { get; set; }
     public uint StatusId { get; set; }
     public DateTime? ModifiedDate { get; set; }
