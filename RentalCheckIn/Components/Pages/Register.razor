@@ -2,6 +2,7 @@
 @inherits RegisterBase
 @using Microsoft.Extensions.Localization
 @using RentalCheckIn.Locales
+@using RentalCheckIn.Enums
 
 <PageTitle>Register</PageTitle>
 
@@ -27,43 +28,43 @@
                         </div>
                     </div>
                 }
-                @if (!isRegistrationComplete)
+                @if (!IsRegistrationComplete)
                 {
                     <p class="fs-3 mt-4">@Localizer["RegisterCreateAccount"]</p>
                     <p class="mb-4">
                         @Localizer["RegisterSecMessage"]? <a class="ms-2" href="login">@Localizer["Login"].</a>
                     </p>
-                    <EditForm Model="registerModel" OnValidSubmit="HandleRegister">
+                    <EditForm Model="RegisterModel" OnValidSubmit="HandleRegister">
                         <DataAnnotationsValidator />
                         <div class="row">
                             <div class="mb-4 col">
-                                <InputText class="bg-transparent text-white rounded-pill form-control" @bind-Value="registerModel.FirstName" placeholder="@Localizer["FirstName"]" />
-                                <ValidationMessage For="@(() => registerModel.FirstName)" class="ms-2 text-danger" />
+                                <InputText class="bg-transparent text-white rounded-pill form-control" @bind-Value="RegisterModel.FirstName" placeholder="@Localizer["FirstName"]" />
+                                <ValidationMessage For="@(() => RegisterModel.FirstName)" class="ms-2 text-danger" />
                             </div>
                             <div class="mb-4 col">
-                                <InputText class="bg-transparent text-white rounded-pill form-control" @bind-Value="registerModel.LastName" placeholder="@Localizer["LastName"]" />
-                                <ValidationMessage For="@(() => registerModel.LastName)" class="ms-2 text-danger" />
+                                <InputText class="bg-transparent text-white rounded-pill form-control" @bind-Value="RegisterModel.LastName" placeholder="@Localizer["LastName"]" />
+                                <ValidationMessage For="@(() => RegisterModel.LastName)" class="ms-2 text-danger" />
                             </div>
                         </div>
                         <div class="mb-4">
-                            <InputText class="bg-transparent text-white rounded-pill form-control" @bind-Value="registerModel.Email" placeholder="Email" />
-                            <ValidationMessage For="@(() => registerModel.Email)" class="ms-2 text-danger" />
+                            <InputText class="bg-transparent text-white rounded-pill form-control" @bind-Value="RegisterModel.Email" placeholder="Email" />
+                            <ValidationMessage For="@(() => RegisterModel.Email)" class="ms-2 text-danger" />
                         </div>
                         <div class="mb-4">
-                            <InputText class="bg-transparent text-white rounded-pill form-control" @bind-Value="registerModel.Password" placeholder="@Localizer["Password"]" type="password" />
-                            <ValidationMessage For="@(() => registerModel.Password)" class="ms-2 text-danger" />
+                            <InputText class="bg-transparent text-white rounded-pill form-control" @bind-Value="RegisterModel.Password" placeholder="@Localizer["Password"]" type="password" />
+                            <ValidationMessage For="@(() => RegisterModel.Password)" class="ms-2 text-danger" />
                         </div>
                         <div class="mb-5 py-2">
-                            <InputText class="bg-transparent text-white rounded-pill form-control" @bind-Value="registerModel.ConfirmPassword" placeholder="@Localizer["ConfirmPassword"]" type="password" />
-                            <ValidationMessage For="@(() => registerModel.ConfirmPassword)" class="ms-2 text-danger" />
+                            <InputText class="bg-transparent text-white rounded-pill form-control" @bind-Value="RegisterModel.ConfirmPassword" placeholder="@Localizer["ConfirmPassword"]" type="password" />
+                            <ValidationMessage For="@(() => RegisterModel.ConfirmPassword)" class="ms-2 text-danger" />
                         </div>
                         <div class="mb-4">
                             <label class="form-label mb-3 fw-bold fs-5">@Localizer["Action.Authorization.Prompt"]</label>
                             <!-- Wrap InputRadio components inside InputRadioGroup -->
-                            <InputRadioGroup @bind-Value="registerModel.Selected2FA">
+                            <InputRadioGroup @bind-Value="RegisterModel.AuthenticatorId">
                                 <div class="d-flex">
                                     <div class="form-check position-relative">
-                                        <InputRadio Value="TOTP" class="form-check-input position-absolute h-100 w-100 m-0 opacity-0" id="totpOption" />
+                                        <InputRadio Value="AuthenticatorType.TOTP" class="form-check-input position-absolute h-100 w-100 m-0 opacity-0" id="totpOption" />
                                         <div class="d-flex gap-1 flex-column align-items-center justify-content-center h-75 text-warning border border-warning-subtle rounded  radio-tile">
                                             <span class="material-symbols-outlined">
                                                 dialpad
@@ -72,7 +73,7 @@
                                         </div>
                                     </div>
                                     <div class="form-check position-relative">
-                                        <InputRadio Value="FaceID" class="form-check-input position-absolute h-100 w-100 m-0 opacity-0" id="faceidOption" />
+                                        <InputRadio Value="AuthenticatorType.FACEID" class="form-check-input position-absolute h-100 w-100 m-0 opacity-0" id="faceidOption" />
                                         <div class="d-flex gap-1 flex-column align-items-center justify-content-center h-75 text-warning border border-warning-subtle rounded radio-tile">
                                             <span class="material-symbols-outlined">
                                                 face
@@ -82,7 +83,7 @@
                                     </div>
                                 </div>
                             </InputRadioGroup>
-                            <ValidationMessage For="@(() => registerModel.Selected2FA)" class="ms-2 text-danger text-break" />
+                            <ValidationMessage For="@(() => RegisterModel.AuthenticatorId)" class="ms-2 text-danger text-break" />
                         </div>
                         <button type="submit" class="btn btn-primary d-block fw-bold w-100 bg-white rounded-pill text-black py-2 mt-4">
                             @if (IsRegistering)
@@ -98,7 +99,7 @@
                     @if (IsFaceIdSelected)
                     {
                         <div class="mt-5 p-3 p-md-0">
-                            <RegisterFaceId HostId="@RegisteredUserId" OnRegistrationComplete="HandleFaceIdRegistrationComplete" />
+                            <RegisterFaceId HostId="@RegisteredLHostId" OnRegistrationComplete="HandleFaceIdRegistrationComplete" />
                         </div>
                     }
                     else
@@ -108,7 +109,7 @@
                                 @((MarkupString)Localizer["RegisterSuccessPrimaryMessage"].Value)
                             </p>
                             <img class="w-50" src="@QrCodeImageData" alt="QR Code" />
-                            <p class="my-4 totp-code text-break text-wrap"><strong>@TotpSecret</strong></p>
+                            <p class="my-4 totp-code text-break text-wrap"><strong>@TOTPSecret</strong></p>
                         </div>
                     }
                 }
