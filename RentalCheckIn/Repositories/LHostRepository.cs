@@ -18,6 +18,18 @@ public class LHostRepository : ILHostRepository
     {
         return await context.LHosts.FirstOrDefaultAsync(h => h.MailAddress == mailAddress);
     }
+    // Refactor the DTO to return LHost tailored to the Authenticator functions after bringing them to the Business logic layer
+    public async Task<HostLoginResponseDTO> GetLoginResponseDataByEmail(string mailAddress)
+    {
+        return await context.LHosts
+            .Where(h => h.MailAddress == mailAddress)
+            .Select(h => new HostLoginResponseDTO
+            {
+                HostId = h.HostId,
+                AuthenticatorId = h.AuthenticatorId,
+                MailAddress = h.MailAddress
+            }).FirstOrDefaultAsync();
+    }
 
     public async Task<LHost> GetLHostByIdAsync(uint id)
     {
@@ -60,4 +72,5 @@ public class LHostRepository : ILHostRepository
         return await context.LHosts
           .FirstOrDefaultAsync(h => h.PasswordResetToken == token && h.ResetTokenExpires > DateTime.Now);
     }
+
 }
