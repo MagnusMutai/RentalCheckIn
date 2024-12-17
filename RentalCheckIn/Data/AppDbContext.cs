@@ -38,10 +38,16 @@ public partial class AppDbContext : DbContext
 
     public DbSet<LHostCredential> LHostCredentials { get; set; }
 
+    // It is said that OnConfiguring could be removed and we rely on the registered DbContext connection in program.cs. Evaluate.
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    // #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseMySql(configuration.GetConnectionString("DefaultConnection"), Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.40-mysql"));
-
+    {
+        // #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
+        var connectionString = configuration.GetConnectionString("DefaultConnection");
+        optionsBuilder
+            .UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
+            // Enable lazy loading;
+            //.UseLazyLoadingProxies()
+    }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder
