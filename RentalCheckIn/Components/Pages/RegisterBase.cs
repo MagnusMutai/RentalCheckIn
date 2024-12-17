@@ -1,23 +1,23 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Localization;
 using QRCoder;
+using RentalCheckIn.Enums;
 using RentalCheckIn.Locales;
 
 namespace RentalCheckIn.Components.Pages;
 public class RegisterBase : ComponentBase
 {
-    protected HostSignUpDTO registerModel = new();
-    protected string? Message;
-    protected string? TotpSecret;
-    protected string TOTP = "TOTP";
-    protected string FaceID = "FaceID";
-    protected bool IsRegistering;
-    protected bool isRegistrationComplete;
+    protected HostSignUpDTO RegisterModel { get; set; } = new();
+    protected string? Message { get; set; }
+    protected string? TOTPSecret { get; set; }
+    protected bool IsRegistering { get; set; }
+    protected bool IsRegistrationComplete { get; set; }
     public string? DisplayToast { get; set; } = "d-block";
     public string BackGroundColor { get; set; } = "bg-success";
-    protected bool IsFaceIdSelected => registerModel.Selected2FA == "FaceID";
-    protected uint RegisteredUserId { get; set; } // To store the user ID after registration
-
+    // Do we need to use this again in the UI or can we use it only once in the base class?
+    protected bool IsFaceIdSelected => RegisterModel.AuthenticatorId == AuthenticatorType.FACEID;
+    // To store the LHost ID after registration
+    protected uint RegisteredLHostId { get; set; } 
     protected string? QrCodeImageData { get; set; }
     [Inject]
     protected IAuthService AuthService { get; set; }
@@ -48,25 +48,26 @@ public class RegisterBase : ComponentBase
         {
             IsRegistering = true;
 
-            var result = await AuthService.RegisterAsync(registerModel);
+            var result = await AuthService.RegisterAsync(RegisterModel);
 
             if (result.IsSuccess)
             {
-                RegisteredUserId = result.Data.HostId;
+                RegisteredLHostId = result.Data.HostId;
                 BackGroundColor = "bg-success";
+                // Use best practices for localization keys(.)
                 Message = Localizer["RegisterAccountCreatedSuccessfully"];
 
                 // Mark registration as complete
-                isRegistrationComplete = true;
+                IsRegistrationComplete = true;
 
                 if (!IsFaceIdSelected)
                 {
-                    TotpSecret = result.Data.TotpSecret;
+                    TOTPSecret = result.Data.TOTPSecret;
 
                     // Generate the otpauth URI
                     string issuer = "RentalCheckIn"; // Replace with your app's name
-                    string account = registerModel.Email;
-                    string otpauthUri = $"otpauth://totp/{Uri.EscapeDataString(issuer)}:{Uri.EscapeDataString(account)}?secret={TotpSecret}&issuer={Uri.EscapeDataString(issuer)}";
+                    string account = RegisterModel.Email;
+                    string otpauthUri = $"otpauth://totp/{Uri.EscapeDataString(issuer)}:{Uri.EscapeDataString(account)}?secret={TOTPSecret}&issuer={Uri.EscapeDataString(issuer)}";
 
                     // Generate the QR code image
                     var qrGenerator = new QRCodeGenerator();
