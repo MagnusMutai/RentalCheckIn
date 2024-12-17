@@ -72,14 +72,14 @@ public class HomeBase : ComponentBase
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         try
-        {
+        {   // Must we always OnAfterender Query the local storage? Or should we check the authentication state before make unnecessary queries?
             // Get the accessToken if it exists
             var response = await LocalStorage.GetAsync<string>("token");
             Constants.JWTToken = response.Success ? response.Value : "";
 
             if (AuthStateProvider is CustomAuthStateProvider customAuthStateProvider)
             {
-                var authState = customAuthStateProvider.NotifyUserAuthentication(Constants.JWTToken);
+                var authState = await customAuthStateProvider.GetAuthenticationStateAsync();
 
                 if (authState.User.Identity is { IsAuthenticated: false })
                 {

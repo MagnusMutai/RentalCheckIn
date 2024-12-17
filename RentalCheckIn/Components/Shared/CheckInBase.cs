@@ -89,7 +89,7 @@ public class CheckInBase : ComponentBase
 
             if (AuthStateProvider is CustomAuthStateProvider customAuthStateProvider)
             {
-                var authState = customAuthStateProvider.NotifyUserAuthentication(Constants.JWTToken);
+                var authState = await customAuthStateProvider.GetAuthenticationStateAsync();
 
                 if (authState.User.Identity is { IsAuthenticated: true })
                 {
