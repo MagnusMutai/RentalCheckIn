@@ -1090,7 +1090,7 @@ namespace RentalCheckIn.Locales {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Selected2FARegexError.
+        ///   Looks up a localized string similar to Invalid two-factor authentication method selected..
         /// </summary>
         public static string Selected2FARegexError {
             get {

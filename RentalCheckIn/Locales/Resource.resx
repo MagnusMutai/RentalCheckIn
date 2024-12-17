@@ -269,7 +269,7 @@
     <value>Please select a two-factor authentication method.</value>
   </data>
   <data name="Selected2FARegexError" xml:space="preserve">
-    <value>Selected2FARegexError</value>
+    <value>Invalid two-factor authentication method selected.</value>
   </data>
   <data name="OTPCodeRequired" xml:space="preserve">
     <value>TOTP code required</value>
