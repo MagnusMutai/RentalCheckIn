@@ -27,10 +27,10 @@
                 <p class="mb-5">
                     @((MarkupString)Localizer["VerifyTOTPSecMessage"].Value).
                 </p>
-                <EditForm Model="oTPModel" OnValidSubmit="HandleVerifyOtp">
+                <EditForm Model="OTPModel" OnValidSubmit="HandleVerifyOtp">
                     <DataAnnotationsValidator />
-                    <InputText class="bg-transparent text-white rounded-pill form-control" @bind-Value="oTPModel.Code" placeholder="TOTP Code" />
-                    <ValidationMessage For="@(() => oTPModel.Code)" class="ms-2 text-danger" />
+                    <InputText class="bg-transparent text-white rounded-pill form-control" @bind-Value="OTPModel.Code" placeholder="TOTP Code" />
+                    <ValidationMessage For="@(() => OTPModel.Code)" class="ms-2 text-danger" />
                     <button type="submit" class="btn btn-primary d-block fw-bold w-100 bg-white rounded-pill text-black py-2 mt-4">
                         @if (IsRegistering)
                         {

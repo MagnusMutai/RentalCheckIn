@@ -75,17 +75,17 @@
                     </div>
 
                     <div class="pagination-controls text-center mt-3 pb-3">
-                        <button class="btn btn-primary btn-sm me-2 rounded-3" @onclick="PreviousPage" disabled="@(currentPage == 1)">@Localizer["Previous"]</button>
+                        <button class="btn btn-primary btn-sm me-2 rounded-3" @onclick="PreviousPage" disabled="@(CurrentPage == 1)">@Localizer["Previous"]</button>
 
-                        @for (uint page = 1; page <= totalPages; page++)
+                        @for (uint page = 1; page <= TotalPages; page++)
                         {
                             uint numPage = page;
-                            <button class="btn btn-secondary btn-sm me-1 border-0 rounded-3 @(currentPage == page ? "active" : "")" disabled="@(currentPage == page)" @onclick="() => GoToPage(numPage)">
+                            <button class="btn btn-secondary btn-sm me-1 border-0 rounded-3 @(CurrentPage == page ? "active" : "")" disabled="@(CurrentPage == page)" @onclick="() => GoToPage(numPage)">
                                 @numPage
                             </button>
                         }
 
-                        <button class="btn btn-primary btn-sm ms-2 rounded-3" @onclick="NextPage" disabled="@(currentPage == totalPages)">@Localizer["Next"]</button>
+                        <button class="btn btn-primary btn-sm ms-2 rounded-3" @onclick="NextPage" disabled="@(CurrentPage == TotalPages)">@Localizer["Next"]</button>
                     </div>
                 }
                 else if(Message != null) 
@@ -106,20 +106,20 @@
         </div>
 
 
-        @if (showModal)
+        @if (ShowModal)
         {
             <div class="modal fade show right-align-modal" tabindex="-1" role="dialog">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <divk class="ms-md-3">
                             <div class="modal-header ms-3">
-                                <h5 class="modal-title">@selectedReservation?.CheckInDate.ToString("dd MMM") - @selectedReservation?.CheckOutDate.ToString("dd MMM") &nbsp; &nbsp; @selectedReservation?.ApartmentName</h5>
+                                <h5 class="modal-title">@SelectedReservation?.CheckInDate.ToString("dd MMM") - @SelectedReservation?.CheckOutDate.ToString("dd MMM") &nbsp; &nbsp; @SelectedReservation?.ApartmentName</h5>
                                 <button type="button" class="btn-close" @onclick="CloseModal"></button>
                             </div>
                             <div class="modal-body">
                                 <div class="header row"></div>
                                 <h4 class="fw-bold ms-3">@Localizer["Guest.Details.Label"]</h4>
-                                <ReservationDetail SelectedReservation="selectedReservation" />
+                                <ReservationDetail SelectedReservation="SelectedReservation" />
                             </div>
                         </divk>
                     </div>

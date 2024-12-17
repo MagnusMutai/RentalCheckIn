@@ -5,15 +5,15 @@ using System.Globalization;
 namespace RentalCheckIn.Components.Pages;
 public class HomeBase : ComponentBase
 {
-    protected uint currentPage = 1;
-    protected uint itemsPerPage;
-    protected string? Message;
-    protected bool showModal = false;
-    protected ReservationDTO? selectedReservation;
+    protected uint CurrentPage { get; set; } = 1;
+    protected uint ItemsPerPage { get; set; }
+    protected string? Message { get; set; }
+    protected bool ShowModal { get; set; }
+    protected ReservationDTO? SelectedReservation { get; set; }
     protected string SelectedApartment { get; set; } = "All";
-    protected List<string> ApartmentNames = new List<string>();
-    protected List<ReservationDTO> Reservations = new List<ReservationDTO>();
-    protected List<Setting> Settings = new List<Setting>();
+    protected List<string> ApartmentNames { get; set; } = new List<string>();
+    protected List<ReservationDTO> Reservations { get; set; } = new List<ReservationDTO>();
+    protected List<Setting> Settings { get; set; } = new List<Setting>();
 
     [Inject]
     private NavigationManager NavigationManager { get; set; }
@@ -29,6 +29,37 @@ public class HomeBase : ComponentBase
     private ILogger<HomeBase> Logger { get; set; }
     [Inject]
     protected IStringLocalizer<Resource> Localizer { get; set; }
+    // Computes the total number of pages based on filtered reservations.
+    protected uint TotalPages
+    {
+        get
+        {
+            if (ItemsPerPage == 0)
+                return 0;
+
+            return (uint)Math.Ceiling((double)FilteredReservations.Count() / ItemsPerPage);
+        }
+    }
+    // Filters the reservations based on the selected apartment.
+    protected IEnumerable<ReservationDTO> FilteredReservations
+    {
+        get
+        {
+            if (SelectedApartment == Localizer["All"])
+            {
+                return Reservations;
+            }
+            else
+            {
+                return Reservations.Where(r => r.ApartmentName == SelectedApartment);
+            }
+        }
+    }
+    // Retrieves the reservations for the current page after applying the filter.
+    protected IEnumerable<ReservationDTO> PaginatedReservations => FilteredReservations
+        .Skip((int)((CurrentPage - 1) * ItemsPerPage))
+        .Take((int)ItemsPerPage);
+
     protected override async Task OnInitializedAsync()
     {
         try
@@ -52,12 +83,12 @@ public class HomeBase : ComponentBase
             // Determine items per page from settings
             if (Settings != null && Settings.Any() && Settings[0].RowsPerPage > 0)
             {
-                itemsPerPage = Settings[0].RowsPerPage;
+                ItemsPerPage = Settings[0].RowsPerPage;
             }
             else
             {
                 // Default value if settings are missing
-                itemsPerPage = 10;
+                ItemsPerPage = 10;
             }
 
             await LoadLocalizedDataAsync();
@@ -137,51 +168,29 @@ public class HomeBase : ComponentBase
         }
     }
 
-    // Computes the total number of pages based on filtered reservations.
-    protected uint totalPages => (uint)Math.Ceiling((double)FilteredReservations.Count() / itemsPerPage);
 
-    // Filters the reservations based on the selected apartment.
-    protected IEnumerable<ReservationDTO> FilteredReservations
-    {
-        get
-        {
-            if (SelectedApartment == Localizer["All"])
-            {
-                return Reservations;
-            }
-            else
-            {
-                return Reservations.Where(r => r.ApartmentName == SelectedApartment);
-            }
-        }
-    }
-
-    // Retrieves the reservations for the current page after applying the filter.
-    protected IEnumerable<ReservationDTO> PaginatedReservations => FilteredReservations
-        .Skip((int)((currentPage - 1) * itemsPerPage))
-        .Take((int)itemsPerPage);
 
     protected void NextPage()
     {
-        if (currentPage < totalPages)
+        if (CurrentPage < TotalPages)
         {
-            currentPage++;
+            CurrentPage++;
         }
     }
 
     protected void PreviousPage()
     {
-        if (currentPage > 1)
+        if (CurrentPage > 1)
         {
-            currentPage--;
+            CurrentPage--;
         }
     }
 
     protected void GoToPage(uint pageNumber)
     {
-        if (pageNumber <= totalPages)
+        if (pageNumber <= TotalPages)
         {
-            currentPage = pageNumber;
+            CurrentPage = pageNumber;
         }
     }
 
@@ -190,21 +199,21 @@ public class HomeBase : ComponentBase
     protected void OnApartmentFilterChanged(ChangeEventArgs e)
     {
         SelectedApartment = e.Value?.ToString() ?? Localizer["All"];
-        currentPage = 1;
+        CurrentPage = 1;
     }
 
     protected void OpenModal(ReservationDTO reservation)
     {
         if (reservation != null)
         {
-            selectedReservation = reservation;
-            showModal = true;
+            SelectedReservation = reservation;
+            ShowModal = true;
         }
     }
 
     protected void CloseModal()
     {
-        showModal = false;
-        selectedReservation = null;
+        ShowModal = false;
+        SelectedReservation = null;
     }
 }

@@ -6,7 +6,7 @@
 <div clss="text-white w-100">
     <h3 class="text-center">Register face Id, pin or fingerprints</h3>
     <p class="text-center my-3">This depends on your preference and device capabilities.</p>
-    @if (isRegistering)
+    @if (IsRegistering)
     {
         <div class="d-flex mt-4 text-success">
             <div>
@@ -16,8 +16,8 @@
         </div>
     }
 
-    <p class="text-center text-info">@message</p>
-    @if (shouldDisplayRegButton)
+    <p class="text-center text-info">@Message</p>
+    @if (ShouldDisplayRegButton)
     {
         <div class="d-flex flex-column">
             <button class="btn btn-primary d-block fw-bold w-100 bg-white rounded-pill text-black py-2 mt-4" disabled="@(isRegistering)" @onclick="HandleRegisterFaceId">Try again</button>

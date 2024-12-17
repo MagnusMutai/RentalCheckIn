@@ -1,19 +1,16 @@
-﻿
-using RentalCheckIn.Services.Core;
-
-namespace RentalCheckIn.Controllers;
+﻿namespace RentalCheckIn.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
 public class DocumentController : ControllerBase
 {
-    private readonly IPDFService pdfService;
+    private readonly IPDFService pDFService;
     private readonly ILogger<DocumentController> logger;
     private readonly IEmailService emailService;
 
-    public DocumentController(IPDFService pdfService, ILogger<DocumentController> logger, IEmailService emailService)
+    public DocumentController(IPDFService pDFService, ILogger<DocumentController> logger, IEmailService emailService)
     {
-        this.pdfService = pdfService;
+        this.pDFService = pDFService;
         this.logger = logger;
         this.emailService = emailService;
     }
@@ -24,9 +21,9 @@ public class DocumentController : ControllerBase
         try
         {
             // Generate the PDF in memory
-            using var pdfStream = pdfService.FillCheckInFormAsync(request.Model, request.Culture);
+            using var pDFStream = await pDFService.FillCheckInFormAsync(request.Model, request.Culture);
           
-            if (pdfStream == null)
+            if (pDFStream == null)
             {
                 var pDFResponse = new OperationResult 
                 {
@@ -45,7 +42,7 @@ public class DocumentController : ControllerBase
                           "Thank you for choosing Snowy.";
 
             // Send the PDF as an attachment directly from memory
-           var emailResponse = await emailService.SendEmailAsync(request.Model.MailAddress, subject, body, pdfStream, "CheckInForm.pdf");
+           var emailResponse = await emailService.SendEmailAsync(request.Model.MailAddress, subject, body, pDFStream, "CheckInForm.pdf");
 
             return Ok(emailResponse);
         }

@@ -34,7 +34,7 @@
                         <span class="ms-3">Authenticate and wait as we try to log you in...</span>
                     </div>
                 }
-                @if (shouldDisplayAuthButton)
+                @if (ShouldDisplayRetryButton )
                 {
                     <div class="d-flex flex-column">
                         <button class="btn btn-primary d-block fw-bold w-100 bg-white rounded-pill text-black py-2 mt-4" disabled="@(IsAuthenticating)" @onclick="Authenticate">Try again</button>

@@ -9,7 +9,7 @@
 
 <AuthorizeView>
     <Authorized>
-        @if (checkInModel == null)
+        @if (CheckInModel == null)
         {
             <p>Reservation not found.</p>
         }
@@ -21,7 +21,7 @@
                          OnClose="HandleModalClose" />
 
 
-            <EditForm Model="@checkInModel" Context="editFormContext" OnValidSubmit="HandleValidSubmit">
+            <EditForm Model="@CheckInModel" Context="editFormContext" OnValidSubmit="HandleValidSubmit">
                 <DataAnnotationsValidator />
 
                 <div class="container rounded-3 my-4">
@@ -40,24 +40,24 @@
                         <h5 class="text-center my-4">@Localizer["Form.CheckIn.Title"]</h5>
 
                         <!-- Guest Information -->
-                        <h4>@checkInModel.GuestFirstName</h4>
+                        <h4>@CheckInModel.GuestFirstName</h4>
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <label>@Localizer["Email"]</label>
-                                <InputText class="form-control" @bind-Value="checkInModel.MailAddress" />
-                                <ValidationMessage For="@(() => checkInModel.MailAddress)" />
+                                <InputText class="form-control" @bind-Value="CheckInModel.MailAddress" />
+                                <ValidationMessage For="@(() => CheckInModel.MailAddress)" />
                             </div>
                             <div class="col-md-6 mt-3 mt-md-0">
                                 <label>@Localizer["Contact.Mobile.Label"]</label>
-                                <InputText class="form-control" @bind-Value="checkInModel.Mobile" />
-                                <ValidationMessage For="@(() => checkInModel.Mobile)" />
+                                <InputText class="form-control" @bind-Value="CheckInModel.Mobile" />
+                                <ValidationMessage For="@(() => CheckInModel.Mobile)" />
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <label>@Localizer["Document.PassportNumber.Label"]</label>
-                                <InputText class="form-control" @bind-Value="checkInModel.PassportNr" maxlength="50" />
-                                <ValidationMessage For="@(() => checkInModel.PassportNr)" />
+                                <InputText class="form-control" @bind-Value="CheckInModel.PassportNr" maxlength="50" />
+                                <ValidationMessage For="@(() => CheckInModel.PassportNr)" />
                             </div>
                         </div>
 
@@ -67,10 +67,10 @@
                                 <p class="fw-bold m-0">@Localizer["CheckIn"]</p>
                                 <div class="mt-1 row">
                                     <div class="col-12 col-md-4 col-lg-3">
-                                        @checkInModel.CheckInDate
+                                        @CheckInModel.CheckInDate
                                     </div>
                                     <div class="col">
-                                        @checkInModel.CheckInTime
+                                        @CheckInModel.CheckInTime
                                     </div>
                                 </div>
                             </div>
@@ -78,10 +78,10 @@
                                 <p class="fw-bold m-0 mt-3 mt-md-0">@Localizer["CheckOut"]</p>
                                 <div class="mt-1 row">
                                     <div class="col-12 col-md-4 col-lg-3">
-                                        @checkInModel.CheckOutDate
+                                        @CheckInModel.CheckOutDate
                                     </div>
                                     <div class="col">
-                                        @checkInModel.CheckOutTime
+                                        @CheckInModel.CheckOutTime
                                     </div>
                                 </div>
                             </div>
@@ -90,49 +90,49 @@
                             <div class="col-md-6 fw-bold">
                                 <p class="fw-bolder m-0">@Localizer["General.Details.Label"]</p>
                                 <div class="text-lowercase">
-                                    @checkInModel.NumberOfNights @Localizer["Nights"]
+                                    @CheckInModel.NumberOfNights @Localizer["Nights"]
                                 </div>
                                 <div>
-                                    @checkInModel.NumberOfGuests @Localizer["Guest.Adults.Label"]
+                                    @CheckInModel.NumberOfGuests @Localizer["Guest.Adults.Label"]
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <p class="fw-bold m-0 mt-3 mt-md-0">@Localizer["Apartment"]</p>
-                                @checkInModel.ApartmentName
+                                @CheckInModel.ApartmentName
                             </div>
                         </div>
 
                         <!-- Price Summary -->
                         <div class="mt-5 mb-3">
                             <div class="row">
-                                <p class="fw-bold col-md-6 m-0 mt-3 mt-md-0">@Localizer["Fee.Apartment.Label"] (@checkInModel.CurrencySymbol)</p>
+                                <p class="fw-bold col-md-6 m-0 mt-3 mt-md-0">@Localizer["Fee.Apartment.Label"] (@CheckInModel.CurrencySymbol)</p>
                                 <div class="col-md-2 mb-1">
                                     <div>
-                                        <InputNumber class="form-control" @bind-Value="checkInModel.ApartmentFee" @oninput="@(e => {
+                                        <InputNumber class="form-control" @bind-Value="CheckInModel.ApartmentFee" @oninput="@(e => {
                                             var strVal = e.Value?.ToString();
                                             var val = decimal.TryParse(strVal, out var parsedVal) ? parsedVal : 0m;
                                             OnFeeChanged(val);})" />
                                     </div>
-                                    <ValidationMessage class="ms-3 text-danger" For="@(() => checkInModel.ApartmentFee)" />
+                                    <ValidationMessage class="ms-3 text-danger" For="@(() => CheckInModel.ApartmentFee)" />
                                 </div>
                             </div>
                             <div class="row">
-                                <p class="fw-bold col-md-6 m-0 mt-3 mt-md-0">@Localizer["SecurityDeposit.Label"] (@checkInModel.CurrencySymbol)</p>
+                                <p class="fw-bold col-md-6 m-0 mt-3 mt-md-0">@Localizer["SecurityDeposit.Label"] (@CheckInModel.CurrencySymbol)</p>
                                 <div class="col-md-2 mb-1">
                                     <div>
-                                        <InputNumber class="form-control" @bind-Value="checkInModel.SecurityDeposit" @bind-Value:format="C" @oninput="@(e => {
+                                        <InputNumber class="form-control" @bind-Value="CheckInModel.SecurityDeposit" @bind-Value:format="C" @oninput="@(e => {
                                             var strVal = e.Value?.ToString();
                                             var val = decimal.TryParse(strVal, out var parsedVal) ? parsedVal : 0m;
                                             OnDepositChanged(val);})" />
                                     </div>
-                                    <ValidationMessage class="ms-3 text-danger" For="@(() => checkInModel.SecurityDeposit)" />
+                                    <ValidationMessage class="ms-3 text-danger" For="@(() => CheckInModel.SecurityDeposit)" />
                                 </div>
                             </div>
                             <div class="row">
-                                <p class="fw-bold col-md-6 m-0 mt-3 mt-md-0">@Localizer["Price.Total.Label"] (@checkInModel.CurrencySymbol)</p>
+                                <p class="fw-bold col-md-6 m-0 mt-3 mt-md-0">@Localizer["Price.Total.Label"] (@CheckInModel.CurrencySymbol)</p>
                                 <div class="col-md-2 mb-1">
                                     <div>
-                                        <div class="form-control">@checkInModel.TotalPrice</div>
+                                        <div class="form-control">@CheckInModel.TotalPrice</div>
                                     </div>
                                 </div>
                             </div>
@@ -141,31 +141,31 @@
 
                         <!-- Agreements -->
                         <div class="form-check mt-4 mb-2">
-                            <InputCheckbox class="form-check-input disable-checkbox-only" @bind-Value="checkInModel.AgreeEnergyConsumption" />
+                            <InputCheckbox class="form-check-input disable-checkbox-only" @bind-Value="CheckInModel.AgreeEnergyConsumption" />
                             <label class="form-check-label">
                                 @{
-                                    var formattedEnergyConsumptionText = string.Format(Localizer["Rental.EnergyConsumption.CheckBox"], checkInModel.KWhPerNightIncluded, checkInModel.CostsPerXtraKWh, checkInModel.CurrencySymbol);
+                                    var formattedEnergyConsumptionText = string.Format(Localizer["Rental.EnergyConsumption.CheckBox"], CheckInModel.KWhPerNightIncluded, CheckInModel.CostsPerXtraKWh, CheckInModel.CurrencySymbol);
                                 } @formattedEnergyConsumptionText <br />  <div class="d-flex gap-2 align-items-center">
-                                    Meter <InputNumber class="form-control w-25" @bind-Value="checkInModel.KwhAtCheckIn" />
-                                    <ValidationMessage For="@(() => checkInModel.KwhAtCheckIn)" /> kWh.
+                                    Meter <InputNumber class="form-control w-25" @bind-Value="CheckInModel.KwhAtCheckIn" />
+                                    <ValidationMessage For="@(() => CheckInModel.KwhAtCheckIn)" /> kWh.
                                 </div>
                             </label>
-                            <ValidationMessage class="text-danger text-break" For="@(() => checkInModel.AgreeEnergyConsumption)" /> kWh.
+                            <ValidationMessage class="text-danger text-break" For="@(() => CheckInModel.AgreeEnergyConsumption)" /> kWh.
 
                         </div>
                         <div class="form-check mb-2">
-                            <InputCheckbox class="form-check-input disable-checkbox-only" @bind-Value="checkInModel.ReceivedKeys" />
+                            <InputCheckbox class="form-check-input disable-checkbox-only" @bind-Value="CheckInModel.ReceivedKeys" />
                             <label class="form-check-label">
                                 @Localizer["Rental.ReceivedKeys.Info"]
                             </label>
-                            <ValidationMessage For="@(() => checkInModel.ReceivedKeys)" /> kWh.
+                            <ValidationMessage For="@(() => CheckInModel.ReceivedKeys)" /> kWh.
                         </div>
                         <div class="form-check mb-4">
-                            <InputCheckbox class="form-check-input disable-checkbox-only" @bind-Value="checkInModel.AgreeTerms" />
+                            <InputCheckbox class="form-check-input disable-checkbox-only" @bind-Value="CheckInModel.AgreeTerms" />
                             <label class="form-check-label">
                                 @Localizer["Rental.Agreement.Signature.Info"]
                             </label>
-                            <ValidationMessage For="@(() => checkInModel.AgreeTerms)" /> kWh.
+                            <ValidationMessage For="@(() => CheckInModel.AgreeTerms)" /> kWh.
                         </div>
 
                         <div class="row mt-5 mb-3">
@@ -191,21 +191,21 @@
                             </div>
                         </div>
 
-                        @if (displaySignaturePad)
+                        @if (ShouldDisplaySignaturePad)
                         {
                             <!-- Signature -->
                             <h5 class="mt-4">@Localizer["Label_GuestsSignature"]</h5>
                             <div class="mb-3">
                                 <SignaturePad Options="_options" @bind-Value="SignatureBytes" Width="180" Height="80" />
-                                @if (!string.IsNullOrEmpty(signatureValidationError))
+                                @if (!string.IsNullOrEmpty(SignatureValidationError))
                                 {
-                                    <div class="text-danger">@signatureValidationError</div>
+                                    <div class="text-danger">@SignatureValidationError</div>
                                 }
                             </div>
                         }
                         <div class="row mb-3">
                             <div class="col-md-4">
-                                @checkInModel.GuestFullName
+                                @CheckInModel.GuestFullName
                             </div>
                         </div>
                         <div class="row">

@@ -28,15 +28,15 @@
                     @Localizer["LoginSecMessage"]? <a class="ms-2" href="register">@Localizer["LoginSignUpLink"].</a>
                 </p>
 
-                <EditForm Model="loginModel" OnValidSubmit="HandleLogin">
+                <EditForm Model="LoginModel" OnValidSubmit="HandleLogin">
                     <DataAnnotationsValidator />
                     <div class="mb-4">
-                        <InputText class="bg-transparent text-white rounded-pill form-control" @bind-Value="loginModel.Email" placeholder="@Localizer["Email"]" />
-                        <ValidationMessage For="@(() => loginModel.Email)" class="ms-2 text-danger" />
+                        <InputText class="bg-transparent text-white rounded-pill form-control" @bind-Value="LoginModel.Email" placeholder="@Localizer["Email"]" />
+                        <ValidationMessage For="@(() => LoginModel.Email)" class="ms-2 text-danger" />
                     </div>
                     <div class="mb-1 py-2">
-                        <InputText class="bg-transparent text-white rounded-pill form-control" @bind-Value="loginModel.Password" placeholder="@Localizer["Password"]" type="password" />
-                        <ValidationMessage For="@(() => loginModel.Password)" class="ms-2 text-danger" />
+                        <InputText class="bg-transparent text-white rounded-pill form-control" @bind-Value="LoginModel.Password" placeholder="@Localizer["Password"]" type="password" />
+                        <ValidationMessage For="@(() => LoginModel.Password)" class="ms-2 text-danger" />
                     </div>
                     <div class="d-flex ms-2">
                         <a href="password-reset-request">@Localizer["ForgotPasswordLink"]?</a>

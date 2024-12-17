@@ -7,9 +7,9 @@ namespace RentalCheckIn.Components.Pages;
 
 public class PasswordResetBase : ComponentBase
 {
-    protected bool IsRegistering;
-    protected PasswordResetDTO resetPasswordModel = new PasswordResetDTO();
-    protected HostLoginDTO autoHostLoginDTO = new HostLoginDTO();
+    protected bool IsRegistering { get; set; }
+    protected PasswordResetDTO ResetPasswordModel { get; set; } = new PasswordResetDTO();
+    protected HostLoginDTO AutoHostLoginDTO { get; set; } = new HostLoginDTO();
     protected string? Message { get; set; }
     protected bool IsPasswordResetSuccessful { get; set; }
     protected bool IsLoading { get; set; } = false;
@@ -40,7 +40,7 @@ public class PasswordResetBase : ComponentBase
 
                 if (!string.IsNullOrWhiteSpace(resetToken))
                 {
-                    ResetPasswordResponse = await AuthService.ResetPasswordAsync(resetToken, resetPasswordModel);
+                    ResetPasswordResponse = await AuthService.ResetPasswordAsync(resetToken, ResetPasswordModel);
 
                     if (ResetPasswordResponse != null)
                     {
@@ -48,10 +48,10 @@ public class PasswordResetBase : ComponentBase
 
                         if (ResetPasswordResponse.IsSuccess)
                         {
-                            autoHostLoginDTO.Email = ResetPasswordResponse.Data;
-                            autoHostLoginDTO.Password = resetPasswordModel.NewPassword;
+                            AutoHostLoginDTO.Email = ResetPasswordResponse.Data;
+                            AutoHostLoginDTO.Password = ResetPasswordModel.NewPassword;
 
-                            var result = await AuthService.LoginAsync(autoHostLoginDTO);
+                            var result = await AuthService.LoginAsync(AutoHostLoginDTO);
 
                             if (result.IsSuccess)
                             {
