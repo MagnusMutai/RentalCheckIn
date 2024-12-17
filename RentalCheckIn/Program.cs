@@ -13,6 +13,7 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 builder.Services.AddControllers();
 // Add in-memory distributed cache **Check later
+// We might need non-inmemory caching solution
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddMemoryCache();
 builder.Services.AddHttpContextAccessor();
@@ -31,9 +32,12 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 // Configure EF Core with MySQL
-builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseMySql(builder.Configuration.GetConnectionString("DefaultConnection"),
-    new MySqlServerVersion(new System.Version(8, 0, 40))));
+builder.Services.AddDbContext<AppDbContext>(options => {
+    var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
+});
+
+//.UseLazyLoadingProxies()
 
 //Register HttpClient with BaseAddress
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://localhost:7110") });
@@ -41,7 +45,7 @@ builder.Services.AddHttpClient();
 
 // Configure JWT Authentication
 var secretKey = builder.Configuration["Jwt:SecretKey"];
-var key = Encoding.ASCII.GetBytes(secretKey);
+var key = Encoding.ASCII.GetBytes(secretKey!);
 builder.Services.AddAuthenticationCore();
 builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthStateProvider>();
 builder.Services.AddScoped<CustomAuthStateProvider>();
@@ -99,7 +103,7 @@ builder.Services.AddSingleton<Fido2>(sp =>
 // Register application services
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ILHostRepository, LHostRepository>();
-builder.Services.AddScoped<ILHostService, LHostService>();
+builder.Services.AddScoped<ILHostUIService, LHostUIService>();
 builder.Services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IReservationRepository, ReservationRepository>();
@@ -116,6 +120,7 @@ builder.Services.AddScoped<IApartmentTranslationRepository, ApartmentTranslation
 builder.Services.AddScoped<IStatusTranslationRepository, StatusTranslationRepository>();
 builder.Services.AddScoped<ILocalizationService, LocalizationService>();
 builder.Services.AddScoped<ILocalizationUIService, LocalizationUIService>();
+builder.Services.AddScoped<ILHostService, LHostService>();
 builder.Services.AddScoped<RefreshTokenService>();
 builder.Services.AddScoped<ProtectedLocalStorage>();
 builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
