@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RentalCheckIn.Data;
 
@@ -11,17 +12,16 @@ using RentalCheckIn.Data;
 namespace RentalCheckIn.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241215201138_ChangedSelected2FAinLHosttoAuthenticatorType")]
+    partial class ChangedSelected2FAinLHosttoAuthenticatorType
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .UseCollation("utf8mb4_0900_ai_ci")
                 .HasAnnotation("ProductVersion", "8.0.10")
-                .HasAnnotation("Proxies:ChangeTracking", false)
-                .HasAnnotation("Proxies:CheckEquality", false)
-                .HasAnnotation("Proxies:LazyLoading", true)
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
             MySqlModelBuilderExtensions.HasCharSet(modelBuilder, "utf8mb4");
@@ -61,11 +61,11 @@ namespace RentalCheckIn.Data.Migrations
 
             modelBuilder.Entity("RentalCheckIn.Entities.ApartmentTranslation", b =>
                 {
-                    b.Property<uint>("ApartmentTranslationId")
+                    b.Property<int>("ApartmentTranslationId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int unsigned");
+                        .HasColumnType("int");
 
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<uint>("ApartmentTranslationId"));
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("ApartmentTranslationId"));
 
                     b.Property<uint>("ApartmentId")
                         .HasColumnType("int unsigned");
@@ -86,23 +86,6 @@ namespace RentalCheckIn.Data.Migrations
                         .IsUnique();
 
                     b.ToTable("ApartmentTranslation", (string)null);
-                });
-
-            modelBuilder.Entity("RentalCheckIn.Entities.Authenticator", b =>
-                {
-                    b.Property<uint>("AuthenticatorId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int unsigned");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<uint>("AuthenticatorId"));
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.HasKey("AuthenticatorId");
-
-                    b.ToTable("Authenticator");
                 });
 
             modelBuilder.Entity("RentalCheckIn.Entities.Channel", b =>
@@ -224,8 +207,9 @@ namespace RentalCheckIn.Data.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<uint>("HostId"));
 
-                    b.Property<uint>("AuthenticatorId")
-                        .HasColumnType("int unsigned");
+                    b.Property<string>("AuthenticatorType")
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
                     b.Property<DateTime>("CreationDate")
                         .ValueGeneratedOnAdd()
@@ -285,7 +269,7 @@ namespace RentalCheckIn.Data.Migrations
                     b.Property<DateTime?>("ResetTokenExpires")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<string>("TOTPSecret")
+                    b.Property<string>("TotpSecret")
                         .IsRequired()
                         .HasColumnType("longtext");
 
@@ -303,18 +287,16 @@ namespace RentalCheckIn.Data.Migrations
                     b.HasKey("HostId")
                         .HasName("PRIMARY");
 
-                    b.HasIndex("AuthenticatorId");
-
                     b.ToTable("lhost", (string)null);
                 });
 
             modelBuilder.Entity("RentalCheckIn.Entities.LHostCredential", b =>
                 {
-                    b.Property<uint>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int unsigned");
+                        .HasColumnType("int");
 
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<uint>("Id"));
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("AuthenticatorType")
                         .HasColumnType("longtext");
@@ -454,11 +436,11 @@ namespace RentalCheckIn.Data.Migrations
 
             modelBuilder.Entity("RentalCheckIn.Entities.RefreshToken", b =>
                 {
-                    b.Property<uint>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int unsigned");
+                        .HasColumnType("int");
 
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<uint>("Id"));
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("Created")
                         .HasColumnType("datetime(6)");
@@ -600,11 +582,11 @@ namespace RentalCheckIn.Data.Migrations
 
             modelBuilder.Entity("RentalCheckIn.Entities.ReservationTranslation", b =>
                 {
-                    b.Property<uint>("ReservationTranslationId")
+                    b.Property<int>("ReservationTranslationId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int unsigned");
+                        .HasColumnType("int");
 
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<uint>("ReservationTranslationId"));
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("ReservationTranslationId"));
 
                     b.Property<string>("CheckInTime")
                         .HasMaxLength(50)
@@ -685,11 +667,11 @@ namespace RentalCheckIn.Data.Migrations
 
             modelBuilder.Entity("RentalCheckIn.Entities.StatusTranslation", b =>
                 {
-                    b.Property<uint>("StatusTranslationId")
+                    b.Property<int>("StatusTranslationId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int unsigned");
+                        .HasColumnType("int");
 
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<uint>("StatusTranslationId"));
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("StatusTranslationId"));
 
                     b.Property<uint>("LanguageId")
                         .HasColumnType("int unsigned");
@@ -729,17 +711,6 @@ namespace RentalCheckIn.Data.Migrations
                     b.Navigation("Apartment");
 
                     b.Navigation("Language");
-                });
-
-            modelBuilder.Entity("RentalCheckIn.Entities.LHost", b =>
-                {
-                    b.HasOne("RentalCheckIn.Entities.Authenticator", "Authenticator")
-                        .WithMany("LHosts")
-                        .HasForeignKey("AuthenticatorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Authenticator");
                 });
 
             modelBuilder.Entity("RentalCheckIn.Entities.LHostCredential", b =>
@@ -875,11 +846,6 @@ namespace RentalCheckIn.Data.Migrations
                     b.Navigation("ApartmentTranslations");
 
                     b.Navigation("Reservations");
-                });
-
-            modelBuilder.Entity("RentalCheckIn.Entities.Authenticator", b =>
-                {
-                    b.Navigation("LHosts");
                 });
 
             modelBuilder.Entity("RentalCheckIn.Entities.Channel", b =>

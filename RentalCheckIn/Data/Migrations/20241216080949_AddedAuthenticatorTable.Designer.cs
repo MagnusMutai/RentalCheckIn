@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RentalCheckIn.Data;
 
@@ -11,9 +12,11 @@ using RentalCheckIn.Data;
 namespace RentalCheckIn.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241216080949_AddedAuthenticatorTable")]
+    partial class AddedAuthenticatorTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -227,6 +230,10 @@ namespace RentalCheckIn.Data.Migrations
                     b.Property<uint>("AuthenticatorId")
                         .HasColumnType("int unsigned");
 
+                    b.Property<string>("AuthenticatorType")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
                     b.Property<DateTime>("CreationDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp")
@@ -285,7 +292,7 @@ namespace RentalCheckIn.Data.Migrations
                     b.Property<DateTime?>("ResetTokenExpires")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<string>("TOTPSecret")
+                    b.Property<string>("TotpSecret")
                         .IsRequired()
                         .HasColumnType("longtext");
 
