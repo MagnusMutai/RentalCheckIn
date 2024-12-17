@@ -1,5 +1,4 @@
 ﻿using System.Net.Http.Headers;
-
 namespace RentalCheckIn.Services.Core;
 
 public class CustomAuthStateProvider : AuthenticationStateProvider
@@ -13,19 +12,11 @@ public class CustomAuthStateProvider : AuthenticationStateProvider
         this.logger = logger;
     }
 
-    // We have repetition here
     public override Task<AuthenticationState> GetAuthenticationStateAsync()
     {
         var state = BuildAuthenticationState(Constants.JWTToken);
         NotifyAuthenticationStateChanged(Task.FromResult(state));
         return Task.FromResult(state);
-    }
-
-    public AuthenticationState NotifyUserAuthentication(string token)
-    {
-        var state = BuildAuthenticationState(token);
-        NotifyAuthenticationStateChanged(Task.FromResult(state));
-        return state;
     }
 
     public void NotifyUserLogout()
@@ -38,18 +29,14 @@ public class CustomAuthStateProvider : AuthenticationStateProvider
     {
         var identity = new ClaimsIdentity();
         httpClient.DefaultRequestHeaders.Authorization = null;
-
+        // We could use Two ternary operators here. Consider the justification.
         try
         {
-            if (!string.IsNullOrEmpty(token))
+            if (!string.IsNullOrEmpty(token) && !JWTUtils.IsTokenExpired(token))
             {
-                var tokenExpired = Extensions.IsTokenExpired(token);
-                if (!tokenExpired)
-                {
-                    identity = new ClaimsIdentity(ParseClaimsFromJwt(token), "jwt");
-                    httpClient.DefaultRequestHeaders.Authorization =
-                        new AuthenticationHeaderValue("Bearer", token.Replace("\"", ""));
-                }
+                identity = new ClaimsIdentity(ParseClaimsFromJwt(token), "jwt");
+                httpClient.DefaultRequestHeaders.Authorization =
+                    new AuthenticationHeaderValue("Bearer", token.Replace("\"", ""));
             }
         }
         catch (Exception ex)
@@ -57,8 +44,7 @@ public class CustomAuthStateProvider : AuthenticationStateProvider
             logger.LogError(ex, "An unexpected error occurred in CustomAuthStateProvider while trying to process the authentication state.");
         }
 
-        var user = new ClaimsPrincipal(identity);
-        return new AuthenticationState(user);
+        return new AuthenticationState(new ClaimsPrincipal(identity));
     }
 
     public static IEnumerable<Claim> ParseClaimsFromJwt(string jwt)
@@ -66,6 +52,7 @@ public class CustomAuthStateProvider : AuthenticationStateProvider
         var payload = jwt.Split('.')[1];
         var jsonBytes = ParseBase64WithoutPadding(payload);
         var keyValuePairs = JsonSerializer.Deserialize<Dictionary<string, object>>(jsonBytes);
+     
         return keyValuePairs.Select(kvp => new Claim(kvp.Key, kvp.Value.ToString()));
     }
 

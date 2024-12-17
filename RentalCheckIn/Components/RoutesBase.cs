@@ -23,7 +23,7 @@ public class RoutesBase : ComponentBase, IAsyncDisposable
     protected override void OnInitialized()
     {
         // Set the culture for use in the service classes
-        CultureUtility.CurCulture = CultureInfo.CurrentCulture;
+        CultureUtils.CurCulture = CultureInfo.CurrentCulture;
 
         if (AuthStateProvider != null)
         {
@@ -64,7 +64,7 @@ public class RoutesBase : ComponentBase, IAsyncDisposable
                     // Notify the authentication state provider
                     if (AuthStateProvider is CustomAuthStateProvider customAuthStateProvider)
                     {
-                        customAuthStateProvider.NotifyUserAuthentication(Constants.JWTToken);
+                        await customAuthStateProvider.GetAuthenticationStateAsync();
 
                         if (Constants.JWTToken != null)
                         {
@@ -139,7 +139,7 @@ public class RoutesBase : ComponentBase, IAsyncDisposable
                     // Notify the authentication state provider
                     if (AuthStateProvider is CustomAuthStateProvider customAuthStateProvider)
                     {
-                        customAuthStateProvider.NotifyUserAuthentication(Constants.JWTToken);
+                        await customAuthStateProvider.GetAuthenticationStateAsync();
                     }
                 }
             }
