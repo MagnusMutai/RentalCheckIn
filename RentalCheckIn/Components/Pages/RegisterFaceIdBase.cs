@@ -5,10 +5,10 @@ using RentalCheckIn.Locales;
 namespace RentalCheckIn.Components.Pages;
 public class RegisterFaceIdBase : ComponentBase
 {
-    protected string? message;
-    protected bool isRegistering;
-    private bool isRegisteringOnce;
-    protected bool shouldDisplayRegButton;
+    protected string? Message { get; set; }
+    protected bool IsRegistering { get; set; }
+    private bool IsRegisteredOnce { get; set; }
+    protected bool ShouldDisplayRegButton { get; set; }
 
 
     [Inject]
@@ -28,9 +28,9 @@ public class RegisterFaceIdBase : ComponentBase
 
     protected override async Task OnInitializedAsync()
     {
-        if (!isRegisteringOnce)
+        if (!IsRegisteredOnce)
         {
-            isRegisteringOnce = true;
+            IsRegisteredOnce = true;
             await HandleRegisterFaceId();
         }
     }
@@ -39,19 +39,19 @@ public class RegisterFaceIdBase : ComponentBase
     {
         try
         {
-            isRegistering = true;
-            message = string.Empty;
+            IsRegistering = true;
+            Message = string.Empty;
             var result = await AuthService.RegisterFaceIdAsync(HostId);
             RegistrationResult = result;
-            message = result.Message;
+            Message = result.Message;
 
             await OnRegistrationComplete.InvokeAsync(result);
 
-            shouldDisplayRegButton = !RegistrationResult.IsSuccess;
+            ShouldDisplayRegButton = !RegistrationResult.IsSuccess;
         }
         catch(Exception ex)
         {
-            message = Localizer["FaceID.Registration.UnexpectedError"];
+            Message = Localizer["FaceID.Registration.UnexpectedError"];
             RegistrationResult = new OperationResult
             {
                 IsSuccess = false,
@@ -64,7 +64,7 @@ public class RegisterFaceIdBase : ComponentBase
         }
         finally
         {
-            isRegistering = false;
+            IsRegistering = false;
         }
     }
 }

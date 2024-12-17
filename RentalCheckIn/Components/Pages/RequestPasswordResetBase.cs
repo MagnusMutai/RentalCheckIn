@@ -5,10 +5,9 @@ namespace RentalCheckIn.Components.Pages;
 
 public class RequestPasswordResetBase : ComponentBase
 {
-    protected ResetRequestDTO resetModel = new ResetRequestDTO();
-    protected bool isEmailSent = false;
-    protected string? Message;
-    protected bool IsRegistering;
+    protected ResetRequestDTO ResetModel { get; set; } = new ResetRequestDTO();
+    protected string? Message { get; set; }
+    protected bool IsRegistering { get; set; }
     public string? DisplayToast { get; set; } = "d-block";
     public string BackGroundColor { get; set; } = "bg-success";
 
@@ -25,7 +24,7 @@ public class RequestPasswordResetBase : ComponentBase
         try
         {
             IsRegistering = true;
-            var result = await AuthService.ForgotPasswordAsync(resetModel);
+            var result = await AuthService.ForgotPasswordAsync(ResetModel);
 
             // In other similar pages remember to go back and check null first.
             if (result != null)

@@ -5,9 +5,9 @@ namespace RentalCheckIn.Components.Pages;
 
 public class VerifyTOTPBase : ComponentBase
 {
-    protected TOTPDTO oTPModel = new();
-    protected string? ErrorMessage;
-    protected bool IsRegistering;
+    protected TOTPDTO OTPModel { get; set; } = new();
+    protected string? ErrorMessage { get; set; }
+    protected bool IsRegistering { get; set; }
     public string? DisplayToast { get; set; } = "d-block";
 
     [Inject]
@@ -16,7 +16,6 @@ public class VerifyTOTPBase : ComponentBase
     protected IJWTService JWTService { get; set; }
     [Inject]
     protected NavigationManager NavigationManager { get; set; }
-
     [Inject]
     protected ProtectedLocalStorage LocalStorage { get; set; }
     [Inject]
@@ -37,9 +36,9 @@ public class VerifyTOTPBase : ComponentBase
 
             if (result.Success)
             {
-                oTPModel.Email = result.Value;
+                OTPModel.Email = result.Value;
             }
-            if (string.IsNullOrEmpty(oTPModel.Email))
+            if (string.IsNullOrEmpty(OTPModel.Email))
             {
                 NavigationManager.NavigateTo("/login");
             }
@@ -55,7 +54,7 @@ public class VerifyTOTPBase : ComponentBase
         IsRegistering = true;
         try
         {
-            var result = await AuthService.VerifyTOTPAsync(oTPModel);
+            var result = await AuthService.VerifyTOTPAsync(OTPModel);
            
             if (result.IsSuccess)
             {

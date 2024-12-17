@@ -4,11 +4,11 @@ namespace RentalCheckIn.Components;
 
 public class RoutesBase : ComponentBase, IAsyncDisposable
 {
-    private bool isTokenRefreshed;
-    private bool isDisposed;
-    private bool isRefreshing = false;
-    private PeriodicTimer? timer;
-    private CancellationTokenSource? cts;
+    private bool IsTokenRefreshed { get; set; }
+    private bool IsDisposed { get; set; }
+    private bool IsRefreshing { get; set; }
+    private PeriodicTimer? Timer { get; set; }
+    private CancellationTokenSource? Cts { get; set; }
     [Inject]
     private AuthenticationStateProvider AuthStateProvider { get; set; }
     [Inject]
@@ -47,9 +47,9 @@ public class RoutesBase : ComponentBase, IAsyncDisposable
         {
             if (firstRender)
             {
-                if (!isDisposed && !isTokenRefreshed)
+                if (!IsDisposed && !IsTokenRefreshed)
                 {
-                    isTokenRefreshed = true;
+                    IsTokenRefreshed = true;
                     await StartRefreshTokenAsync();
                 }
 
@@ -80,7 +80,7 @@ public class RoutesBase : ComponentBase, IAsyncDisposable
         }
         catch(Exception ex)
         {
-            Logger.LogError(ex, "An unexpected errror occurred while trying to refresh JWT tokens in Routes Component. FirstRender: {firstRender}, isTokenRefreshed: {isTokenRefreshed}", firstRender, isTokenRefreshed);
+            Logger.LogError(ex, "An unexpected errror occurred while trying to refresh JWT tokens in Routes Component. FirstRender: {firstRender}, IsTokenRefreshed: {IsTokenRefreshed}", firstRender, IsTokenRefreshed);
         }
     }
 
@@ -110,10 +110,10 @@ public class RoutesBase : ComponentBase, IAsyncDisposable
 
     private async Task StartRefreshTokenAsync()
     {
-        if (isRefreshing)
+        if (IsRefreshing)
             return;
 
-        isRefreshing = true;
+        IsRefreshing = true;
 
         try
         {
@@ -123,10 +123,10 @@ public class RoutesBase : ComponentBase, IAsyncDisposable
                 return;
             }
 
-            cts = new CancellationTokenSource();
-            timer = new PeriodicTimer(TimeSpan.FromMinutes(15));
+            Cts = new CancellationTokenSource();
+            Timer = new PeriodicTimer(TimeSpan.FromMinutes(15));
 
-            while (await timer.WaitForNextTickAsync(cts.Token))
+            while (await Timer.WaitForNextTickAsync(Cts.Token))
             {
 
                 var response = await AuthService.RefreshTokenAsync();
@@ -154,17 +154,17 @@ public class RoutesBase : ComponentBase, IAsyncDisposable
         }
         finally
         {
-            isRefreshing = false;
+            IsRefreshing = false;
         }
     }
 
     private void StopRefreshToken()
     {
-        isDisposed = true;
+        IsDisposed = true;
 
         try
         {
-            cts?.Cancel();
+            Cts?.Cancel();
         }
         catch (Exception ex)
         {
@@ -173,20 +173,20 @@ public class RoutesBase : ComponentBase, IAsyncDisposable
 
         try
         {
-            timer?.Dispose();
+            Timer?.Dispose();
         }
         catch (Exception ex) 
         {
             Logger.LogError(ex, "Failed to dispose the timer in StopRefreshToken.");
         }
 
-        isRefreshing = false;
+        IsRefreshing = false;
     }
 
 
     public async ValueTask DisposeAsync()
     {
-        isDisposed = true;
+        IsDisposed = true;
         try
         {
             AuthStateProvider.AuthenticationStateChanged -= async (task) => await OnAuthenticationStateChanged(task);
@@ -195,11 +195,11 @@ public class RoutesBase : ComponentBase, IAsyncDisposable
         {
             Logger.LogError(ex, "Failed to unsubscribe from AuthenticationStateChanged in DisposeAsync in Routes component.");
         }
-        if (cts != null)
+        if (Cts != null)
         {
             try
             {
-                await cts.CancelAsync();
+                await Cts.CancelAsync();
             }
             catch (Exception ex)
             {
@@ -207,25 +207,25 @@ public class RoutesBase : ComponentBase, IAsyncDisposable
             }
             try
             {
-                cts.Dispose();
+                Cts.Dispose();
             }
             catch (Exception ex)
             {
                 Logger.LogError(ex, "Failed to dispose the CancellationTokenSource in DisposeAsync in Routes component.");
             }
-            cts = null;
+            Cts = null;
         }
-        if (timer != null)
+        if (Timer != null)
         {
             try
             {
-                timer.Dispose();
+                Timer.Dispose();
             }
             catch (Exception ex)
             {
                 Logger.LogError(ex, "Failed to dispose the timer in DisposeAsync in Routes component.");
             }
-            timer = null;
+            Timer = null;
         }
     }
 }

@@ -6,9 +6,9 @@ namespace RentalCheckIn.Components.Pages;
 
 public class LoginBase : ComponentBase
 {
-    protected HostLoginDTO loginModel = new();
-    protected string? ErrorMessage;
-    protected bool IsRegistering;
+    protected HostLoginDTO LoginModel { get; set; } = new();
+    protected string? ErrorMessage { get; set; }
+    protected bool IsRegistering { get; set; }
     protected string? DisplayToast { get; set; } = "d-block";
     [Inject]
     private ProtectedLocalStorage LocalStorage { get; set; }
@@ -50,7 +50,7 @@ public class LoginBase : ComponentBase
         {
             IsRegistering = true;
     
-            var result = await AuthService.LoginAsync(loginModel);
+            var result = await AuthService.LoginAsync(LoginModel);
             
             if (result.IsSuccess)
             {

@@ -6,9 +6,9 @@ namespace RentalCheckIn.Components.Pages;
 
 public class VerifyFaceIdBase : ComponentBase
 {
-    protected string? ErrorMessage;
-    protected bool IsAuthenticating;
-    protected bool shouldDisplayAuthButton;
+    protected string? ErrorMessage { get; set; }
+    protected bool IsAuthenticating { get; set; }
+    protected bool ShouldDisplayRetryButton { get; set; }
 
     protected string? DisplayToast { get; set; } = "d-block";
     [Inject]
@@ -37,12 +37,12 @@ public class VerifyFaceIdBase : ComponentBase
 
             if (result.IsSuccess)
             {
-                shouldDisplayAuthButton = false;
+                ShouldDisplayRetryButton  = false;
                 await LocalStorage.DeleteAsync("UserIdFor2FA");
             }
             else 
             {
-                shouldDisplayAuthButton = true;
+                ShouldDisplayRetryButton  = true;
                 ErrorMessage = result.Message;
             }
         }

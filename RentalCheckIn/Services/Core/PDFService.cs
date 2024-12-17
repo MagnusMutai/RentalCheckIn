@@ -15,7 +15,7 @@ public class PDFService : IPDFService
         this.logger = logger;
     }
 
-    public MemoryStream FillCheckInFormAsync(CheckInReservationDTO model, string culture)
+    public async Task<MemoryStream> FillCheckInFormAsync(CheckInReservationDTO model, string culture)
     {
         var template = culture switch
         {

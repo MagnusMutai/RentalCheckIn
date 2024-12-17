@@ -8,16 +8,14 @@ using System.Globalization;
 namespace RentalCheckIn.Components.Shared;
 public class CheckInBase : ComponentBase
 {
-    protected bool displaySignaturePad;
-    protected string? signatureValidationError;
-    protected string? displaySecretDepositValue;
-    protected bool IsCheckingIn;
-    protected bool checkAll;
+    protected bool ShouldDisplaySignaturePad { get; set; }
+    protected string? SignatureValidationError { get; set; }
+    protected bool IsCheckingIn {  get; set; }
     protected string? ModalMessage { get; set; }
     protected bool IsSuccessModal { get; set; }
-    protected bool IsModalOpen { get; set; } 
-    private static Color strokeColor = Color.FromArgb(0, 77, 230);
-    protected CheckInReservationDTO checkInModel = new CheckInReservationDTO();
+    protected bool IsModalOpen { get; set; }
+    private static Color StrokeColor { get; set; } = Color.FromArgb(0, 77, 230);
+    protected CheckInReservationDTO CheckInModel { get; set; } = new CheckInReservationDTO();
 
     [Parameter]
     public int Id { get; set; }
@@ -26,7 +24,7 @@ public class CheckInBase : ComponentBase
     [Inject]
     private IReservationService ReservationService { get; set; }
     [Inject]
-    private IDocumentService DocumentService{ get; set; }
+    private IDocumentService DocumentService { get; set; }
     [Inject]
     private AuthenticationStateProvider AuthStateProvider { get; set; }
     [Inject]
@@ -40,23 +38,23 @@ public class CheckInBase : ComponentBase
     {
         get
         {
-            return string.IsNullOrEmpty(checkInModel.SignatureDataUrl)
+            return string.IsNullOrEmpty(CheckInModel.SignatureDataUrl)
                 ? null
-                : Convert.FromBase64String(checkInModel.SignatureDataUrl.Split(',')[1]); // Strip "data:image/png;base64,"
+                : Convert.FromBase64String(CheckInModel.SignatureDataUrl.Split(',')[1]); // Strip "data:image/png;base64,"
         }
         set
         {
-            checkInModel.SignatureDataUrl = value == null
+            CheckInModel.SignatureDataUrl = value == null
                 ? null
                 : "data:image/png;base64," + Convert.ToBase64String(value);
         }
     }
 
-    protected DateTime CheckedInAt 
+    protected DateTime CheckedInAt
     {
         get
         {
-            return checkInModel.CheckedInAt ?? DateTime.UtcNow;
+            return CheckInModel.CheckedInAt ?? DateTime.UtcNow;
         }
     }
 
@@ -66,14 +64,14 @@ public class CheckInBase : ComponentBase
         try
         {
             var reservationData = await ReservationService.GetCheckInReservationByIdAsync((uint)Id);
-            
+
             if (reservationData != null)
             {
-                checkInModel = reservationData;
+                CheckInModel = reservationData;
             }
 
         }
-        catch (Exception ex) 
+        catch (Exception ex)
         {
             Logger.LogError(ex, "An unexpected error occurred while trying to load check-In reservation data on OnInitializedAsync.");
         }
@@ -95,11 +93,11 @@ public class CheckInBase : ComponentBase
                 {
                     // User is authenticated, retrieve claims
                     var hostIdClaim = authState.User.FindFirst("nameid");
-                  
+
                     if (hostIdClaim != null && uint.TryParse(hostIdClaim.Value, out uint hostId))
                     {
                         // Assign the HostId to your model
-                        checkInModel.LHostId = hostId;
+                        CheckInModel.LHostId = hostId;
                     }
                 }
                 else
@@ -110,7 +108,7 @@ public class CheckInBase : ComponentBase
             }
 
             // Check the partial display issues even with this configuration specified
-            displaySignaturePad = true;
+            ShouldDisplaySignaturePad = true;
 
         }
         catch (Exception ex)
@@ -124,7 +122,7 @@ public class CheckInBase : ComponentBase
 
     protected async Task HandleValidSubmit()
     {
-        IsCheckingIn = true; 
+        IsCheckingIn = true;
 
         try
         {
@@ -152,42 +150,42 @@ public class CheckInBase : ComponentBase
         // Check custom field
         if (SignatureBytes == null || SignatureBytes.Length == 0)
         {
-            signatureValidationError = Localizer["Signature.Required"];
+            SignatureValidationError = Localizer["Signature.Required"];
             return false;
         }
         else
         {
-            signatureValidationError = null;
+            SignatureValidationError = null;
             return true;
         }
     }
 
     protected void OnDateChanged(ChangeEventArgs e)
     {
-        if (checkInModel.CheckInDate != default && checkInModel.CheckOutDate != default)
+        if (CheckInModel.CheckInDate != default && CheckInModel.CheckOutDate != default)
         {
             // Convert DateOnly to DateTime for subtraction
-            var checkInDateTime = checkInModel.CheckInDate.ToDateTime(TimeOnly.MinValue);
-            var checkOutDateTime = checkInModel.CheckOutDate.ToDateTime(TimeOnly.MinValue);
-            checkInModel.NumberOfNights = (checkOutDateTime - checkInDateTime).Days;
+            var checkInDateTime = CheckInModel.CheckInDate.ToDateTime(TimeOnly.MinValue);
+            var checkOutDateTime = CheckInModel.CheckOutDate.ToDateTime(TimeOnly.MinValue);
+            CheckInModel.NumberOfNights = (checkOutDateTime - checkInDateTime).Days;
         }
     }
 
     // Keep it DRY by passing a string literal for identification
     protected void OnFeeChanged(decimal newValue)
     {
-        checkInModel.ApartmentFee = newValue;
+        CheckInModel.ApartmentFee = newValue;
         CalculateTotalPrice();
     }
     protected void OnDepositChanged(decimal newValue)
     {
-        checkInModel.SecurityDeposit = newValue;
+        CheckInModel.SecurityDeposit = newValue;
         CalculateTotalPrice();
     }
 
     private void CalculateTotalPrice()
     {
-        checkInModel.TotalPrice = checkInModel.ApartmentFee + checkInModel.SecurityDeposit;
+        CheckInModel.TotalPrice = CheckInModel.ApartmentFee + CheckInModel.SecurityDeposit;
         StateHasChanged();
     }
 
@@ -195,10 +193,10 @@ public class CheckInBase : ComponentBase
     {
         try
         {
-           var isSaved = await ReservationService.UpdateCheckInFormReservationAsync(checkInModel);
+            var isSaved = await ReservationService.UpdateCheckInFormReservationAsync(CheckInModel);
             // Implement Result pattern to get more relevant and specific responses from the server.
         }
-        catch (Exception ex) 
+        catch (Exception ex)
         {
             Logger.LogError(ex, "An unexpected error occurred while trying to update the user check-In information in CheckIn component.");
         }
@@ -211,8 +209,8 @@ public class CheckInBase : ComponentBase
         // PDF generation and sharing
         try
         {
-            var result = await DocumentService.GenerateAndSendCheckInFormAsync(checkInModel, culture);
-          
+            var result = await DocumentService.GenerateAndSendCheckInFormAsync(CheckInModel, culture);
+
             if (result.IsSuccess)
             {
                 ModalMessage = "Check-In form succesfully sent to customer by email.";
@@ -234,13 +232,13 @@ public class CheckInBase : ComponentBase
             Logger.LogError(ex, "An unexpected error occurred while trying to merge form data to the document template in CheckIn component.");
         }
     }
-    
+
     protected SignaturePadOptions _options = new SignaturePadOptions
     {
         LineCap = LineCap.Round,
         LineJoin = LineJoin.Round,
         LineWidth = 2,
-        StrokeStyle = strokeColor
+        StrokeStyle = StrokeColor
     };
 
     protected void HandleModalClose()
