@@ -1,10 +1,10 @@
 ﻿namespace RentalCheckIn.Services.UI;
 
-public class LHostService : ILHostService
+public class LHostUIService : ILHostUIService
 {
     private readonly HttpClient httpClient;
 
-    public LHostService(HttpClient httpClient)
+    public LHostUIService(HttpClient httpClient)
     {
         this.httpClient = httpClient;
     }
