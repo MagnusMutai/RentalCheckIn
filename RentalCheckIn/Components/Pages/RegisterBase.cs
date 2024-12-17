@@ -29,6 +29,7 @@ public class RegisterBase : ComponentBase
     private ILogger<RegisterBase> Logger { get; set; }
     [Inject]
     protected IStringLocalizer<Resource> Localizer { get; set;}
+
     protected override async Task OnInitializedAsync()
     {
         // Get the current authentication state
