@@ -77,7 +77,7 @@ public class RefreshTokenService
             }
 
             // Check if the access token is valid
-            if (!string.IsNullOrEmpty(accessToken) && !Extensions.IsTokenAlmostExpired(accessToken))
+            if (!string.IsNullOrEmpty(accessToken) && !JWTUtils.IsTokenAlmostExpired(accessToken, TimeSpan.FromMinutes(15)))
             {
                 // Access token is valid, no need to refresh
                 Constants.JWTToken = accessToken;
