@@ -1,4 +1,6 @@
 ﻿namespace RentalCheckIn.DTOs;
+
+using RentalCheckIn.Enums;
 using RentalCheckIn.Locales;
 
 [MetadataType(typeof(Resource))]
@@ -23,9 +25,10 @@ public class HostSignUpDTO
     [DataType(DataType.Password)]
     [Compare("Password", ErrorMessageResourceName = "ConfirmPasswordCompareError", ErrorMessageResourceType = typeof(Resource))]
     public string ConfirmPassword { get; set; } = string.Empty;
+    // Change DataAnnotations to AuthenticatorType
 
     [Required(ErrorMessageResourceName = "Selected2FARequired", ErrorMessageResourceType = typeof(Resource))]
-    [RegularExpression("^(TOTP|FaceID)$", ErrorMessageResourceName = "Selected2FARegexError", ErrorMessageResourceType = typeof(Resource))]
-    public string Selected2FA { get; set; } = string.Empty;
+    [EnumDataType(typeof(AuthenticatorType), ErrorMessageResourceName = "Selected2FARegexError", ErrorMessageResourceType = typeof(Resource))]
+    public AuthenticatorType AuthenticatorId { get; set; }
 
 }
