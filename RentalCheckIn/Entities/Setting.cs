@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace RentalCheckIn.Entities;
+﻿namespace RentalCheckIn.Entities;
 
 public partial class Setting
 {

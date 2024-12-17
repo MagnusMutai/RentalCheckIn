@@ -9,7 +9,6 @@ public partial class Language
     public bool IsEnabled { get; set; }
     public string Svg { get; set; } = default!;
     public DateTime CreationDate { get; set; }
-
     public virtual ICollection<Quest> Quests { get; set; } = new List<Quest>();
     public virtual ICollection<ApartmentTranslation> ApartmentTranslations { get; set; } = new List<ApartmentTranslation>();
     public virtual ICollection<StatusTranslation> StatusTranslations { get; set; } = new List<StatusTranslation>();
