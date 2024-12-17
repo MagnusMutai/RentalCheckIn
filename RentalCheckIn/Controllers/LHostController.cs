@@ -4,13 +4,13 @@
 [ApiController]
 public class LHostController : ControllerBase
 {
-    private readonly ILHostRepository lHostRepository;
+    private readonly ILHostService lHostService;
     private readonly ILogger<LHostController> logger;
 
     // Change to use a service don't call the repository directly. 
-    public LHostController(ILHostRepository lHostRepository, ILogger<LHostController> logger) 
+    public LHostController(ILHostService lHostService, ILogger<LHostController> logger) 
     {
-        this.lHostRepository = lHostRepository;
+        this.lHostService = lHostService;
         this.logger = logger;
     }
 
@@ -19,7 +19,7 @@ public class LHostController : ControllerBase
     {
         try
         {
-            var lHost = await this.lHostRepository.GetLHostByEmailAsync(email);
+            var lHost = await lHostService.GetLHostByEmailAsync(email);
 
             if (lHost == null)
             {
@@ -42,7 +42,7 @@ public class LHostController : ControllerBase
     {
         try
         {
-            var lHost = await this.lHostRepository.GetLHostByIdAsync(id);
+            var lHost = await lHostService.GetLHostByIdAsync(id);
 
             if (lHost == null)
             {

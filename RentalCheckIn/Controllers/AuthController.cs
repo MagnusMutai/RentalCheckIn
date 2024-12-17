@@ -23,7 +23,7 @@ public class AuthController : ControllerBase
     }
     // Standard JWT Authentication
     [HttpPost("login")]
-    public async Task<ActionResult<OperationResult<LHost>>> Login(HostLoginDTO request)
+    public async Task<ActionResult<OperationResult<HostLoginResponseDTO>>> Login(HostLoginDTO request)
     {
         try
         {
