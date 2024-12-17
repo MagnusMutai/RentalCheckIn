@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Localization;
+using RentalCheckIn.Enums;
 using RentalCheckIn.Locales;
 namespace RentalCheckIn.Components.Pages;
 
@@ -56,13 +57,13 @@ public class LoginBase : ComponentBase
                 var lHost = result.Data;
 
                 // Redirect based on the selected 2FA method
-                if (lHost.Selected2FA.Equals("TOTP", StringComparison.OrdinalIgnoreCase))
+                if (lHost.AuthenticatorId == (uint)AuthenticatorType.TOTP)
                 {
                     // Store email for OTP verification
                     await LocalStorage.SetAsync("emailForTOTP", lHost.MailAddress);
                     NavigationManager.NavigateTo("/verify-otp");
                 }
-                else if (lHost.Selected2FA.Equals("FaceID", StringComparison.OrdinalIgnoreCase))
+                else if (lHost.AuthenticatorId == (uint)AuthenticatorType.FACEID)
                 {
                     // Store necessary user ID temporarily for 2FA
                     await LocalStorage.SetAsync("UserIdFor2FA", lHost.HostId);
