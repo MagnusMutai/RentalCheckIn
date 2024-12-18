@@ -1,10 +1,12 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Localization;
+using Microsoft.JSInterop;
 using RentalCheckIn.Locales;
 using System.Globalization;
 namespace RentalCheckIn.Components.Pages;
-public class HomeBase : ComponentBase
+public class HomeBase : ComponentBase, IAsyncDisposable
 {
+    private IJSObjectReference? module;
     protected uint CurrentPage { get; set; } = 1;
     protected uint ItemsPerPage { get; set; }
     protected string? Message { get; set; }
@@ -22,13 +24,17 @@ public class HomeBase : ComponentBase
     [Inject]
     private ProtectedLocalStorage LocalStorage { get; set; }
     [Inject]
-    private IReservationService ReservationService { get; set; }
+    private IReservationUIService ReservationService { get; set; }
     [Inject]
     private ILocalizationUIService LocalizationUIService { get; set; }
     [Inject]
     private ILogger<HomeBase> Logger { get; set; }
     [Inject]
     protected IStringLocalizer<Resource> Localizer { get; set; }
+    [Inject]
+    private IJSRuntime JSRuntime { get; set; }
+    [Inject]
+    private IDocumentUIService DocumentUIService { get; set; }
     // Computes the total number of pages based on filtered reservations.
     protected uint TotalPages
     {
@@ -55,6 +61,7 @@ public class HomeBase : ComponentBase
             }
         }
     }
+
     // Retrieves the reservations for the current page after applying the filter.
     protected IEnumerable<ReservationDTO> PaginatedReservations => FilteredReservations
         .Skip((int)((CurrentPage - 1) * ItemsPerPage))
@@ -103,7 +110,16 @@ public class HomeBase : ComponentBase
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         try
-        {   // Must we always OnAfterender Query the local storage? Or should we check the authentication state before make unnecessary queries?
+        {  
+            // Use JS modules
+            // Load JS module from a collocated JS file.
+            if (firstRender)
+            {
+                module = await JSRuntime.InvokeAsync<IJSObjectReference>("import",
+                    "./Components/Pages/Home.razor.js");
+            }            
+
+            // Must we always OnAfterender Query the local storage? Or should we check the authentication state before make unnecessary queries?
             // Get the accessToken if it exists
             var response = await LocalStorage.GetAsync<string>("token");
             Constants.JWTToken = response.Success ? response.Value : "";
@@ -114,12 +130,12 @@ public class HomeBase : ComponentBase
 
                 if (authState.User.Identity is { IsAuthenticated: false })
                 {
-                    // User is not authenticated; redirect to login
+                    // User is not authenticated; redirect to login.
                     NavigationManager.NavigateTo("/login", forceLoad: false);
                 }
             }
 
-            // Update default value with localized text
+            // Update default value with localized text.
             if (SelectedApartment == "All" && Localizer != null)
             {
                 SelectedApartment = Localizer["All"];
@@ -128,7 +144,7 @@ public class HomeBase : ComponentBase
         catch (Exception ex)
         {
             Message = Localizer["UnexpectedErrorOccurred"];
-            Logger.LogError(ex, "An unexpected error occurred either while trying to authenticate a user or assigning localized apartment names on Reservation page.");
+            Logger.LogError(ex, "An unexpected error occurred while trying to authenticate a user, assigning modules to IJSObjectReferences or assigning localized apartment names on Reservation page.");
         }
     }
 
@@ -136,14 +152,14 @@ public class HomeBase : ComponentBase
     {
         try
         {
-            // Fetch localized apartment names and status labels
+            // Fetch localized apartment names and status labels.
             var apartmentIds = Reservations.Select(r => r.ApartmentId).Distinct();
             var statusIds = Reservations.Select(r => r.StatusId).Distinct();
             var culture = CultureInfo.CurrentCulture.Name;
             var apartmentNamesDict = await LocalizationUIService.GetApartmentNamesAsync(apartmentIds, culture);
             var statusLabelsDict = await LocalizationUIService.GetStatusLabelsAsync(statusIds, culture);
 
-            // Assign localized names to reservations
+            // Assign localized names to reservations.
             foreach (var reservation in Reservations)
             {
                 reservation.ApartmentName = apartmentNamesDict.ContainsKey(reservation.ApartmentId)
@@ -164,11 +180,9 @@ public class HomeBase : ComponentBase
         catch (Exception ex)
         {
             Message = Localizer["CouldNotLoadResources"];
-            Logger.LogError(ex, "An error occurred while loading localized data.");
+            Logger.LogError(ex, "An unexpected error occurred while loading localized data in HomeBase (LoadLocalizedDataAsync method).");
         }
     }
-
-
 
     protected void NextPage()
     {
@@ -215,5 +229,60 @@ public class HomeBase : ComponentBase
     {
         ShowModal = false;
         SelectedReservation = null;
+    }
+
+    protected async Task HandleDisplayDocument(uint reservationId)
+    {
+        try
+        {
+            var reservationData = await ReservationService.GetCheckInReservationByIdAsync(reservationId);
+           
+            if (reservationData == null)
+            {
+                Message = Localizer["Error.DocumentDisplay"];
+            }
+            else
+            {
+                var docRequest = new OperationRequest
+                {
+                    Culture = CultureInfo.CurrentCulture.Name,
+                    Model = reservationData
+                };
+
+                var pdfByteArray = await DocumentUIService.GenerateCheckInFormAsync(docRequest);
+                var pdfUri = $"data:application/pdf;base64,{Convert.ToBase64String(pdfByteArray?.Data)}";
+
+                if (module is not null)
+                {
+                    // Add localization data for the popup
+                    var enablePopupMessage = Localizer["Enable:Popup"].Value;
+                    await module.InvokeVoidAsync("initializeLocalizationData", new { EnablePopupMessage = enablePopupMessage });
+                    // Open the pdf document
+                    await module.InvokeVoidAsync("openPDFDocument", pdfUri, enablePopupMessage);
+                    //StateHasChanged();
+                }
+            }
+
+        }
+        catch(Exception ex)
+        {
+            Logger.LogError(ex, "An unexpected error occurred while displaying checkin pdf in HomeBase (HandleDisplayDocument method).");
+        }
+    }
+
+    async ValueTask IAsyncDisposable.DisposeAsync()
+    {
+        if (module is not null)
+        {
+            try
+            {
+                await module.DisposeAsync();
+            }
+            catch (JSDisconnectedException ex)
+            {
+                Logger.LogInformation(ex, "JavaScript runtime unexpectedly disconnected.");
+            }
+        }
+
     }
 }
