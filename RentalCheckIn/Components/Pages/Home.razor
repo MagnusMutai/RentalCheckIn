@@ -26,6 +26,7 @@
                         </select>
                     </div>
                 </div>
+
                 @if (PaginatedReservations != null)
                 {
                     <div class="table-responsive d-none d-lg-block">
@@ -119,7 +120,7 @@
                             <div class="modal-body">
                                 <div class="header row"></div>
                                 <h4 class="fw-bold ms-3">@Localizer["Guest.Details.Label"]</h4>
-                                <ReservationDetail SelectedReservation="SelectedReservation" />
+                                <ReservationDetail SelectedReservation="SelectedReservation" OnOpenCheckInDocument="HandleDisplayDocument" />
                             </div>
                         </divk>
                     </div>
