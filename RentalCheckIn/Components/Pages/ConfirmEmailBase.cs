@@ -14,7 +14,7 @@ public class ConfirmEmailBase : ComponentBase
     [Inject]
     private NavigationManager NavigationManager { get; set; }
     [Inject]
-    private IAuthService AuthService { get; set; }
+    private IAuthUIService AuthService { get; set; }
     [Inject]
     private ILogger<ConfirmEmailBase> Logger { get; set; }
     [Inject]

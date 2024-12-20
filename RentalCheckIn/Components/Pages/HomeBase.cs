@@ -249,8 +249,8 @@ public class HomeBase : ComponentBase, IAsyncDisposable
                     Model = reservationData
                 };
 
-                var pdfByteArray = await DocumentUIService.GenerateCheckInFormAsync(docRequest);
-                var pdfUri = $"data:application/pdf;base64,{Convert.ToBase64String(pdfByteArray?.Data)}";
+                OperationResult<byte[]> pdfOperationResult = await DocumentUIService.GenerateCheckInFormAsync(docRequest);
+                var pdfUri = $"data:application/pdf;base64,{Convert.ToBase64String(pdfOperationResult?.Data)}";
 
                 if (module is not null)
                 {
@@ -277,6 +277,7 @@ public class HomeBase : ComponentBase, IAsyncDisposable
             try
             {
                 await module.DisposeAsync();
+                module = null;
             }
             catch (JSDisconnectedException ex)
             {
