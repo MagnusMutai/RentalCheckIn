@@ -11,7 +11,7 @@
 
     .modal#statusSuccessModal .modal-content svg,
     .modal#statusErrorsModal .modal-content svg {
-        width: 100px;
+        width: 80px;
         display: block;
         margin: 0 auto;
     }
