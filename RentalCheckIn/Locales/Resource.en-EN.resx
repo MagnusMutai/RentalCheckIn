@@ -519,4 +519,42 @@
   <data name="Error.Unexpected.Response" xml:space="preserve">
     <value>The server did not respond as expected. Please try again later.</value>
   </data>
+  <data name="Error.DocumentDisplay" xml:space="preserve">
+    <value>Could not display the document. Please try again later.</value>
+  </data>
+  <data name="Enable:Popup" xml:space="preserve">
+    <value>Tip: Allow pop-ups for this site in your browser settings to display the Document.</value>
+  </data>
+  <data name="Error.Generate.Checkinform" xml:space="preserve">
+    <value>An error occurred while generating the check-in form. Please try again later.</value>
+  </data>
+  <data name="EmailSubject.CheckInForm" xml:space="preserve">
+    <value>Your Check-in Form</value>
+  </data>
+  <data name="EmailBody.CheckInForm" xml:space="preserve">
+    <value>&lt;data name="EmailCheckInForm" xml:space="preserve"&gt;
+  &lt;value&gt;Dear {0},&lt;br/&gt;&lt;br/&gt;Please find your check-in form attached.&lt;br/&gt;&lt;br/&gt;Thank you for choosing Snowy.&lt;/value&gt;
+&lt;/data&gt;</value>
+  </data>
+  <data name="Success.Emailed.CheckInForm" xml:space="preserve">
+    <value>Check-In form succesfully sent to customer by email.</value>
+  </data>
+  <data name="Error.UnableToSendCheckInForm" xml:space="preserve">
+    <value>Uexpected error has occurred. Unable to send check-In form to guest's email. Please try again later</value>
+  </data>
+  <data name="Success" xml:space="preserve">
+    <value>Success</value>
+  </data>
+  <data name="Error.Modal.Email.Document" xml:space="preserve">
+    <value>Error emailing document</value>
+  </data>
+  <data name="Meter" xml:space="preserve">
+    <value>Meter</value>
+  </data>
+  <data name="Back" xml:space="preserve">
+    <value>Back</value>
+  </data>
+  <data name="PDF.CheckIn" xml:space="preserve">
+    <value>pdf check-in</value>
+  </data>
 </root>

@@ -520,4 +520,47 @@
     <value>Le serveur n'a pas répondu comme prévu. Veuillez réessayer plus tard.
 </value>
   </data>
+  <data name="Error.DocumentDisplay" xml:space="preserve">
+    <value>Impossible d'afficher le document. Veuillez réessayer plus tard.</value>
+  </data>
+  <data name="Enable:Popup" xml:space="preserve">
+    <value>Astuce : Autorisez les pop-ups pour ce site dans les paramètres de votre navigateur afin d'afficher le document.
+</value>
+  </data>
+  <data name="Error.Generate.Checkinform" xml:space="preserve">
+    <value>Une erreur s'est produite lors de la génération du formulaire d'enregistrement. Veuillez réessayer plus tard.
+</value>
+  </data>
+  <data name="EmailSubject.CheckInForm" xml:space="preserve">
+    <value>Votre formulaire d'enregistrement</value>
+  </data>
+  <data name="EmailBody.CheckInForm" xml:space="preserve">
+    <value>&lt;data name="EmailCheckInForm" xml:space="preserve"&gt;
+  &lt;value&gt;Cher/Chère {0},&lt;br/&gt;&lt;br/&gt;Veuillez trouver votre formulaire d'enregistrement en pièce jointe.&lt;br/&gt;&lt;br/&gt;Merci d'avoir choisi Snowy.&lt;/value&gt;
+&lt;/data&gt;
+</value>
+  </data>
+  <data name="Success.Emailed.CheckInForm" xml:space="preserve">
+    <value>Formulaire d'enregistrement envoyé avec succès au client par e-mail.
+</value>
+  </data>
+  <data name="Error.UnableToSendCheckInForm" xml:space="preserve">
+    <value>Une erreur inattendue s'est produite. Impossible d'envoyer le formulaire d'enregistrement à l'adresse e-mail de l'invité. Veuillez réessayer plus tard.
+</value>
+  </data>
+  <data name="Success" xml:space="preserve">
+    <value>Succès</value>
+  </data>
+  <data name="Error.Modal.Email.Document" xml:space="preserve">
+    <value>Erreur lors de l'envoi du document par email</value>
+  </data>
+  <data name="Meter" xml:space="preserve">
+    <value>Compteur</value>
+  </data>
+  <data name="Back" xml:space="preserve">
+    <value>Retour</value>
+  </data>
+  <data name="PDF.CheckIn" xml:space="preserve">
+    <value>enregistrement pdf</value>
+  </data>
 </root>

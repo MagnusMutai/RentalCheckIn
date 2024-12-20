@@ -187,6 +187,15 @@ namespace RentalCheckIn.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Back.
+        /// </summary>
+        public static string Back {
+            get {
+                return ResourceManager.GetString("Back", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Channel.
         /// </summary>
         public static string Channel {
@@ -331,11 +340,40 @@ namespace RentalCheckIn.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to &lt;data name=&quot;EmailCheckInForm&quot; xml:space=&quot;preserve&quot;&gt;
+        ///  &lt;value&gt;Dear {0},&lt;br/&gt;&lt;br/&gt;Please find your check-in form attached.&lt;br/&gt;&lt;br/&gt;Thank you for choosing Snowy.&lt;/value&gt;
+        ///&lt;/data&gt;.
+        /// </summary>
+        public static string EmailBody_CheckInForm {
+            get {
+                return ResourceManager.GetString("EmailBody.CheckInForm", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Email is required.
         /// </summary>
         public static string EmailRequired {
             get {
                 return ResourceManager.GetString("EmailRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Your Check-in Form.
+        /// </summary>
+        public static string EmailSubject_CheckInForm {
+            get {
+                return ResourceManager.GetString("EmailSubject.CheckInForm", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tip: Allow pop-ups for this site in your browser settings to display the Document..
+        /// </summary>
+        public static string Enable_Popup {
+            get {
+                return ResourceManager.GetString("Enable:Popup", resourceCulture);
             }
         }
         
@@ -368,11 +406,29 @@ namespace RentalCheckIn.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Could not display the document. Please try again later..
+        /// </summary>
+        public static string Error_DocumentDisplay {
+            get {
+                return ResourceManager.GetString("Error.DocumentDisplay", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to &quot;Failed to confirm your email address. Please try again later.&quot;.
         /// </summary>
         public static string Error_Email_Verification {
             get {
                 return ResourceManager.GetString("Error.Email.Verification", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An error occurred while generating the check-in form. Please try again later..
+        /// </summary>
+        public static string Error_Generate_Checkinform {
+            get {
+                return ResourceManager.GetString("Error.Generate.Checkinform", resourceCulture);
             }
         }
         
@@ -400,6 +456,15 @@ namespace RentalCheckIn.Locales {
         public static string Error_Login_InvalidCredentials {
             get {
                 return ResourceManager.GetString("Error.Login.InvalidCredentials", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error emailing document.
+        /// </summary>
+        public static string Error_Modal_Email_Document {
+            get {
+                return ResourceManager.GetString("Error.Modal.Email.Document", resourceCulture);
             }
         }
         
@@ -454,6 +519,15 @@ namespace RentalCheckIn.Locales {
         public static string Error_TryAgainLater {
             get {
                 return ResourceManager.GetString("Error.TryAgainLater", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Uexpected error has occurred. Unable to send check-In form to guest&apos;s email. Please try again later.
+        /// </summary>
+        public static string Error_UnableToSendCheckInForm {
+            get {
+                return ResourceManager.GetString("Error.UnableToSendCheckInForm", resourceCulture);
             }
         }
         
@@ -746,6 +820,15 @@ namespace RentalCheckIn.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Meter.
+        /// </summary>
+        public static string Meter {
+            get {
+                return ResourceManager.GetString("Meter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Mobile number is required..
         /// </summary>
         public static string MobileRequired {
@@ -913,6 +996,15 @@ namespace RentalCheckIn.Locales {
         public static string Payment_Total_Label {
             get {
                 return ResourceManager.GetString("Payment.Total.Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to pdf check-in.
+        /// </summary>
+        public static string PDF_CheckIn {
+            get {
+                return ResourceManager.GetString("PDF.CheckIn", resourceCulture);
             }
         }
         
@@ -1126,11 +1218,29 @@ namespace RentalCheckIn.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Success.
+        /// </summary>
+        public static string Success {
+            get {
+                return ResourceManager.GetString("Success", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Email confirmed successfully..
         /// </summary>
         public static string Success_Email_Confirmed {
             get {
                 return ResourceManager.GetString("Success.Email.Confirmed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Check-In form succesfully sent to customer by email..
+        /// </summary>
+        public static string Success_Emailed_CheckInForm {
+            get {
+                return ResourceManager.GetString("Success.Emailed.CheckInForm", resourceCulture);
             }
         }
         

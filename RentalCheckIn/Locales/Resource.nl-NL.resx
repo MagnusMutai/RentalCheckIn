@@ -522,4 +522,47 @@ Uitchecken</value>
     <value>De server reageerde niet zoals verwacht. Probeer het later opnieuw.
 </value>
   </data>
+  <data name="Error.DocumentDisplay" xml:space="preserve">
+    <value>Kan het document niet weergeven. Probeer het later opnieuw.</value>
+  </data>
+  <data name="Enable:Popup" xml:space="preserve">
+    <value>Tip: Sta pop-ups toe voor deze site in de instellingen van uw browser om het document weer te geven.
+</value>
+  </data>
+  <data name="Error.Generate.Checkinform" xml:space="preserve">
+    <value>Er is een fout opgetreden bij het genereren van het incheckformulier. Probeer het later opnieuw.
+</value>
+  </data>
+  <data name="EmailSubject.CheckInForm" xml:space="preserve">
+    <value>Uw incheckformulier</value>
+  </data>
+  <data name="EmailBody.CheckInForm" xml:space="preserve">
+    <value>&lt;data name="EmailCheckInForm" xml:space="preserve"&gt;
+  &lt;value&gt;Beste {0},&lt;br/&gt;&lt;br/&gt;Bijgevoegd vindt u uw incheckformulier.&lt;br/&gt;&lt;br/&gt;Dank u voor uw keuze voor Snowy.&lt;/value&gt;
+&lt;/data&gt;
+</value>
+  </data>
+  <data name="Success.Emailed.CheckInForm" xml:space="preserve">
+    <value>Incheckformulier succesvol naar de klant verzonden via e-mail.
+</value>
+  </data>
+  <data name="Error.UnableToSendCheckInForm" xml:space="preserve">
+    <value>Er is een onverwachte fout opgetreden. Het is niet gelukt om het incheckformulier naar de e-mail van de gast te sturen. Probeer het later opnieuw.
+</value>
+  </data>
+  <data name="Success" xml:space="preserve">
+    <value>Succes</value>
+  </data>
+  <data name="Error.Modal.Email.Document" xml:space="preserve">
+    <value>Fout bij het e-mailen van het document</value>
+  </data>
+  <data name="Meter" xml:space="preserve">
+    <value>Meter</value>
+  </data>
+  <data name="Back" xml:space="preserve">
+    <value>Terug</value>
+  </data>
+  <data name="PDF.CheckIn" xml:space="preserve">
+    <value>pdf Inchecken</value>
+  </data>
 </root>
