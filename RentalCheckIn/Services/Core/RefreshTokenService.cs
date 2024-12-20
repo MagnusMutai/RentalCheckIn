@@ -1,5 +1,5 @@
 ﻿namespace RentalCheckIn.Services.Core;
-public class RefreshTokenService
+public class RefreshTokenService : IRefreshTokenService
 {
     private readonly IRefreshTokenRepository refreshTokenRepository;
     private readonly IAccountService accountService;
@@ -52,6 +52,7 @@ public class RefreshTokenService
         }
     }
 
+    // Move to Utilities
     private string GenerateSecureToken()
     {
         var randomNumber = new byte[64];
