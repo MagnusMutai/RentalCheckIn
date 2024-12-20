@@ -5,16 +5,16 @@ namespace RentalCheckIn.Controllers;
 [ApiController]
 public class ReservationController : ControllerBase
 {
-    private readonly IReservationBusinessService reservationService;
+    private readonly IReservationService reservationService;
     private readonly ILogger<ReservationController> logger;
 
-    public ReservationController(IReservationBusinessService reservationService, ILogger<ReservationController> logger) 
+    public ReservationController(IReservationService reservationService, ILogger<ReservationController> logger) 
     {
         this.reservationService = reservationService;
         this.logger = logger;
     }
 
-    [HttpGet("AllTableReservations")]
+    [HttpGet("all-table-reservations")]
     public async Task<IActionResult> GetAllTableReservations()
     {
         try
@@ -37,7 +37,7 @@ public class ReservationController : ControllerBase
         }
     }
     
-    [HttpGet("Settings")]
+    [HttpGet("settings")]
     public async Task<IActionResult> GetSettingsAsync()
     {
         try
@@ -58,7 +58,7 @@ public class ReservationController : ControllerBase
         }
     }
 
-    [HttpGet("CheckInFormReservation/{reservationId}")]
+    [HttpGet("check-in-form-reservation/{reservationId}")]
     public async Task<IActionResult> GetCheckInFormReservationById(uint reservationId)
     {
         try
