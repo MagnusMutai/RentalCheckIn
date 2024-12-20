@@ -5,28 +5,26 @@ using Microsoft.JSInterop;
 using RentalCheckIn.Locales;
 
 namespace RentalCheckIn.Services.UI;
-public class AuthService : IAuthService
+public class AuthUIService : IAuthUIService
 {
     private readonly HttpClient httpClient;
     private readonly ProtectedLocalStorage localStorage;
     private readonly IJSRuntime jSRuntime;
     private readonly NavigationManager navigationManager;
-    private readonly AuthenticationStateProvider authStateProvider;
-    private readonly RefreshTokenService refreshTokenService;
+    private readonly IRefreshTokenBusinessService refreshTokenBusinessService;
     private readonly IJWTService jWTService;
     private readonly ITOTPService tOTPService;
-    private readonly ILogger<AuthService> logger;
+    private readonly ILogger<AuthUIService> logger;
     private readonly IStringLocalizer<Resource> localizer;
 
     // Too many injected services separate them into smaller services
-    public AuthService(HttpClient httpClient, ProtectedLocalStorage localStorage, IJSRuntime jSRuntime, NavigationManager navigationManager, AuthenticationStateProvider authStateProvider, RefreshTokenService refreshTokenService, IJWTService jWTService, ITOTPService tOTPService, ILogger<AuthService> logger, IStringLocalizer<Resource> localizer)
+    public AuthUIService(HttpClient httpClient, ProtectedLocalStorage localStorage, IJSRuntime jSRuntime, NavigationManager navigationManager, IRefreshTokenBusinessService refreshTokenBusinessService, IJWTService jWTService, ITOTPService tOTPService, ILogger<AuthUIService> logger, IStringLocalizer<Resource> localizer)
     {
         this.httpClient = httpClient;
         this.localStorage = localStorage;
         this.jSRuntime = jSRuntime;
         this.navigationManager = navigationManager;
-        this.authStateProvider = authStateProvider;
-        this.refreshTokenService = refreshTokenService;
+        this.refreshTokenBusinessService = refreshTokenBusinessService;
         this.jWTService = jWTService;
         this.tOTPService = tOTPService;
         this.logger = logger;
@@ -305,7 +303,7 @@ public class AuthService : IAuthService
             if (!tOTPService.VerifyCode(lHost.TOTPSecret, oTPModel.Code))
                 return new OperationResult { IsSuccess = false, Message = "Invalid OTP code." };
             // Add null checks before assignments.
-            var refreshToken = await refreshTokenService.GenerateRefreshToken(lHost.HostId);
+            var refreshToken = await refreshTokenBusinessService.GenerateRefreshToken(lHost.HostId);
             
             if (refreshToken != null)
             {
@@ -469,7 +467,7 @@ public class AuthService : IAuthService
                 }
 
                 // Generate Refresh Token
-                var refreshToken = await refreshTokenService.GenerateRefreshToken(lHost.HostId);
+                var refreshToken = await refreshTokenBusinessService.GenerateRefreshToken(lHost.HostId);
                 await localStorage.SetAsync("refreshToken", refreshToken.Token);
                 // Generate JWT Token
                 var accessToken = jWTService.GenerateToken(lHost);
