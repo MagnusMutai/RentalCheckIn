@@ -15,7 +15,7 @@ public class LoginBase : ComponentBase
     [Inject]
     private NavigationManager NavigationManager { get; set; }
     [Inject]
-    private IAuthService AuthService { get; set; }
+    private IAuthUIService AuthService { get; set; }
     [Inject]
     private AuthenticationStateProvider AuthStateProvider { get; set; }
     [Inject]

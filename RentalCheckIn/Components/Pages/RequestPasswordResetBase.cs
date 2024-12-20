@@ -12,7 +12,7 @@ public class RequestPasswordResetBase : ComponentBase
     public string BackGroundColor { get; set; } = "bg-success";
 
     [Inject]
-    protected IAuthService AuthService { get; set; }
+    protected IAuthUIService AuthService { get; set; }
     [Inject]
     private ILogger<RequestPasswordResetBase> Logger { get; set; }
 

@@ -12,7 +12,7 @@ public class RoutesBase : ComponentBase, IAsyncDisposable
     [Inject]
     private AuthenticationStateProvider AuthStateProvider { get; set; }
     [Inject]
-    private IAuthService AuthService { get; set; }
+    private IAuthUIService AuthService { get; set; }
     [Inject]
     private ProtectedLocalStorage LocalStorage { get; set; }
     [Inject]

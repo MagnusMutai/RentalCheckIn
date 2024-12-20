@@ -15,7 +15,7 @@ public class PasswordResetBase : ComponentBase
     protected bool IsLoading { get; set; } = false;
     protected OperationResult<string> ResetPasswordResponse { get; set; }
     [Inject]
-    protected IAuthService AuthService { get; set; }
+    protected IAuthUIService AuthService { get; set; }
     [Inject]
     protected NavigationManager NavigationManager { get; set; }
     [Inject]

@@ -20,7 +20,7 @@ public class RegisterBase : ComponentBase
     protected uint RegisteredLHostId { get; set; } 
     protected string? QrCodeImageData { get; set; }
     [Inject]
-    protected IAuthService AuthService { get; set; }
+    protected IAuthUIService AuthService { get; set; }
     [Inject]
     private AuthenticationStateProvider AuthStateProvider { get; set; }
     [Inject]
