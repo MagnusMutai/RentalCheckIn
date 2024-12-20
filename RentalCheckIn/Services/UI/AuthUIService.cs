@@ -11,14 +11,14 @@ public class AuthUIService : IAuthUIService
     private readonly ProtectedLocalStorage localStorage;
     private readonly IJSRuntime jSRuntime;
     private readonly NavigationManager navigationManager;
-    private readonly IRefreshTokenBusinessService refreshTokenBusinessService;
+    private readonly IRefreshTokenService refreshTokenBusinessService;
     private readonly IJWTService jWTService;
     private readonly ITOTPService tOTPService;
     private readonly ILogger<AuthUIService> logger;
     private readonly IStringLocalizer<Resource> localizer;
 
     // Too many injected services separate them into smaller services
-    public AuthUIService(HttpClient httpClient, ProtectedLocalStorage localStorage, IJSRuntime jSRuntime, NavigationManager navigationManager, IRefreshTokenBusinessService refreshTokenBusinessService, IJWTService jWTService, ITOTPService tOTPService, ILogger<AuthUIService> logger, IStringLocalizer<Resource> localizer)
+    public AuthUIService(HttpClient httpClient, ProtectedLocalStorage localStorage, IJSRuntime jSRuntime, NavigationManager navigationManager, IRefreshTokenService refreshTokenBusinessService, IJWTService jWTService, ITOTPService tOTPService, ILogger<AuthUIService> logger, IStringLocalizer<Resource> localizer)
     {
         this.httpClient = httpClient;
         this.localStorage = localStorage;
