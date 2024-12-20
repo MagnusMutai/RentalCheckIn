@@ -101,27 +101,28 @@ builder.Services.AddSingleton<Fido2>(sp =>
 });
 
 // Register application services
-builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IAuthUIService, AuthUIService>();
 builder.Services.AddScoped<ILHostRepository, LHostRepository>();
 builder.Services.AddScoped<ILHostUIService, LHostUIService>();
 builder.Services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IReservationRepository, ReservationRepository>();
-builder.Services.AddScoped<IReservationBusinessService, ReservationBusinessService>();
 builder.Services.AddScoped<IReservationService, ReservationService>();
+builder.Services.AddScoped<IReservationUIService, ReservationUIService>();
 builder.Services.AddScoped<IApartmentRepository, ApartmentRepository>();
 builder.Services.AddScoped<IJWTService, JWTService>();
 builder.Services.AddScoped<ITOTPService, TOTPService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
-builder.Services.AddScoped<IPDFService, PDFService>();
+builder.Services.AddScoped<IEmailUIService, EmailUIService>();
 builder.Services.AddScoped<IDocumentService, DocumentService>();
+builder.Services.AddScoped<IDocumentUIService, DocumentUIService>();
 builder.Services.AddScoped<ILanguageRepository, LanguageRepository>();
 builder.Services.AddScoped<IApartmentTranslationRepository, ApartmentTranslationRepository>();
 builder.Services.AddScoped<IStatusTranslationRepository, StatusTranslationRepository>();
 builder.Services.AddScoped<ILocalizationService, LocalizationService>();
 builder.Services.AddScoped<ILocalizationUIService, LocalizationUIService>();
 builder.Services.AddScoped<ILHostService, LHostService>();
-builder.Services.AddScoped<RefreshTokenService>();
+builder.Services.AddScoped<IRefreshTokenService, RefreshTokenService>();
 builder.Services.AddScoped<ProtectedLocalStorage>();
 builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
 
