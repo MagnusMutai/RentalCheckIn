@@ -12,7 +12,7 @@ public class RegisterFaceIdBase : ComponentBase
 
 
     [Inject]
-    protected IAuthService AuthService { get; set; }
+    protected IAuthUIService AuthService { get; set; }
 
     [Parameter]
     public uint HostId { get; set; }

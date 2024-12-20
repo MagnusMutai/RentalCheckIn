@@ -12,7 +12,7 @@ public class VerifyFaceIdBase : ComponentBase
 
     protected string? DisplayToast { get; set; } = "d-block";
     [Inject]
-    private IAuthService AuthService { get; set; }
+    private IAuthUIService AuthService { get; set; }
     [Inject]
     private ProtectedLocalStorage LocalStorage { get; set; }
     [Inject]

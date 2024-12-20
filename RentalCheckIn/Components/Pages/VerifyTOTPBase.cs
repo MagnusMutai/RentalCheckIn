@@ -11,17 +11,11 @@ public class VerifyTOTPBase : ComponentBase
     public string? DisplayToast { get; set; } = "d-block";
 
     [Inject]
-    private RefreshTokenService RefreshTokenService { get; set; }
-    [Inject]
-    protected IJWTService JWTService { get; set; }
-    [Inject]
     protected NavigationManager NavigationManager { get; set; }
     [Inject]
     protected ProtectedLocalStorage LocalStorage { get; set; }
     [Inject]
-    protected ILHostUIService LHostService { get; set; }
-    [Inject]
-    private IAuthService AuthService { get; set; }
+    private IAuthUIService AuthService { get; set; }
     [Inject]
     private ILogger<VerifyTOTPBase> Logger { get; set; }
 
