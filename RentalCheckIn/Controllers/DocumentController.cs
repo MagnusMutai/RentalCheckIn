@@ -1,63 +1,55 @@
-﻿namespace RentalCheckIn.Controllers;
+﻿using Microsoft.Extensions.Localization;
+using RentalCheckIn.Locales;
+
+namespace RentalCheckIn.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
 public class DocumentController : ControllerBase
 {
-    private readonly IPDFService pDFService;
+    private readonly IDocumentService documentService;
     private readonly ILogger<DocumentController> logger;
-    private readonly IEmailService emailService;
+    private readonly IStringLocalizer<Resource> localizer;
 
-    public DocumentController(IPDFService pDFService, ILogger<DocumentController> logger, IEmailService emailService)
+    public DocumentController(IDocumentService documentService, ILogger<DocumentController> logger, IStringLocalizer<Resource> localizer)
     {
-        this.pDFService = pDFService;
+        this.documentService = documentService;
         this.logger = logger;
-        this.emailService = emailService;
+        this.localizer = localizer;
     }
 
-    [HttpPost("GenerateAndSendCheckInForm")]
-    public async Task<IActionResult> GenerateAndSendCheckInForm([FromBody] OperationRequest request)
+    [HttpPost("generate-check-in-form")]
+    public async Task<IActionResult> GenerateCheckInForm([FromBody] OperationRequest request)
     {
         try
         {
             // Generate the PDF in memory
-            using var pDFStream = await pDFService.FillCheckInFormAsync(request.Model, request.Culture);
-          
-            if (pDFStream == null)
+            var pdfStream = await documentService.FillCheckInFormAsync(request.Model, request.Culture);
+
+            if (pdfStream == null)
             {
-                var pDFResponse = new OperationResult 
+                return NotFound(new OperationResult
                 {
                     IsSuccess = false,
-                    Message = "There's an error generating the Quest's Check-In Form document"
-                };
-
-                return NotFound(pDFResponse);
-
+                    Message = "There's an error generating the Quest's Check-In Form document."
+                });
             }
 
-            // Localize the email message
-            string subject = "Your Check-In Form";
-            string body = $"Dear {request.Model.GuestFirstName},<br/><br/>" +
-                          "Please find your check-in form attached.<br/><br/>" +
-                          "Thank you for choosing Snowy.";
-
-            // Send the PDF as an attachment directly from memory
-           var emailResponse = await emailService.SendEmailAsync(request.Model.MailAddress, subject, body, pDFStream, "CheckInForm.pdf");
-
-            return Ok(emailResponse);
+            // Ensure the stream is reset to the beginning so we don't have missing data
+            pdfStream.Position = 0;
+            // Return the PDF stream as a file format.
+            return File(pdfStream, "application/pdf", "CheckInForm.pdf");
         }
         catch (Exception ex)
         {
-            var response = new OperationResult
+            logger.LogError(ex, "An unexpected error occurred while generating the Check-In Form PDF.");
+         
+            return StatusCode(StatusCodes.Status500InternalServerError, new OperationResult
             {
                 IsSuccess = false,
-                Message = "There's an error generating and sending the the Quest's Check-In Form document via email."
-            };
-
-            logger.LogError(ex, "An unexpected error occurred in DocumentController while trying to send the check-In Form generated document via WhatsApp.");
-            return StatusCode(StatusCodes.Status500InternalServerError, response);
+                Message = localizer["UnexpectedErrorOccurred"]
+            });
         }
-    
     }
 
 }

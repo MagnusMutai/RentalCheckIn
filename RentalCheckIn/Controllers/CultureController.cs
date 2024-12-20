@@ -12,6 +12,7 @@ public class CultureController : Controller
     {
         this.logger = logger;
     }
+
     public IActionResult Set(string culture, string redirectUri)
     {
         // Validate the culture parameter
