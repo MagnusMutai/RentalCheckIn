@@ -8,18 +8,18 @@ namespace RentalCheckIn.Controllers;
 public class AuthController : ControllerBase
 {
     private readonly IAccountService accountService;
-    private readonly RefreshTokenService refreshTokenService;
+    private readonly IRefreshTokenService refreshTokenService;
     private readonly Fido2 fido2;
     private readonly ILogger<AuthController> logger;
-    private readonly AppDbContext context;
+    private readonly AppDbContext dbContext;
 
-    public AuthController(IAccountService accountService, RefreshTokenService refreshTokenService, Fido2 fido2, ILogger<AuthController> logger, AppDbContext context)
+    public AuthController(IAccountService accountService, IRefreshTokenService refreshTokenService, Fido2 fido2, ILogger<AuthController> logger, AppDbContext dbContext)
     {
         this.accountService = accountService;
         this.refreshTokenService = refreshTokenService;
         this.fido2 = fido2;
         this.logger = logger;
-        this.context = context;
+        this.dbContext = dbContext;
     }
     // Standard JWT Authentication
     [HttpPost("login")]
@@ -131,25 +131,23 @@ public class AuthController : ControllerBase
             // In other endpoints like this pass custom response along with the data.
             if (lHost == null)
             {
-                var response = new OperationResult
+
+                return NotFound(new OperationResult
                 {
                     IsSuccess = false,
                     Message = "The provided email is not registered."
-                };
-
-                return NotFound(response);
+                });
             }
 
             var result = await accountService.ForgotPasswordAsync(lHost);
 
             if (result == null)
             {
-                var response = new OperationResult
+                return BadRequest(new OperationResult
                 {
                     IsSuccess = false,
                     Message = "An unexpected error has occurred. Please try again later"
-                };
-                return BadRequest(response);
+                });
             }
 
             return Ok(result);
@@ -158,12 +156,13 @@ public class AuthController : ControllerBase
         {
             logger.LogError(ex, "An unexpected error occurred in AuthController while trying to send a password reset request.");
 
-            var response = new OperationResult
+            return StatusCode(
+            StatusCodes.Status500InternalServerError, 
+            new OperationResult
             {
                 IsSuccess = false,
                 Message = "An unexpected error has occurred. Please try again later"
-            };
-            return StatusCode(StatusCodes.Status500InternalServerError, response);
+            });
         }
     }
 
@@ -206,7 +205,7 @@ public class AuthController : ControllerBase
             IsCredentialIdUniqueToUserAsyncDelegate isCredentialIdUniqueToUser = async (uniqueParams, cancellationToken) =>
             {
                 var credentialId = uniqueParams.CredentialId;
-                var exists = await context.LHostCredentials
+                var exists = await dbContext.LHostCredentials
                     .AnyAsync(c => c.CredentialId == Convert.ToBase64String(credentialId), cancellationToken);
                 // Return true if it does not exist
                 return !exists; 
@@ -219,7 +218,7 @@ public class AuthController : ControllerBase
             }
 
             // Retrieve the Host entity
-            var host = await context.LHosts.FindAsync(hostId);
+            var host = await dbContext.LHosts.FindAsync(hostId);
 
             if (host == null)
                 return BadRequest("Host not found.");
@@ -228,7 +227,7 @@ public class AuthController : ControllerBase
             // options.User.Id is in byte[] format
             host.UserHandle = options.User.Id; 
             // Update the Host entity
-            context.LHosts.Update(host);
+            dbContext.LHosts.Update(host);
             var result = await fido2.MakeNewCredentialAsync(response, options, isCredentialIdUniqueToUser);
             var newCredential = new LHostCredential
             {
@@ -238,8 +237,8 @@ public class AuthController : ControllerBase
                 HostId = uint.Parse(result.Result.User.Id)
             };
             // Create a repository method instead.
-            context.LHostCredentials.Add(newCredential);
-            await context.SaveChangesAsync();
+            dbContext.LHostCredentials.Add(newCredential);
+            await dbContext.SaveChangesAsync();
 
             return Ok();
         }
@@ -256,7 +255,7 @@ public class AuthController : ControllerBase
     {
         try
         {
-            var user = await context.LHosts
+            var user = await dbContext.LHosts
                 .Include(h => h.Credentials)
                 .FirstOrDefaultAsync(h => h.HostId == hostId);
 
@@ -299,7 +298,7 @@ public class AuthController : ControllerBase
     {
         try
         {
-            var user = await context.LHosts
+            var user = await dbContext.LHosts
                 .Include(h => h.Credentials)
                 .FirstOrDefaultAsync(h => h.HostId == hostId);
 
@@ -337,7 +336,7 @@ public class AuthController : ControllerBase
             if (options == null)
                 return BadRequest("Authentication options not found in session");
 
-            var storedCredential = await context.LHostCredentials
+            var storedCredential = await dbContext.LHostCredentials
                 .FirstOrDefaultAsync(c => c.CredentialId == Convert.ToBase64String(response.Id));
 
             if (storedCredential == null)
@@ -348,7 +347,7 @@ public class AuthController : ControllerBase
                 var userHandle = userHandleParams.UserHandle;
                 var credentialId = userHandleParams.CredentialId;
                 // Use a repository class instead.
-                var user = await context.LHostCredentials.FirstOrDefaultAsync(c =>
+                var user = await dbContext.LHostCredentials.FirstOrDefaultAsync(c =>
                     c.CredentialId == Convert.ToBase64String(credentialId) &&
                     c.Host.UserHandle.SequenceEqual(userHandle), cancellationToken);
 
@@ -365,7 +364,7 @@ public class AuthController : ControllerBase
 
             // Update the signature counter after successful authentication
             storedCredential.SignCount = result.Counter;
-            await context.SaveChangesAsync();
+            await dbContext.SaveChangesAsync();
 
             return Ok();
         }
