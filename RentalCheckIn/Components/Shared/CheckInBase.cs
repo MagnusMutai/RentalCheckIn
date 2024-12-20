@@ -22,9 +22,11 @@ public class CheckInBase : ComponentBase
     [Inject]
     private NavigationManager NavigationManager { get; set; }
     [Inject]
-    private IReservationService ReservationService { get; set; }
+    private IReservationUIService ReservationService { get; set; }
     [Inject]
-    private IDocumentService DocumentService { get; set; }
+    private IDocumentUIService DocumentUIService { get; set; }
+    [Inject]
+    private IEmailUIService IEmailUIService { get; set; }
     [Inject]
     private AuthenticationStateProvider AuthStateProvider { get; set; }
     [Inject]
@@ -113,9 +115,7 @@ public class CheckInBase : ComponentBase
         }
         catch (Exception ex)
         {
-            ModalMessage = Localizer["UnexpectedErrorOccurred"];
-            IsSuccessModal = false;
-            IsModalOpen = true;
+            ShowModal(Localizer["UnexpectedErrorOccurred"], false);
             Logger.LogError(ex, "An unexpected error occurred while trying to authenticate user on OnAfterRenderAsync on CheckIn component.");
         }
     }
@@ -209,13 +209,34 @@ public class CheckInBase : ComponentBase
         // PDF generation and sharing
         try
         {
-            var result = await DocumentService.GenerateAndSendCheckInFormAsync(CheckInModel, culture);
+            var generateDocRequest = new OperationRequest
+            {
+                Culture = CultureInfo.CurrentCulture.Name,
+                Model = CheckInModel
+            };
+
+            OperationResult<byte[]> pdfOperationResult = await DocumentUIService.GenerateCheckInFormAsync(generateDocRequest);
+
+            if (pdfOperationResult == null) 
+            {
+                ShowModal(Localizer["Error.Generate.Checkinform"], false);
+
+                return;
+            }
+
+            // Send the check-in form to the quest via email.
+            var sendCheckinFormRequest = new SendEmailRequest
+            {
+                Email = CheckInModel.MailAddress,
+                Subject = Localizer["EmailSubject.CheckInForm"],
+                Body = String.Format(Localizer["EmailBody.CheckInForm"], CheckInModel.GuestFirstName),
+                PDFByteArray = pdfOperationResult.Data
+            };
+            OperationResult result = await IEmailUIService.SendEmailWithAttachmentAsync(sendCheckinFormRequest);
 
             if (result.IsSuccess)
             {
-                ModalMessage = "Check-In form succesfully sent to customer by email.";
-                IsSuccessModal = true;
-                IsModalOpen = true;
+                ShowModal(Localizer["Success.Emailed.CheckInForm"], true);
             }
             else
             {
@@ -226,9 +247,7 @@ public class CheckInBase : ComponentBase
         }
         catch (Exception ex)
         {
-            ModalMessage = "Uexpected error has occurred. Unable to send check-In form to guest's email. Please try again later";
-            IsSuccessModal = false;
-            IsModalOpen = true;
+            ShowModal(Localizer["Error.UnableToSendCheckInForm"], true);
             Logger.LogError(ex, "An unexpected error occurred while trying to merge form data to the document template in CheckIn component.");
         }
     }
@@ -240,6 +259,13 @@ public class CheckInBase : ComponentBase
         LineWidth = 2,
         StrokeStyle = StrokeColor
     };
+
+    private void ShowModal(string message, bool isSuccess)
+    {
+        ModalMessage = message;
+        IsSuccessModal = isSuccess;
+        IsModalOpen = true;
+    }
 
     protected void HandleModalClose()
     {
