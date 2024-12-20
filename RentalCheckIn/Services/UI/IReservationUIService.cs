@@ -1,5 +1,5 @@
 ﻿namespace RentalCheckIn.Services.UI;
-public interface IReservationService
+public interface IReservationUIService
 {
     Task<IEnumerable<ReservationDTO>> GetAllTableReservationsAsync();
     Task<CheckInReservationDTO> GetCheckInReservationByIdAsync(uint reservationId);

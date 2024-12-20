@@ -1,9 +1,9 @@
 ﻿namespace RentalCheckIn.Services.UI;
-public class ReservationService : IReservationService
+public class ReservationUIService : IReservationUIService
 {
     private readonly HttpClient httpClient;
 
-    public ReservationService(HttpClient httpClient)
+    public ReservationUIService(HttpClient httpClient)
     {
         this.httpClient = httpClient;
     }
@@ -12,7 +12,7 @@ public class ReservationService : IReservationService
     {
         try
         {
-            var response = await httpClient.GetAsync("api/reservation/AllTableReservations");
+            var response = await httpClient.GetAsync("api/reservation/all-table-reservations");
             if (response.IsSuccessStatusCode)
             {
                 if (response.StatusCode == HttpStatusCode.NoContent)
@@ -37,7 +37,7 @@ public class ReservationService : IReservationService
     {
         try
         {
-            var response = await httpClient.GetAsync($"api/reservation/CheckInFormReservation/{reservationId}");
+            var response = await httpClient.GetAsync($"api/reservation/check-in-form-reservation/{reservationId}");
             if (response.IsSuccessStatusCode)
             {
                 if (response.StatusCode == HttpStatusCode.NoContent)
@@ -79,7 +79,7 @@ public class ReservationService : IReservationService
                 SignatureDataUrl = checkInModel.SignatureDataUrl,
             };
 
-            var response = await httpClient.PutAsJsonAsync($"api/Reservation/{updateModel.Id}", updateModel);
+            var response = await httpClient.PutAsJsonAsync($"api/reservation/{updateModel.Id}", updateModel);
             
             return response.IsSuccessStatusCode;
         }
@@ -90,6 +90,7 @@ public class ReservationService : IReservationService
         }
     }
 
+    // Move to a settings flow
     public async Task<IEnumerable<Setting>> GetSettingsAsync()
     {
         try
