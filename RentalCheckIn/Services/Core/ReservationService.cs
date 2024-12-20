@@ -2,13 +2,13 @@
 using System.Globalization;
 
 namespace RentalCheckIn.Services.Core;
-public class ReservationBusinessService : IReservationBusinessService
+public class ReservationService : IReservationService
 {
     private readonly IReservationRepository reservationRepository;
     private readonly ILanguageRepository languageRepository;
-    private readonly ILogger<ReservationBusinessService> logger;
+    private readonly ILogger<ReservationService> logger;
 
-    public ReservationBusinessService(IReservationRepository reservationRepository, ILanguageRepository languageRepository, ILogger<ReservationBusinessService> logger)
+    public ReservationService(IReservationRepository reservationRepository, ILanguageRepository languageRepository, ILogger<ReservationService> logger)
     {
         this.reservationRepository = reservationRepository;
         this.languageRepository = languageRepository;
