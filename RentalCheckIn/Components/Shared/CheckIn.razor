@@ -145,8 +145,9 @@
                             <label class="form-check-label">
                                 @{
                                     var formattedEnergyConsumptionText = string.Format(Localizer["Rental.EnergyConsumption.CheckBox"], CheckInModel.KWhPerNightIncluded, CheckInModel.CostsPerXtraKWh, CheckInModel.CurrencySymbol);
-                                } @formattedEnergyConsumptionText <br />  <div class="d-flex gap-2 align-items-center">
-                                    Meter <InputNumber class="form-control w-25" @bind-Value="CheckInModel.KwhAtCheckIn" />
+                                 }
+                                @formattedEnergyConsumptionText <br />  <div class="d-flex gap-2 align-items-center">
+                                    @Localizer["Meter"] <InputNumber class="form-control w-25" @bind-Value="CheckInModel.KwhAtCheckIn" />
                                     <ValidationMessage For="@(() => CheckInModel.KwhAtCheckIn)" /> kWh.
                                 </div>
                             </label>
@@ -221,7 +222,7 @@
                                 </button>
                             </div>
                             <div class="col-md">
-                                <button class="btn btn-secondary border-0 rounded-3 py-1 text-end" @onclick="HandleBackButton">Back</button>
+                                <button class="btn btn-secondary border-0 rounded-3 py-1 text-end" @onclick="HandleBackButton">@Localizer["Back"]</button>
                             </div>
                         </div>
                     </div>
