@@ -6,6 +6,7 @@ public class ReservationDTO
     public DateOnly CheckOutDate { get; set; }
     public string? CheckInTime { get; set; }
     public string? CheckOutTime { get; set; }
+    public DateTime? CheckedInAt { get; set; }
     public string QuestName { get; set; }
     public string? PhoneNumber { get; set; }
     public int NumberOfQuests { get; set; }
