@@ -232,6 +232,8 @@ public partial class AppDbContext : DbContext
             entity.Property(e => e.SecurityDeposit).HasPrecision(9, 2);
             entity.Property(e => e.SignatureQuest).HasColumnType("text");
             entity.Property(e => e.TotalPrice).HasPrecision(9, 2);
+            // Changed the default precision
+            entity.Property(e => e.CostsXtraRemotes).HasPrecision(18,2);
 
             entity.HasOne(d => d.Apartment).WithMany(p => p.Reservations)
                 .HasForeignKey(d => d.ApartmentId)
