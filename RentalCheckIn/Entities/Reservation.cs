@@ -7,6 +7,10 @@ public partial class Reservation
     public string? CheckInTime { get; set; }
     public DateOnly CheckOutDate { get; set; }
     public string? CheckOutTime { get; set; }
+    // Current actual date
+    public DateTime? CheckedInAt { get; set; }
+    // Current actual date
+    public DateTime? CheckedOutAt { get; set; }
     public int NumberOfQuests { get; set; }
     public int NumberOfNights { get; set; }
     public decimal ApartmentFee { get; set; }
@@ -20,8 +24,6 @@ public partial class Reservation
     public bool ReceivedKeys { get; set; }
     public bool AgreeTerms { get; set; }
     public uint CurrencyId { get; set; }
-    public DateTime? CheckedInAt { get; set; }
-    public DateTime? CheckedOutAt { get; set; }
     public string? SignatureQuest { get; set; }
     public uint ApartmentId { get; set; }
     public uint QuestId { get; set; }

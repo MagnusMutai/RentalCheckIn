@@ -29,6 +29,7 @@ public class ReservationRepository : IReservationRepository
                     CheckOutDate = r.CheckOutDate,
                     CheckInTime = r.CheckInTime,
                     CheckOutTime = r.CheckOutTime,
+                    CheckedInAt = r.CheckedInAt,
                     QuestName = r.Quest.FirstName,
                     PhoneNumber = r.Quest.Mobile,
                     NumberOfQuests = r.NumberOfQuests,
