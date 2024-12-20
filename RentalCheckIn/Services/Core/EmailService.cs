@@ -36,6 +36,7 @@ public class EmailService : IEmailService
                 Message = "The email does not contain the recipient."
             };
         }
+
         var mail = new MailMessage
         {
             From = new MailAddress(emailSettings.SenderEmail, emailSettings.SenderName),
@@ -44,7 +45,6 @@ public class EmailService : IEmailService
             IsBodyHtml = true
         };
         mail.To.Add(toEmail);
-
         attachment.Position = 0;
         mail.Attachments.Add(new Attachment(attachment, "application/pdf") { Name = attachmentName });
 
