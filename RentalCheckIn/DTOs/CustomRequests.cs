@@ -24,5 +24,13 @@ public class CustomRequests
         public  CheckInReservationDTO Model { get; set; }
         public string Culture { get; set; }
     }
+    
+    public class SendEmailRequest
+    {
+        public string Email { get; set; }
+        public string Subject { get; set; }
+        public string Body { get; set; }
+        public byte[]? PDFByteArray { get; set; }
+    }
 
 }
