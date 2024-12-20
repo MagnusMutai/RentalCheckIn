@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-
-namespace RentalCheckIn.Entities;
+﻿namespace RentalCheckIn.Entities;
 
 public partial class Reservation
 {
