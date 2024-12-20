@@ -4,12 +4,12 @@ using System.Drawing;
 
 namespace RentalCheckIn.Services.Core;
 
-public class PDFService : IPDFService
+public class DocumentService : IDocumentService
 {
     private readonly IWebHostEnvironment environment;
-    private readonly ILogger<PDFService> logger;
+    private readonly ILogger<DocumentService> logger;
 
-    public PDFService(IWebHostEnvironment environment, ILogger<PDFService> logger)
+    public DocumentService(IWebHostEnvironment environment, ILogger<DocumentService> logger)
     {
         this.environment = environment;
         this.logger = logger;
